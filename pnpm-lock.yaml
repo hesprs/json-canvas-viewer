@@ -17,10 +17,10 @@ importers:
         version: 2.3.8
       '@open-xchange/vite-plugin-es-decorators':
         specifier: ^1.1.1
-        version: 1.1.1(vite@7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))
+        version: 1.1.1(vite@7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))
       '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.1
+        specifier: ^25.0.2
+        version: 25.0.2
       marked:
         specifier: ^17.0.1
         version: 17.0.1
@@ -41,7 +41,7 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^7.2.7
-        version: 7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
+        version: 7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
 
 packages:
 
@@ -608,8 +608,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/node@24.10.1':
-    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
+  '@types/node@25.0.2':
+    resolution: {integrity: sha512-gWEkeiyYE4vqjON/+Obqcoeffmk0NF15WSBwSs7zwVA2bAbTaE0SJ7P0WNGoJn8uE7fiaV5a7dKYIJriEqOrmA==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -1327,12 +1327,12 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@open-xchange/vite-plugin-es-decorators@1.1.1(vite@7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))':
+  '@open-xchange/vite-plugin-es-decorators@1.1.1(vite@7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.28.5)
-      vite: 7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
-      vite-plugin-babel: 1.3.2(@babel/core@7.28.5)(vite@7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))
+      vite: 7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
+      vite-plugin-babel: 1.3.2(@babel/core@7.28.5)(vite@7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -1471,7 +1471,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/node@24.10.1':
+  '@types/node@25.0.2':
     dependencies:
       undici-types: 7.16.0
 
@@ -1825,12 +1825,12 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
-  vite-plugin-babel@1.3.2(@babel/core@7.28.5)(vite@7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)):
+  vite-plugin-babel@1.3.2(@babel/core@7.28.5)(vite@7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)):
     dependencies:
       '@babel/core': 7.28.5
-      vite: 7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
+      vite: 7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1)
 
-  vite@7.2.7(@types/node@24.10.1)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1):
+  vite@7.2.7(@types/node@25.0.2)(jiti@2.6.0)(sass@1.94.2)(terser@5.44.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -1839,7 +1839,7 @@ snapshots:
       rollup: 4.53.3
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.10.1
+      '@types/node': 25.0.2
       fsevents: 2.3.3
       jiti: 2.6.0
       sass: 1.94.2

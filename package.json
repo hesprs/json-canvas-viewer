@@ -28,7 +28,7 @@
 		"marked": "^17.0.1",
 		"marked-katex-extension": "^5.1.6",
 		"omnikernel": "file:src/omnikernel-1.0.0-alpha.tgz",
-		"sass": "^1.94.2",
+		"sass": "^1.96.0",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.7"

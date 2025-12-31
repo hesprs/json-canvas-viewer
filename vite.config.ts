@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import decorators from '@open-xchange/vite-plugin-es-decorators';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -7,17 +6,15 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': resolve(__dirname, 'src/'),
-			$: resolve(__dirname, 'dist/'),
 		},
 	},
-	plugins: [decorators()],
 	build: {
 		outDir: resolve(__dirname, 'dist'),
 		emptyOutDir: true,
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['dompurify'],
+			external: ['dompurify', 'pointeract', 'micromark', 'micromark-extension-gfm'],
 		},
 		lib: {
 			entry: {

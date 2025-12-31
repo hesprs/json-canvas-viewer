@@ -70,3 +70,18 @@ export type NodeBounds = {
 	centerX: number;
 	centerY: number;
 };
+
+// biome-ignore lint/suspicious/noExplicitAny: General Type
+export type GeneralArguments = Array<any>;
+
+export type Options = {
+	container: HTMLElement;
+	canvasPath: string;
+	noShadow?: boolean;
+	interactions?: {
+		proControlSchema?: boolean;
+		zoomFactor?: number;
+		lockControlSchema?: boolean;
+	};
+};
+export type Module = new (container: Container) => unknown;

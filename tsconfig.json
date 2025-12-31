@@ -7,18 +7,14 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"declaration": true,
-		"emitDeclarationOnly": true,
-		"declarationDir": "./dist/types",
-		"outDir": "./dist/types",
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
 		"lib": ["ESNext", "DOM"],
 		"paths": {
 			"@/*": ["./src/*"],
-			"@": ["./src"],
-			"$/*": ["./src/*"],
-			"$": ["./src"]
+			"@": ["./src"]
 		}
 	},
-	"include": ["src/**/*", "test/**/*", "omniTypes"],
+	"include": ["src/**/*", "test/**/*"],
 	"exclude": ["node_modules", "./dist"]
 }

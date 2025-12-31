@@ -1,6 +1,8 @@
-import { manifest, OmniUnit } from 'omnikernel';
+import type { Container } from '@needle-di/core';
+import Controller from '@/controller';
 import { destroyError, unexpectedError } from '@/shared';
-import type { rendererArgs } from '../omniTypes';
+import DataManager from './dataManager';
+import { UtilitiesToken, type utilities } from './utilities';
 
 interface viewport {
 	left: number;
@@ -19,15 +21,11 @@ const NODE_RADIUS = 12;
 const FONT_COLOR = '#fff';
 const CSS_ZOOM_REDRAW_INTERVAL = 500;
 
-@manifest({
-	name: 'renderer',
-	dependsOn: ['dataManager', 'canvasViewer', 'utilities'],
-})
-export default class Renderer extends OmniUnit<rendererArgs> {
+export default class Renderer {
 	private _canvas: HTMLCanvasElement | null;
 	private ctx: CanvasRenderingContext2D;
-	private dataManager: typeof this.deps.dataManager;
-	private utilities: typeof this.deps.utilities;
+	private DM: DataManager;
+	private utilities: typeof utilities;
 	private zoomInOptimize: {
 		lastDrawnScale: number;
 		lastDrawnViewport: viewport;
@@ -50,25 +48,20 @@ export default class Renderer extends OmniUnit<rendererArgs> {
 		return this._canvas;
 	}
 
-	constructor(...args: rendererArgs) {
-		super(...args);
-		this.Kernel.register(
-			{
-				onRefresh: { renderer: this.redraw },
-				onResize: { renderer: this.optimizeDPR },
-			},
-			this.deps.canvasViewer,
-		);
-		this.dataManager = this.deps.dataManager;
-		this.utilities = this.deps.utilities;
+	constructor(container: Container) {
+		const controller = container.get(Controller);
+		controller.hooks.onRefresh.subscribe(this.redraw);
+		controller.hooks.onResize.subscribe(this.optimizeDPR);
+		this.DM = container.get(DataManager);
+		this.utilities = container.get(UtilitiesToken);
 		this._canvas = document.createElement('canvas');
 		this._canvas.className = 'main-canvas';
 		this.ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
-		this.dataManager.data.container().appendChild(this._canvas);
+		this.DM.data.container.appendChild(this._canvas);
 	}
 
 	private optimizeDPR = () => {
-		const container = this.dataManager.data.container();
+		const container = this.DM.data.container;
 		this.utilities.resizeCanvasForDPR(this.canvas, container.offsetWidth, container.offsetHeight);
 	};
 
@@ -78,9 +71,9 @@ export default class Renderer extends OmniUnit<rendererArgs> {
 			this.zoomInOptimize.timeout = null;
 		}
 		const now = Date.now();
-		const offsetX = this.dataManager.data.offsetX();
-		const offsetY = this.dataManager.data.offsetY();
-		const scale = this.dataManager.data.scale();
+		const offsetX = this.DM.data.offsetX;
+		const offsetY = this.DM.data.offsetY;
+		const scale = this.DM.data.scale;
 		const currentViewport = this.getCurrentViewport(offsetX, offsetY, scale);
 		if (
 			this.isViewportInside(currentViewport, this.zoomInOptimize.lastDrawnViewport) &&
@@ -109,7 +102,7 @@ export default class Renderer extends OmniUnit<rendererArgs> {
 		this.ctx.save();
 		this.ctx.translate(offsetX, offsetY);
 		this.ctx.scale(scale, scale);
-		const canvasData = this.dataManager.data.canvasData();
+		const canvasData = this.DM.data.canvasData;
 		canvasData.nodes.forEach(node => {
 			switch (node.type) {
 				case 'group':
@@ -142,7 +135,7 @@ export default class Renderer extends OmniUnit<rendererArgs> {
 	private getCurrentViewport = (offsetX: number, offsetY: number, scale: number) => {
 		const left = -offsetX / scale;
 		const top = -offsetY / scale;
-		const container = this.dataManager.data.container();
+		const container = this.DM.data.container;
 		const right = left + container.clientWidth / scale;
 		const bottom = top + container.clientHeight / scale;
 		return { left, top, right, bottom };
@@ -278,8 +271,8 @@ export default class Renderer extends OmniUnit<rendererArgs> {
 	};
 
 	private getEdgeNodes = (edge: JSONCanvasEdge) => ({
-		fromNode: this.dataManager.data.nodeMap()[edge.fromNode],
-		toNode: this.dataManager.data.nodeMap()[edge.toNode],
+		fromNode: this.DM.data.nodeMap[edge.fromNode],
+		toNode: this.DM.data.nodeMap[edge.toNode],
 	});
 
 	private getControlPoints = (

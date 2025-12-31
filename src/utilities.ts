@@ -1,32 +1,24 @@
-import { manifest, OmniUnit } from 'omnikernel';
+import { InjectionToken } from '@needle-di/core';
 import { unexpectedError } from '@/shared';
-import type { utilitiesArgs } from '../omniTypes';
 
-@manifest({ name: 'utilities' })
-export default class Utilities extends OmniUnit<utilitiesArgs> {
-	constructor(...args: utilitiesArgs) {
-		super(...args);
-		this.Kernel.register(
-			{
-				round,
-				resizeCanvasForDPR,
-				applyStyles,
-				drawRoundRect,
-				getAnchorCoord,
-				getColor,
-			},
-			this.facade,
-		);
-	}
-}
+export const UtilitiesToken = new InjectionToken<typeof utilities>('utilities');
 
-export function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
+export const utilities = {
+	round,
+	resizeCanvasForDPR,
+	applyStyles,
+	drawRoundRect,
+	getAnchorCoord,
+	getColor,
+};
+
+function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
 	const style = document.createElement('style');
 	style.innerHTML = styleString;
 	container.appendChild(style);
 }
 
-export function drawRoundRect(
+function drawRoundRect(
 	ctx: CanvasRenderingContext2D,
 	x: number,
 	y: number,
@@ -47,7 +39,7 @@ export function drawRoundRect(
 	ctx.closePath();
 }
 
-export function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'left' | 'right') {
+function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'left' | 'right') {
 	const midX = node.x + node.width / 2;
 	const midY = node.y + node.height / 2;
 	switch (side) {
@@ -64,7 +56,7 @@ export function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'l
 	}
 }
 
-export function getColor(colorIndex: string = '0') {
+function getColor(colorIndex: string = '0') {
 	let themeColor = null;
 
 	function hexToRgb(hex: string) {
@@ -109,7 +101,7 @@ export function getColor(colorIndex: string = '0') {
 	};
 }
 
-export function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
+function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
 	const dpr = window.devicePixelRatio || 1;
 	const ctx = canvas.getContext('2d');
 	if (!ctx) throw unexpectedError;
@@ -119,7 +111,7 @@ export function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, hei
 	ctx.scale(dpr, dpr);
 }
 
-export function round(roundedNum: number, digits: number) {
+function round(roundedNum: number, digits: number) {
 	const factor = 10 ** digits;
 	return Math.round(roundedNum * factor) / factor;
 }

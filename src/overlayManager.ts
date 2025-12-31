@@ -1,54 +1,51 @@
+import type { Container } from '@needle-di/core';
 import Purify from 'dompurify';
-import { Hook, manifest, OmniUnit } from 'omnikernel';
+import { micromark } from 'micromark';
+import { gfm, gfmHtml } from 'micromark-extension-gfm';
+import Controller from '@/controller';
+import InteractionHandler from '@/interactionHandler';
 import { destroyError, type RuntimeJSONCanvasNode, unexpectedError } from '@/shared';
-import type { overlayManagerArgs } from '../omniTypes';
+import DataManager from './dataManager';
+import { UtilitiesToken, type utilities } from './utilities';
+import { makeHook } from './utilityFunctions';
 
-@manifest({
-	name: 'overlayManager',
-	dependsOn: ['dataManager', 'canvasViewer', 'utilities', 'renderer', 'options'],
-	requires: ['interactionHandler'],
-})
-export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
+export default class OverlayManager {
 	private _overlaysLayer: HTMLDivElement | null = document.createElement('div');
 	private overlays: Record<string, HTMLDivElement> = {}; // { id: node } the overlays in viewport
 	private selectedId: string | null = null;
 	private eventListeners: Record<string, Array<EventListener | null>> = {};
-	private dataManager: typeof this.deps.dataManager;
-	private utilities: typeof this.deps.utilities;
-	private parser: (input: string) => Promise<string>;
+	private DM: DataManager;
+	private IH: () => InteractionHandler;
+	private utilities: typeof utilities;
+	private parser = (markdown: string) =>
+		micromark(markdown, { extensions: [gfm()], htmlExtensions: [gfmHtml()] });
 
 	private get overlaysLayer() {
 		if (!this._overlaysLayer) throw destroyError;
 		return this._overlaysLayer;
 	}
 
-	constructor(...args: overlayManagerArgs) {
-		super(...args);
-		this.Kernel.register(
-			{
-				onInteractionStart: new Hook(),
-				onInteractionEnd: new Hook(),
-			},
-			this.facade,
-		);
-		this.dataManager = this.deps.dataManager;
-		this.utilities = this.deps.utilities;
-		this.parser = this.deps.options.markdownParser();
-		if (!this.parser) throw new Error('[JSONCanvasViewer] Markdown parser is not provided.');
-		this.Kernel.register(
-			{ hooks: { onCanvasFetched: { overlayManager: this.onFetched } } },
-			this.dataManager,
-		);
-		this.Kernel.register({ onRefresh: { overlayManager: this.updateOverlays } }, this.deps.canvasViewer);
-		this.Kernel.register({ onClick: { overlayManager: this.select } }, this.deps.interactionHandler);
+	hooks = {
+		onInteractionStart: makeHook(),
+		onInteractionEnd: makeHook(),
+	};
+
+	constructor(container: Container) {
+		this.DM = container.get(DataManager);
+		this.IH = container.get(InteractionHandler, { lazy: true });
+		const controller = container.get(Controller);
+		this.utilities = container.get(UtilitiesToken);
+		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
+		controller.hooks.onRefresh.subscribe(this.updateOverlays);
 
 		this._overlaysLayer = document.createElement('div');
 		this._overlaysLayer.className = 'overlays';
-		this.dataManager.data.container().appendChild(this.overlaysLayer);
+		this.DM.data.container.appendChild(this.overlaysLayer);
 	}
 
 	private onFetched = () => {
-		const cbd = this.dataManager.data.canvasBaseDir();
+		this.IH().onClick.subscribe(this.select);
+		const cbd = this.DM.data.canvasBaseDir;
 		const overlayCreators = {
 			text: (node: RuntimeJSONCanvasNode) => {
 				if (!node.text) throw unexpectedError;
@@ -68,7 +65,7 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 			},
 			group: () => {},
 		};
-		Object.values(this.dataManager.data.nodeMap()).forEach(node => {
+		Object.values(this.DM.data.nodeMap).forEach(node => {
 			overlayCreators[node.type](node);
 		});
 	};
@@ -79,8 +76,8 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 		if (previous) previous.classList.remove('active');
 		if (current) {
 			current.classList.add('active');
-			this.facade.onInteractionStart();
-		} else this.facade.onInteractionEnd();
+			this.hooks.onInteractionStart();
+		} else this.hooks.onInteractionEnd();
 		this.selectedId = id;
 	};
 
@@ -90,7 +87,7 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 			this.updateOrCreateOverlay(node, node.mdContent, 'markdown');
 			try {
 				if (!node.file) throw unexpectedError;
-				const response = await fetch(this.dataManager.data.canvasBaseDir() + node.file);
+				const response = await fetch(this.DM.data.canvasBaseDir + node.file);
 				const result = await response.text();
 				const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
 				if (frontmatterMatch) {
@@ -101,9 +98,9 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 							acc[key] = value;
 							return acc;
 						}, {});
-					node.mdContent = Purify.sanitize(await this.parser(frontmatterMatch[2].trim()));
+					node.mdContent = Purify.sanitize(this.parser(frontmatterMatch[2].trim()));
 					node.mdFrontmatter = frontmatter;
-				} else node.mdContent = Purify.sanitize(await this.parser(result));
+				} else node.mdContent = Purify.sanitize(this.parser(result));
 			} catch (err) {
 				console.error('[JSONCanvasViewer] Failed to load markdown:', err);
 				node.mdContent = 'Failed to load content.';
@@ -113,7 +110,8 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 	};
 
 	private updateOverlays = () => {
-		this.overlaysLayer.style.transform = `translate(${this.dataManager.data.offsetX()}px, ${this.dataManager.data.offsetY()}px) scale(${this.dataManager.data.scale()})`;
+		const data = this.DM.data;
+		this.overlaysLayer.style.transform = `translate(${data.offsetX}px, ${data.offsetY}px) scale(${data.scale})`;
 	};
 
 	private async updateOrCreateOverlay(node: RuntimeJSONCanvasNode, content: string, type: string) {
@@ -150,7 +148,7 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 			case 'markdown': {
 				overlay.classList.add('markdown-content');
 				const parsedContentWrapper = document.createElement('div');
-				parsedContentWrapper.innerHTML = Purify.sanitize(await this.parser(content || ''));
+				parsedContentWrapper.innerHTML = Purify.sanitize(this.parser(content || ''));
 				parsedContentWrapper.classList.add('parsed-content-wrapper');
 				overlay.appendChild(parsedContentWrapper);
 				break;
@@ -192,10 +190,10 @@ export default class OverlayManager extends OmniUnit<overlayManagerArgs> {
 		overlayBorder.style.borderColor = color.border;
 		overlay.appendChild(overlayBorder);
 		const onStart = () => {
-			if (node.id === this.selectedId) this.facade.onInteractionStart();
+			if (node.id === this.selectedId) this.hooks.onInteractionStart();
 		};
 		const onEnd = () => {
-			if (node.id === this.selectedId) this.facade.onInteractionEnd();
+			if (node.id === this.selectedId) this.hooks.onInteractionEnd();
 		};
 		overlay.addEventListener('pointerenter', onStart);
 		overlay.addEventListener('pointerleave', onEnd);

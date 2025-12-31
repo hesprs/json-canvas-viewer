@@ -1,16 +1,13 @@
-import { manifest, OmniUnit, Reactive, Runner } from 'omnikernel';
+import type { Container } from '@needle-di/core';
+import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
+import { UtilitiesToken } from '@/utilities';
 import style from './styles.scss?inline';
 
-@manifest({
-	name: 'mistouchPreventer',
-	dependsOn: ['dataManager', 'utilities', 'renderer', 'overlayManager'],
-})
-export default class MistouchPreventer extends OmniUnit<UnitArgs> {
+export default class MistouchPreventer {
 	private _preventionContainer: HTMLDivElement | null = null;
-	private _preventionBanner: HTMLDivElement | null = null;
 	private preventMt: boolean = false;
-	private dataManager: Facade;
+	private DM: DataManager;
 	private preventMistouch: {
 		record: boolean;
 		lastX: number;
@@ -29,49 +26,28 @@ export default class MistouchPreventer extends OmniUnit<UnitArgs> {
 		if (this._preventionContainer === null) throw destroyError;
 		return this._preventionContainer;
 	}
-	private get preventionBanner() {
-		if (this._preventionBanner === null) throw destroyError;
-		return this._preventionBanner;
-	}
 
-	constructor(...args: UnitArgs) {
-		super(...args);
-		this.Kernel.register(
-			{
-				startPrevention: this.startPrevention,
-				endPrevention: this.endPrevention,
-				tipText: new Reactive('Frozen to prevent mistouch, click on to unlock.'),
-				preventAtStart: true,
-			},
-			this.facade,
-		);
-		this._preventionBanner = document.createElement('div');
-		this._preventionBanner.className = 'prevention-banner';
-		this.Kernel.register(
-			{ tipText: { mistouchPreventer: new Runner(this.setText, { immediate: true }) } },
-			this.facade,
-		);
-		this.dataManager = this.deps.dataManager;
+	constructor(container: Container) {
+		const preventionBanner = document.createElement('div');
+		preventionBanner.className = 'prevention-banner';
+		preventionBanner.textContent = 'Frozen to prevent mistouch, click on to unlock.';
+		this.DM = container.get(DataManager);
 		this._preventionContainer = document.createElement('div');
 		this._preventionContainer.className = 'prevention-container hidden';
 
-		this.deps.utilities.applyStyles(this._preventionContainer, style);
-		this._preventionContainer.appendChild(this._preventionBanner);
-		(this.dataManager.data.container() as HTMLDivElement).appendChild(this._preventionContainer);
+		container.get(UtilitiesToken).applyStyles(this._preventionContainer, style);
+		this._preventionContainer.appendChild(preventionBanner);
+		this.DM.data.container.appendChild(this._preventionContainer);
 
-		if (this.facade.preventAtStart()) this.startPrevention();
+		this.startPrevention();
 
 		window.addEventListener('pointerdown', this.onPointerDown);
 		window.addEventListener('pointermove', this.onPointerMove);
 		window.addEventListener('pointerup', this.onPointerUp);
 	}
 
-	private setText = () => {
-		this.preventionBanner.innerHTML = this.facade.tipText() as string;
-	};
-
 	private onPointerDown = (e: PointerEvent) => {
-		const bounds = (this.dataManager.data.container() as HTMLDivElement).getBoundingClientRect();
+		const bounds = this.DM.data.container.getBoundingClientRect();
 		if (
 			e.clientX < bounds.left ||
 			e.clientX > bounds.right ||
@@ -107,16 +83,16 @@ export default class MistouchPreventer extends OmniUnit<UnitArgs> {
 		}
 	};
 
-	private startPrevention = () => {
+	startPrevention = () => {
 		this.preventionContainer.classList.remove('hidden');
-		(this.dataManager.data.container() as HTMLDivElement).classList.add('numb');
+		this.DM.data.container.classList.add('numb');
 		this.preventMt = true;
 	};
 
-	private endPrevention = () => {
+	endPrevention = () => {
 		this.preventMt = false;
 		this.preventionContainer.classList.add('hidden');
-		setTimeout(() => (this.dataManager.data.container() as HTMLDivElement).classList.remove('numb'), 50); // minimum delay to prevent triggering undesired button touch
+		setTimeout(() => this.DM.data.container.classList.remove('numb'), 50); // minimum delay to prevent triggering undesired button touch
 	};
 
 	dispose = () => {

@@ -33,9 +33,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate OmniKernel types
-        run: pnpm omnikernel
-
       - name: Run checks
         run: pnpm check
 

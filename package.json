@@ -1,6 +1,6 @@
 {
 	"name": "json-canvas-viewer",
-	"version": "4.0.0",
+	"version": "3.2.0",
 	"description": "An extensible TypeScript-based viewer for JSON Canvas, easy to embed into websites.",
 	"type": "module",
 	"types": "dist/types/src/index.d.ts",
@@ -8,47 +8,43 @@
 	"module": "dist/index.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/hesprs/json-canvas-viewer.git"
+		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
 	},
 	"homepage": "https://github.com/hesprs/json-canvas-viewer#readme",
 	"bugs": {
 		"url": "https://github.com/hesprs/json-canvas-viewer/issues"
 	},
-	"keywords": ["obsidian", "JSONCanvas", "front-end", "HTMLCanvas", "TypeScript"],
+	"keywords": ["obsidian", "json-canvas", "front-end", "html-canvas", "typescript"],
 	"author": {
 		"name": "Hēsperus",
 		"email": "hesprs@outlook.com"
 	},
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	},
 	"license": "MIT",
 	"packageManager": "pnpm@10.24.0",
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.8",
-		"@open-xchange/vite-plugin-es-decorators": "^1.1.1",
-		"@types/node": "^24.10.1",
-		"marked": "^17.0.1",
-		"marked-katex-extension": "^5.1.6",
-		"omnikernel": "file:src/omnikernel-1.0.0-alpha.tgz",
-		"sass": "^1.94.2",
+		"@biomejs/biome": "^2.3.10",
+		"@types/node": "^24.10.4",
+		"sass": "^1.97.1",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
-		"vite": "^7.2.7"
-	},
-	"peerDependencies": {
-		"marked": "^17.0.1"
-	},
-	"peerDependenciesMeta": {
-		"marked": {
-			"optional": true
-		}
+		"vite": "^7.3.0"
 	},
 	"files": ["dist"],
 	"scripts": {
 		"dev": "vite",
 		"lint": "biome check --write",
-		"build": "vite build && tsc && tsc-alias",
+		"build": "vite build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"check": "tsc --noEmit && biome check"
 	},
 	"dependencies": {
-		"dompurify": "^3.3.1"
+		"@needle-di/core": "^1.1.0",
+		"dompurify": "^3.3.1",
+		"micromark": "^4.0.2",
+		"micromark-extension-gfm": "^3.0.0",
+		"pointeract": "^1.0.1"
 	}
 }

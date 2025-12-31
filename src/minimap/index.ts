@@ -1,13 +1,11 @@
-import { manifest, OmniUnit, Reactive } from 'omnikernel';
+import type { Container } from '@needle-di/core';
+import Controller from '@/controller';
+import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
-import type { minimapArgs } from '../../omniTypes';
+import { UtilitiesToken, type utilities } from '@/utilities';
 import style from './styles.scss?inline';
 
-@manifest({
-	name: 'minimap',
-	dependsOn: ['dataManager', 'canvasViewer', 'renderer', 'overlayManager', 'utilities'],
-})
-export default class Minimap extends OmniUnit<minimapArgs> {
+export default class Minimap {
 	private _minimapCtx: CanvasRenderingContext2D | null = null;
 	private _viewportRectangle: HTMLDivElement | null = null;
 	private _minimap: HTMLDivElement | null = null;
@@ -18,8 +16,9 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 		centerX: 0,
 		centerY: 0,
 	};
-	private dataManager: typeof this.deps.dataManager;
-	private utilities: typeof this.deps.utilities;
+	private DM: DataManager;
+	private utilities: typeof utilities;
+	private collapsed = false;
 
 	private get minimap() {
 		if (this._minimap === null) throw destroyError;
@@ -42,23 +41,11 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 		return this._toggleMinimapBtn;
 	}
 
-	constructor(...args: minimapArgs) {
-		super(...args);
-		this.Kernel.register(
-			{
-				collapsed: new Reactive(false),
-				toggleCollapse: this.toggleCollapseButton,
-			},
-			this.facade,
-		);
-		this.Kernel.register(
-			{ onRefresh: { minimap: this.updateViewportRectangle } },
-			this.deps.canvasViewer,
-		);
-		this.dataManager = this.deps.dataManager;
-		this.utilities = this.deps.utilities;
-		this.Kernel.register({ collapsed: { minimap: this.toggleCollapse } }, this.facade);
-		this.Kernel.register({ hooks: { onCanvasFetched: { minimap: this.drawMinimap } } }, this.dataManager);
+	constructor(container: Container) {
+		container.get(Controller).hooks.onRefresh.subscribe(this.updateViewportRectangle);
+		this.DM = container.get(DataManager);
+		this.utilities = container.get(UtilitiesToken);
+		this.DM.hooks.onCanvasFetched.subscribe(this.drawMinimap);
 
 		this._minimapContainer = document.createElement('div');
 		this._minimapContainer.className = 'minimap-container';
@@ -85,26 +72,22 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 		this._minimap.appendChild(this._viewportRectangle);
 		this._minimapContainer.appendChild(this._minimap);
 
-		this.dataManager.data.container().appendChild(this._minimapContainer);
+		this.DM.data.container.appendChild(this._minimapContainer);
 
-		this._minimapContainer.classList.toggle('collapsed', this.facade.collapsed());
+		this._minimapContainer.classList.toggle('collapsed', this.collapsed);
 
-		this._toggleMinimapBtn.addEventListener('click', this.toggleCollapseButton);
-		this.deps.utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
+		this._toggleMinimapBtn.addEventListener('click', this.toggleCollapse);
+		this.utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
 	}
 
-	private toggleCollapseButton = () => {
-		const state = !this.facade.collapsed();
-		this.facade.collapsed(state);
-	};
-
-	private toggleCollapse = (newValue: boolean) => {
-		this.minimapContainer.classList.toggle('collapsed', newValue);
-		if (newValue) this.updateViewportRectangle();
+	toggleCollapse = () => {
+		this.collapsed = !this.collapsed;
+		this.minimapContainer.classList.toggle('collapsed', this.collapsed);
+		if (!this.collapsed) this.updateViewportRectangle();
 	};
 
 	private drawMinimap = () => {
-		const bounds = this.dataManager.data.nodeBounds();
+		const bounds = this.DM.data.nodeBounds;
 		if (!bounds) return;
 		const displayWidth = this.minimap.clientWidth;
 		const displayHeight = this.minimap.clientHeight;
@@ -118,7 +101,7 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 		this.minimapCtx.translate(this.minimapCache.centerX, this.minimapCache.centerY);
 		this.minimapCtx.scale(this.minimapCache.scale, this.minimapCache.scale);
 		this.minimapCtx.translate(-bounds.centerX, -bounds.centerY);
-		const canvasData = this.dataManager.data.canvasData();
+		const canvasData = this.DM.data.canvasData;
 		for (const edge of canvasData.edges) this.drawMinimapEdge(edge);
 		for (const node of canvasData.nodes) this.drawMinimapNode(node);
 		this.minimapCtx.restore();
@@ -135,7 +118,7 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 	};
 
 	private drawMinimapEdge = (edge: JSONCanvasEdge) => {
-		const nodeMap = this.dataManager.data.nodeMap();
+		const nodeMap = this.DM.data.nodeMap;
 		const fromNode = nodeMap[edge.fromNode];
 		const toNode = nodeMap[edge.toNode];
 		if (!fromNode || !toNode) return;
@@ -150,17 +133,15 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 	};
 
 	private updateViewportRectangle = () => {
-		if (this.facade.collapsed()) return;
-		const bounds = this.dataManager.data.nodeBounds();
-		const container = this.dataManager.data.container();
-		const scale = this.dataManager.data.scale();
+		if (this.collapsed) return;
+		const bounds = this.DM.data.nodeBounds;
+		const container = this.DM.data.container;
+		const scale = this.DM.data.scale;
 		if (!bounds) return;
 		const viewWidth = container.clientWidth / scale;
 		const viewHeight = container.clientHeight / scale;
-		const viewportCenterX =
-			-this.dataManager.data.offsetX() / scale + container.clientWidth / (2 * scale);
-		const viewportCenterY =
-			-this.dataManager.data.offsetY() / scale + container.clientHeight / (2 * scale);
+		const viewportCenterX = -this.DM.data.offsetX / scale + container.clientWidth / (2 * scale);
+		const viewportCenterY = -this.DM.data.offsetY / scale + container.clientHeight / (2 * scale);
 		const viewRectX =
 			this.minimapCache.centerX +
 			(viewportCenterX - viewWidth / 2 - bounds.centerX) * this.minimapCache.scale;
@@ -176,7 +157,7 @@ export default class Minimap extends OmniUnit<minimapArgs> {
 	};
 
 	dispose = () => {
-		this.toggleMinimapBtn.removeEventListener('click', this.toggleCollapseButton);
+		this.toggleMinimapBtn.removeEventListener('click', this.toggleCollapse);
 		this.minimapCtx.clearRect(0, 0, this.minimap.clientWidth, this.minimap.clientHeight);
 		this.minimapContainer.remove();
 		this._minimapContainer = null;

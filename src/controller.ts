@@ -1,14 +1,15 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
-import { makeHook } from '@/utilityFunctions';
-import { OptionsToken } from './canvasViewer';
-import style from './styles.scss?inline';
-import { UtilitiesToken, type utilities } from './utilities';
+import { makeHook } from '@/shared';
+import style from '@/styles.scss?inline';
 
-export default class Controller {
+type Options = {
+	noShadow?: boolean;
+};
+
+export default class Controller extends BaseModule<Options> {
 	private animationId: null | number = null;
 	private resizeAnimationId: null | number = null;
-	private utilities: typeof utilities;
 	private DM: DataManager;
 	private perFrame: {
 		lastScale: number;
@@ -30,17 +31,16 @@ export default class Controller {
 		onRefresh: makeHook(),
 	};
 
-	constructor(container: Container) {
-		this.DM = container.get(DataManager);
-		this.utilities = container.get(UtilitiesToken);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.DM = this.container.get(DataManager);
 		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
-		const options = container.get(OptionsToken);
 
-		const parentContainer = options.container;
+		const parentContainer = this.options.container;
 		while (parentContainer.firstElementChild) parentContainer.firstElementChild.remove();
 		parentContainer.innerHTML = '';
 
-		const noShadow = options.noShadow || false;
+		const noShadow = this.options.noShadow || false;
 		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
 
 		this.utilities.applyStyles(realContainer, style);

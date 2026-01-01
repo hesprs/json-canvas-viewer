@@ -1,11 +1,14 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
-import { UtilitiesToken, type utilities } from '@/utilities';
 import style from './styles.scss?inline';
 
-export default class Minimap {
+type Options = {
+	minimapCollapsed?: boolean;
+};
+
+export default class Minimap extends BaseModule<Options> {
 	private _minimapCtx: CanvasRenderingContext2D | null = null;
 	private _viewportRectangle: HTMLDivElement | null = null;
 	private _minimap: HTMLDivElement | null = null;
@@ -17,8 +20,7 @@ export default class Minimap {
 		centerY: 0,
 	};
 	private DM: DataManager;
-	private utilities: typeof utilities;
-	private collapsed = false;
+	private collapsed: boolean;
 
 	private get minimap() {
 		if (this._minimap === null) throw destroyError;
@@ -41,10 +43,11 @@ export default class Minimap {
 		return this._toggleMinimapBtn;
 	}
 
-	constructor(container: Container) {
-		container.get(Controller).hooks.onRefresh.subscribe(this.updateViewportRectangle);
-		this.DM = container.get(DataManager);
-		this.utilities = container.get(UtilitiesToken);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.collapsed = this.options.minimapCollapsed || false;
+		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateViewportRectangle);
+		this.DM = this.container.get(DataManager);
 		this.DM.hooks.onCanvasFetched.subscribe(this.drawMinimap);
 
 		this._minimapContainer = document.createElement('div');

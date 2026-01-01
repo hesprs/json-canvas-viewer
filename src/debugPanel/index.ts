@@ -1,24 +1,22 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
-import { UtilitiesToken, type utilities } from '@/utilities';
 import style from './styles.scss?inline';
 
-export default class DebugPanel {
+export default class DebugPanel extends BaseModule {
 	private _debugPanel: HTMLDivElement | null = null;
 	private DM: DataManager;
-	private utilities: typeof utilities;
 
 	private get debugPanel() {
 		if (!this._debugPanel) throw destroyError;
 		return this._debugPanel;
 	}
 
-	constructor(container: Container) {
-		this.DM = container.get(DataManager);
-		this.utilities = container.get(UtilitiesToken);
-		container.get(Controller).hooks.onRefresh.subscribe(this.update);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.DM = this.container.get(DataManager);
+		this.container.get(Controller).hooks.onRefresh.subscribe(this.update);
 		this._debugPanel = document.createElement('div');
 		this._debugPanel.className = 'debug-panel';
 		const HTMLContainer = this.DM.data.container;
@@ -29,10 +27,7 @@ export default class DebugPanel {
 	private update = () => {
 		const round = this.utilities.round;
 		const data = this.DM.data;
-		this.debugPanel.innerHTML = `
-            <p>Scale: ${round(data.scale, 3)}</p>
-            <p>Offset: ${round(data.offsetX, 1)}, ${round(data.offsetY, 1)}</p>
-        `;
+		this.debugPanel.innerHTML = `<p>Scale: ${round(data.scale, 3)}</p><p>Offset: ${round(data.offsetX, 1)}, ${round(data.offsetY, 1)}</p>`;
 	};
 
 	dispose = () => {

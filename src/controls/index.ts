@@ -1,11 +1,14 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
-import { UtilitiesToken } from '@/utilities';
 import style from './styles.scss?inline';
 
-export default class Controls {
+type Options = {
+	controlsCollapsed?: boolean;
+};
+
+export default class Controls extends BaseModule<Options> {
 	private _controlsPanel: HTMLDivElement | null = null;
 	private _toggleCollapseBtn: HTMLButtonElement | null = null;
 	private _toggleFullscreenBtn: HTMLButtonElement | null = null;
@@ -14,7 +17,7 @@ export default class Controls {
 	private _zoomInBtn: HTMLButtonElement | null = null;
 	private _resetViewBtn: HTMLButtonElement | null = null;
 	private DM: DataManager;
-	private collapsed = false;
+	private collapsed: boolean;
 
 	private get controlsPanel() {
 		if (this._controlsPanel === null) throw destroyError;
@@ -45,16 +48,18 @@ export default class Controls {
 		return this._resetViewBtn;
 	}
 
-	constructor(container: Container) {
-		this.DM = container.get(DataManager);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.collapsed = this.options.controlsCollapsed || false;
+		this.DM = this.container.get(DataManager);
 		this.DM.hooks.onToggleFullscreen.subscribe(this.updateFullscreenBtn);
-		container.get(Controller).hooks.onRefresh.subscribe(this.updateSlider);
+		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateSlider);
 
 		this._controlsPanel = document.createElement('div');
 		this._controlsPanel.className = 'controls';
 		this._controlsPanel.classList.toggle('collapsed', this.collapsed);
 
-		container.get(UtilitiesToken).applyStyles(this._controlsPanel, style);
+		this.utilities.applyStyles(this._controlsPanel, style);
 
 		this._toggleCollapseBtn = document.createElement('button');
 		this._toggleCollapseBtn.className = 'collapse-button';

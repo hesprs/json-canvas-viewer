@@ -1,31 +1,44 @@
-import { Container, InjectionToken } from '@needle-di/core';
+import { Container } from '@needle-di/core';
+import type { GeneralModuleCtor } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
-import type { Module, Options } from '@/declarations';
+import type { ModuleInput, Options } from '@/declarations';
 import InteractionHandler from '@/interactionHandler';
 import OverlayManager from '@/overlayManager';
 import Renderer from '@/renderer';
-import { UtilitiesToken, utilities } from '@/utilities';
+import utilities from '@/utilities';
 
-export const OptionsToken = new InjectionToken<Options>('Options');
+type InternalModules = [
+	typeof DataManager,
+	typeof Controller,
+	typeof OverlayManager,
+	typeof InteractionHandler,
+	typeof Renderer,
+];
 
-export class JSONCanvasViewer {
-	private options: Options;
-	private container: Container;
-	allModules: Array<Module>;
-	constructor(options: Options, modules: Array<Module> = []) {
+export class JSONCanvasViewer<M extends ModuleInput = []> {
+	private options: Options<[...InternalModules, ...M]>;
+	private allModules: ModuleInput;
+	container: Container;
+
+	constructor(options: Options<[...InternalModules, ...M]>, modules?: M) {
 		this.container = new Container();
 		this.options = options;
-		const bind = (Class: Module) => {
+		const bind = (Class: GeneralModuleCtor) => {
 			this.container.bind({
 				provide: Class,
-				useFactory: () => new Class(this.container),
+				useFactory: () => new Class(this.container, this.options, utilities),
 			});
 		};
-		this.allModules = [Controller, DataManager, InteractionHandler, Renderer, OverlayManager, ...modules];
+		this.allModules = [
+			DataManager,
+			Controller,
+			OverlayManager,
+			InteractionHandler,
+			Renderer,
+			...(modules || []),
+		];
 
-		this.container.bind({ provide: OptionsToken, useValue: options });
-		this.container.bind({ provide: UtilitiesToken, useValue: utilities });
 		this.allModules.forEach(bind);
 		this.allModules.forEach(Module => {
 			this.container.get(Module);

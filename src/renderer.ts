@@ -1,8 +1,7 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
+import DataManager from '@/dataManager';
 import { destroyError, unexpectedError } from '@/shared';
-import DataManager from './dataManager';
-import { UtilitiesToken, type utilities } from './utilities';
 
 interface viewport {
 	left: number;
@@ -21,11 +20,10 @@ const NODE_RADIUS = 12;
 const FONT_COLOR = '#fff';
 const CSS_ZOOM_REDRAW_INTERVAL = 500;
 
-export default class Renderer {
+export default class Renderer extends BaseModule {
 	private _canvas: HTMLCanvasElement | null;
 	private ctx: CanvasRenderingContext2D;
 	private DM: DataManager;
-	private utilities: typeof utilities;
 	private zoomInOptimize: {
 		lastDrawnScale: number;
 		lastDrawnViewport: viewport;
@@ -48,12 +46,12 @@ export default class Renderer {
 		return this._canvas;
 	}
 
-	constructor(container: Container) {
-		const controller = container.get(Controller);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		const controller = this.container.get(Controller);
 		controller.hooks.onRefresh.subscribe(this.redraw);
 		controller.hooks.onResize.subscribe(this.optimizeDPR);
-		this.DM = container.get(DataManager);
-		this.utilities = container.get(UtilitiesToken);
+		this.DM = this.container.get(DataManager);
 		this._canvas = document.createElement('canvas');
 		this._canvas.className = 'main-canvas';
 		this.ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;

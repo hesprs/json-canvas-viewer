@@ -1,10 +1,16 @@
-import type { Container } from '@needle-di/core';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
-import { UtilitiesToken } from '@/utilities';
 import style from './styles.scss?inline';
 
-export default class MistouchPreventer {
+type Options = {
+	mistouchPreventer?: {
+		preventAtStart?: boolean;
+		labelText?: string;
+	};
+};
+
+export default class MistouchPreventer extends BaseModule<Options> {
 	private _preventionContainer: HTMLDivElement | null = null;
 	private preventMt: boolean = false;
 	private DM: DataManager;
@@ -27,19 +33,28 @@ export default class MistouchPreventer {
 		return this._preventionContainer;
 	}
 
-	constructor(container: Container) {
+	constructor(...args: BaseArgs) {
+		super(...args);
+		const options = Object.assign(
+			{
+				preventAtStart: true,
+				labelText: 'Click on to unlock.',
+			},
+			this.options.mistouchPreventer || {},
+		);
+
 		const preventionBanner = document.createElement('div');
 		preventionBanner.className = 'prevention-banner';
-		preventionBanner.textContent = 'Frozen to prevent mistouch, click on to unlock.';
-		this.DM = container.get(DataManager);
+		preventionBanner.textContent = options.labelText;
+		this.DM = this.container.get(DataManager);
 		this._preventionContainer = document.createElement('div');
 		this._preventionContainer.className = 'prevention-container hidden';
 
-		container.get(UtilitiesToken).applyStyles(this._preventionContainer, style);
+		this.utilities.applyStyles(this._preventionContainer, style);
 		this._preventionContainer.appendChild(preventionBanner);
 		this.DM.data.container.appendChild(this._preventionContainer);
 
-		this.startPrevention();
+		if (options.preventAtStart) this.startPrevention();
 
 		window.addEventListener('pointerdown', this.onPointerDown);
 		window.addEventListener('pointermove', this.onPointerMove);

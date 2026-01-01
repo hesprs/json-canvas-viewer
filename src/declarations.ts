@@ -1,3 +1,6 @@
+import type { GeneralModuleCtor } from '@/baseModule';
+import type utilities from '@/utilities';
+
 declare global {
 	interface JSONCanvasNode {
 		id: string;
@@ -37,11 +40,6 @@ declare global {
 			frontmatter: Record<string, string>;
 		};
 	}
-
-	module '*.scss?inline' {
-		const content: string;
-		export default content;
-	}
 }
 
 export type Coordinates = {
@@ -56,7 +54,7 @@ export type RuntimeData = {
 	canvasData: JSONCanvas;
 	nodeMap: Record<string, JSONCanvasNode>;
 	canvasBaseDir: string;
-	nodeBounds: nodeBounds;
+	nodeBounds: NodeBounds;
 	container: HTMLDivElement;
 };
 
@@ -73,15 +71,29 @@ export type NodeBounds = {
 
 // biome-ignore lint/suspicious/noExplicitAny: General Type
 export type GeneralArguments = Array<any>;
+// biome-ignore lint/suspicious/noExplicitAny: General Type
+export type GeneralObject = Record<Indexable, any>;
+// biome-ignore lint/suspicious/noExplicitAny: General Type
+export type GeneralFunction = (...args: GeneralArguments) => any;
+// biome-ignore lint/complexity/noBannedTypes: General Type
+export type Empty = {};
+type Indexable = string | number | symbol;
+// biome-ignore lint/suspicious/noExplicitAny: General Type
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+	? I
+	: never;
+type AllModuleInstances<T extends ModuleInput> = InstanceType<T[number]>;
 
-export type Options = {
+export type DefaultOptions = {
 	container: HTMLElement;
 	canvasPath: string;
-	noShadow?: boolean;
-	interactions?: {
-		proControlSchema?: boolean;
-		zoomFactor?: number;
-		lockControlSchema?: boolean;
-	};
 };
-export type Module = new (container: Container) => unknown;
+export type Utilities = typeof utilities;
+
+export type ModuleInput = Array<GeneralModuleCtor>;
+
+export type Options<T extends ModuleInput> = Omit<
+	UnionToIntersection<AllModuleInstances<T>['options']>,
+	keyof DefaultOptions
+> &
+	DefaultOptions;

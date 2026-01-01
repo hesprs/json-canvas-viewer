@@ -1,15 +1,12 @@
-import type { Container } from '@needle-di/core';
-import { OptionsToken } from '@/canvasViewer';
-import type { Coordinates, NodeBounds, Options } from '@/declarations';
-import { unexpectedError } from '@/shared';
-import { makeHook } from '@/utilityFunctions';
+import type { Coordinates, NodeBounds } from '@/declarations';
+import { makeHook, unexpectedError } from '@/shared';
+import { BaseModule } from './baseModule';
 
 const GRID_CELL_SIZE = 800;
 const INITIAL_VIEWPORT_PADDING = 100;
 
-export default class DataManager {
+export default class DataManager extends BaseModule {
 	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
-	private options: Options;
 	hooks = {
 		onToggleFullscreen: makeHook<[boolean]>(),
 		onCanvasFetched: makeHook(),
@@ -24,10 +21,6 @@ export default class DataManager {
 		scale: 1,
 		container: document.createElement('div'),
 	};
-
-	constructor(container: Container) {
-		this.options = container.get(OptionsToken);
-	}
 
 	loadCanvas = async () => {
 		const path = this.options.canvasPath;

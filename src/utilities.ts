@@ -1,9 +1,6 @@
-import { InjectionToken } from '@needle-di/core';
 import { unexpectedError } from '@/shared';
 
-export const UtilitiesToken = new InjectionToken<typeof utilities>('utilities');
-
-export const utilities = {
+export default {
 	round,
 	resizeCanvasForDPR,
 	applyStyles,

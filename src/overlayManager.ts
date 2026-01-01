@@ -1,22 +1,19 @@
-import type { Container } from '@needle-di/core';
 import Purify from 'dompurify';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
+import DataManager from '@/dataManager';
 import InteractionHandler from '@/interactionHandler';
-import { destroyError, type RuntimeJSONCanvasNode, unexpectedError } from '@/shared';
-import DataManager from './dataManager';
-import { UtilitiesToken, type utilities } from './utilities';
-import { makeHook } from './utilityFunctions';
+import { destroyError, makeHook, type RuntimeJSONCanvasNode, unexpectedError } from '@/shared';
 
-export default class OverlayManager {
+export default class OverlayManager extends BaseModule {
 	private _overlaysLayer: HTMLDivElement | null = document.createElement('div');
 	private overlays: Record<string, HTMLDivElement> = {}; // { id: node } the overlays in viewport
 	private selectedId: string | null = null;
 	private eventListeners: Record<string, Array<EventListener | null>> = {};
 	private DM: DataManager;
 	private IH: () => InteractionHandler;
-	private utilities: typeof utilities;
 	private parser = (markdown: string) =>
 		micromark(markdown, { extensions: [gfm()], htmlExtensions: [gfmHtml()] });
 
@@ -30,11 +27,11 @@ export default class OverlayManager {
 		onInteractionEnd: makeHook(),
 	};
 
-	constructor(container: Container) {
-		this.DM = container.get(DataManager);
-		this.IH = container.get(InteractionHandler, { lazy: true });
-		const controller = container.get(Controller);
-		this.utilities = container.get(UtilitiesToken);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.DM = this.container.get(DataManager);
+		this.IH = this.container.get(InteractionHandler, { lazy: true });
+		const controller = this.container.get(Controller);
 		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
 		controller.hooks.onRefresh.subscribe(this.updateOverlays);
 

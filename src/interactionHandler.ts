@@ -1,4 +1,3 @@
-import type { Container } from '@needle-di/core';
 import {
 	Click,
 	type Ctors,
@@ -9,23 +8,32 @@ import {
 	type StdEvents,
 	WheelPanZoom,
 } from 'pointeract';
-import { OptionsToken } from '@/canvasViewer';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
 import OverlayManager from '@/overlayManager';
-import { makeHook } from './utilityFunctions';
+import { makeHook } from '@/shared';
 
-export default class InteractionHandler {
+type Options = {
+	interactions?: {
+		proControlSchema?: boolean;
+		zoomFactor?: number;
+		lockControlSchema?: boolean;
+	};
+};
+
+export default class InteractionHandler extends BaseModule<Options> {
 	private pointeract: Pointeract<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
 	private DM: DataManager;
 	private OM: OverlayManager;
 	onClick = makeHook<[string | null]>();
 
-	constructor(container: Container) {
-		this.DM = container.get(DataManager);
-		this.OM = container.get(OverlayManager);
+	constructor(...args: BaseArgs) {
+		super(...args);
+		this.DM = this.container.get(DataManager);
+		this.OM = this.container.get(OverlayManager);
 		const options = Object.assign(
 			{ proControlSchema: false, zoomFactor: 0.1, lockControlSchema: false },
-			container.get(OptionsToken).interactions || {},
+			this.options.interactions || {},
 		);
 		this.pointeract = new Pointeract(
 			this.DM.data.container,
@@ -34,7 +42,7 @@ export default class InteractionHandler {
 		);
 		this.startInteraction = this.pointeract.start;
 		this.stopInteraction = this.pointeract.stop;
-		const OM = container.get(OverlayManager);
+		const OM = this.container.get(OverlayManager);
 		OM.hooks.onInteractionStart.subscribe(this.stopInteraction);
 		OM.hooks.onInteractionEnd.subscribe(this.startInteraction);
 		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);

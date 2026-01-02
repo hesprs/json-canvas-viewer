@@ -15,7 +15,8 @@ A **TypeScript-based** viewer for **JSON Canvas** files. View and interact with 
 
 This project is derived from [sofanati-nour/obsidian-canvas-web-renderer](https://github.com/sofanati-nour/obsidian-canvas-web-renderer), but is far more developed and optimized.
 
-Access our documentation at [project wiki](https://github.com/hesprs/json-canvas-viewer/wiki). For more about **JSON Canvas**, also known as **Obsidian Canvas**, please visit [jsoncanvas.org](https://jsoncanvas.org/).
+- **Documentation**: [project wiki](https://github.com/hesprs/json-canvas-viewer/wiki)
+- **More about JSON Canvas**: [jsoncanvas.org](https://jsoncanvas.org/)
 
 ## 🐶 Features
 

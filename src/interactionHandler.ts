@@ -4,6 +4,7 @@ import {
 	Drag,
 	MultitouchPanZoom,
 	Pointeract,
+	type Options as PointeractOptions,
 	PreventDefault,
 	type StdEvents,
 	WheelPanZoom,
@@ -11,30 +12,23 @@ import {
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
 import OverlayManager from '@/overlayManager';
-import { makeHook } from '@/shared';
+import utilities from '@/utilities';
 
 type Options = {
-	interactions?: {
-		proControlSchema?: boolean;
-		zoomFactor?: number;
-		lockControlSchema?: boolean;
-	};
+	pointeract?: PointeractOptions<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
 };
 
 export default class InteractionHandler extends BaseModule<Options> {
 	private pointeract: Pointeract<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
 	private DM: DataManager;
-	private OM: OverlayManager;
-	onClick = makeHook<[string | null]>();
+	onClick = utilities.makeHook<[string | null]>();
 
 	constructor(...args: BaseArgs) {
 		super(...args);
 		this.DM = this.container.get(DataManager);
-		this.OM = this.container.get(OverlayManager);
-		const options = Object.assign(
-			{ proControlSchema: false, zoomFactor: 0.1, lockControlSchema: false },
-			this.options.interactions || {},
-		);
+		const options = Object.assign(this.options.pointeract || {}, {
+			coordinateOutput: 'relative',
+		});
 		this.pointeract = new Pointeract(
 			this.DM.data.container,
 			[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom],

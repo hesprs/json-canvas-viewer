@@ -6,7 +6,6 @@ import type { ModuleInput, Options } from '@/declarations';
 import InteractionHandler from '@/interactionHandler';
 import OverlayManager from '@/overlayManager';
 import Renderer from '@/renderer';
-import utilities from '@/utilities';
 
 type InternalModules = [
 	typeof DataManager,
@@ -27,7 +26,7 @@ export class JSONCanvasViewer<M extends ModuleInput = []> {
 		const bind = (Class: GeneralModuleCtor) => {
 			this.container.bind({
 				provide: Class,
-				useFactory: () => new Class(this.container, this.options, utilities),
+				useFactory: () => new Class(this.container, this.options),
 			});
 		};
 		this.allModules = [

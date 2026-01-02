@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 import style from './styles.scss?inline';
 
 type Options = {
@@ -53,7 +54,7 @@ export default class Minimap extends BaseModule<Options> {
 		this._minimapContainer = document.createElement('div');
 		this._minimapContainer.className = 'minimap-container';
 
-		this.utilities.applyStyles(this._minimapContainer, style);
+		utilities.applyStyles(this._minimapContainer, style);
 
 		this._toggleMinimapBtn = document.createElement('button');
 		this._toggleMinimapBtn.className = 'toggle-minimap collapse-button';
@@ -80,7 +81,7 @@ export default class Minimap extends BaseModule<Options> {
 		this._minimapContainer.classList.toggle('collapsed', this.collapsed);
 
 		this._toggleMinimapBtn.addEventListener('click', this.toggleCollapse);
-		this.utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
+		utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
 	}
 
 	toggleCollapse = () => {
@@ -111,11 +112,11 @@ export default class Minimap extends BaseModule<Options> {
 	};
 
 	private drawMinimapNode = (node: JSONCanvasNode) => {
-		const colors = this.utilities.getColor(node.color);
+		const colors = utilities.getColor(node.color);
 		const radius = 25;
 		this.minimapCtx.fillStyle = colors.border;
 		this.minimapCtx.globalAlpha = 0.3;
-		this.utilities.drawRoundRect(this.minimapCtx, node.x, node.y, node.width, node.height, radius);
+		utilities.drawRoundRect(this.minimapCtx, node.x, node.y, node.width, node.height, radius);
 		this.minimapCtx.fill();
 		this.minimapCtx.globalAlpha = 1.0;
 	};
@@ -125,8 +126,8 @@ export default class Minimap extends BaseModule<Options> {
 		const fromNode = nodeMap[edge.fromNode];
 		const toNode = nodeMap[edge.toNode];
 		if (!fromNode || !toNode) return;
-		const [startX, startY] = this.utilities.getAnchorCoord(fromNode, edge.fromSide);
-		const [endX, endY] = this.utilities.getAnchorCoord(toNode, edge.toSide);
+		const [startX, startY] = utilities.getAnchorCoord(fromNode, edge.fromSide);
+		const [endX, endY] = utilities.getAnchorCoord(toNode, edge.toSide);
 		this.minimapCtx.beginPath();
 		this.minimapCtx.moveTo(startX, startY);
 		this.minimapCtx.lineTo(endX, endY);

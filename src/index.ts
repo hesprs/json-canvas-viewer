@@ -4,6 +4,8 @@ export { default as Controls } from '@/controls';
 export { default as DebugPanel } from '@/debugPanel';
 export { default as Minimap } from '@/minimap';
 export { default as MistouchPreventer } from '@/mistouchPreventer';
+export { default as renderToString } from '@/renderToString';
+export { default as CanvasUtils } from '@/utilities';
 
 import Controller from '@/controller';
 import DataManager from '@/dataManager';

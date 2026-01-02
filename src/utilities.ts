@@ -1,4 +1,4 @@
-import { unexpectedError } from '@/shared';
+import type { GeneralArguments } from '@/declarations';
 
 export default {
 	round,
@@ -7,6 +7,8 @@ export default {
 	drawRoundRect,
 	getAnchorCoord,
 	getColor,
+	resolvePath,
+	makeHook,
 };
 
 function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
@@ -101,7 +103,10 @@ function getColor(colorIndex: string = '0') {
 function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
 	const dpr = window.devicePixelRatio || 1;
 	const ctx = canvas.getContext('2d');
-	if (!ctx) throw unexpectedError;
+	if (!ctx)
+		throw new Error(
+			'[JSONCanvasViewer] This error is unexpected, probably caused uncontrollable runtime errors. Please contact the developer and show how to reproduce.',
+		);
 	canvas.width = Math.round(width * dpr);
 	canvas.height = Math.round(height * dpr);
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -111,4 +116,35 @@ function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: nu
 function round(roundedNum: number, digits: number) {
 	const factor = 10 ** digits;
 	return Math.round(roundedNum * factor) / factor;
+}
+
+function resolvePath(path: string) {
+	if (/^https?:\/\//.test(path)) return path.substring(0, path.lastIndexOf('/') + 1);
+	else {
+		const lastSlash = path.lastIndexOf('/');
+		return lastSlash !== -1 ? path.substring(0, lastSlash + 1) : './';
+	}
+}
+
+function makeHook<Args extends GeneralArguments = []>() {
+	type MatchingFunc = (...args: Args) => unknown;
+	type Hook = {
+		(...args: Args): void;
+		subs: Set<MatchingFunc>;
+		subscribe(callback: MatchingFunc): void;
+		unsubscribe(callback: MatchingFunc): void;
+	};
+	const result: Hook = (...args: Args) => {
+		result.subs.forEach(callback => {
+			callback(...args);
+		});
+	};
+	result.subs = new Set();
+	result.subscribe = (callback: MatchingFunc) => {
+		result.subs.add(callback);
+	};
+	result.unsubscribe = (callback: MatchingFunc) => {
+		result.subs.delete(callback);
+	};
+	return result;
 }

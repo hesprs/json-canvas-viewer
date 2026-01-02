@@ -1,21 +1,23 @@
-import Purify from 'dompurify';
 import { micromark } from 'micromark';
-import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import InteractionHandler from '@/interactionHandler';
-import { destroyError, makeHook, type RuntimeJSONCanvasNode, unexpectedError } from '@/shared';
+import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 
-export default class OverlayManager extends BaseModule {
+type Options = {
+	micromark?: Parameters<typeof micromark>[1];
+};
+
+export default class OverlayManager extends BaseModule<Options> {
 	private _overlaysLayer: HTMLDivElement | null = document.createElement('div');
 	private overlays: Record<string, HTMLDivElement> = {}; // { id: node } the overlays in viewport
 	private selectedId: string | null = null;
 	private eventListeners: Record<string, Array<EventListener | null>> = {};
 	private DM: DataManager;
 	private IH: () => InteractionHandler;
-	private parser = (markdown: string) =>
-		micromark(markdown, { extensions: [gfm()], htmlExtensions: [gfmHtml()] });
+	private parse: (markdown: string) => string;
 
 	private get overlaysLayer() {
 		if (!this._overlaysLayer) throw destroyError;
@@ -23,12 +25,13 @@ export default class OverlayManager extends BaseModule {
 	}
 
 	hooks = {
-		onInteractionStart: makeHook(),
-		onInteractionEnd: makeHook(),
+		onInteractionStart: utilities.makeHook(),
+		onInteractionEnd: utilities.makeHook(),
 	};
 
 	constructor(...args: BaseArgs) {
 		super(...args);
+		this.parse = (markdown: string) => micromark(markdown, this.options.micromark);
 		this.DM = this.container.get(DataManager);
 		this.IH = this.container.get(InteractionHandler, { lazy: true });
 		const controller = this.container.get(Controller);
@@ -43,27 +46,28 @@ export default class OverlayManager extends BaseModule {
 	private onFetched = () => {
 		this.IH().onClick.subscribe(this.select);
 		const cbd = this.DM.data.canvasBaseDir;
-		const overlayCreators = {
-			text: (node: RuntimeJSONCanvasNode) => {
-				if (!node.text) throw unexpectedError;
-				this.updateOrCreateOverlay(node, node.text, 'text');
-			},
-			file: (node: RuntimeJSONCanvasNode) => {
-				if (!node.file) throw unexpectedError;
-				if (node.file.match(/\.md$/i)) this.loadMarkdownForNode(node);
-				else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
-					this.updateOrCreateOverlay(node, cbd + node.file, 'image');
-				else if (node.file.match(/\.(mp3|wav)$/i))
-					this.updateOrCreateOverlay(node, cbd + node.file, 'audio');
-			},
-			link: (node: RuntimeJSONCanvasNode) => {
-				if (!node.url) throw unexpectedError;
-				this.updateOrCreateOverlay(node, node.url, 'link');
-			},
-			group: () => {},
+		const createOverlay = async (node: JSONCanvasNode) => {
+			switch (node.type) {
+				case 'text': {
+					this.updateOverlay(node, node.text, 'text');
+					break;
+				}
+				case 'file': {
+					if (node.file.match(/\.md$/i)) this.loadMarkdownForNode(node);
+					else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
+						this.updateOverlay(node, cbd + node.file, 'image');
+					else if (node.file.match(/\.(mp3|wav)$/i))
+						this.updateOverlay(node, cbd + node.file, 'audio');
+					break;
+				}
+				case 'link': {
+					this.updateOverlay(node, node.url, 'link');
+					break;
+				}
+			}
 		};
 		Object.values(this.DM.data.nodeMap).forEach(node => {
-			overlayCreators[node.type](node);
+			createOverlay(node);
 		});
 	};
 
@@ -78,32 +82,20 @@ export default class OverlayManager extends BaseModule {
 		this.selectedId = id;
 	};
 
-	private loadMarkdownForNode = async (node: RuntimeJSONCanvasNode) => {
-		if (!node.mdContent) {
-			node.mdContent = 'Loading...';
-			this.updateOrCreateOverlay(node, node.mdContent, 'markdown');
-			try {
-				if (!node.file) throw unexpectedError;
-				const response = await fetch(this.DM.data.canvasBaseDir + node.file);
-				const result = await response.text();
-				const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-				if (frontmatterMatch) {
-					const frontmatter = frontmatterMatch[1]
-						.split('\n')
-						.reduce((acc: Record<string, string>, line) => {
-							const [key, value] = line.split(':').map(s => s.trim());
-							acc[key] = value;
-							return acc;
-						}, {});
-					node.mdContent = Purify.sanitize(this.parser(frontmatterMatch[2].trim()));
-					node.mdFrontmatter = frontmatter;
-				} else node.mdContent = Purify.sanitize(this.parser(result));
-			} catch (err) {
-				console.error('[JSONCanvasViewer] Failed to load markdown:', err);
-				node.mdContent = 'Failed to load content.';
-			}
+	private loadMarkdownForNode = async (node: JSONCanvasFileNode) => {
+		this.updateOverlay(node, 'Loading...', 'text');
+		let parsedContent: string;
+		try {
+			const response = await fetch(this.DM.data.canvasBaseDir + node.file);
+			const result = await response.text();
+			const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+			if (frontmatterMatch) parsedContent = this.parse(frontmatterMatch[2]);
+			else parsedContent = this.parse(result);
+		} catch (err) {
+			console.error('[JSONCanvasViewer] Failed to load markdown:', err);
+			parsedContent = 'Failed to load content.';
 		}
-		this.updateOrCreateOverlay(node, node.mdContent, 'markdown');
+		this.updateOverlay(node, parsedContent, 'text');
 	};
 
 	private updateOverlays = () => {
@@ -111,41 +103,34 @@ export default class OverlayManager extends BaseModule {
 		this.overlaysLayer.style.transform = `translate(${data.offsetX}px, ${data.offsetY}px) scale(${data.scale})`;
 	};
 
-	private async updateOrCreateOverlay(node: RuntimeJSONCanvasNode, content: string, type: string) {
+	private updateOverlay(node: JSONCanvasNode, content: string, type: string) {
 		let element = this.overlays[node.id];
 		if (!element) {
-			element = await this.constructOverlay(node, content, type);
+			element = this.constructOverlay(node, content, type);
 			this.overlaysLayer.appendChild(element);
 			this.overlays[node.id] = element;
 			element.style.left = `${node.x}px`;
 			element.style.top = `${node.y}px`;
 			element.style.width = `${node.width}px`;
 			element.style.height = `${node.height}px`;
-		}
-		if (element.style.display === 'none') element.style.display = 'flex';
-		if (type === 'markdown') {
+		} else if (type === 'text') {
 			const parsedContentContainer = element.getElementsByClassName('parsed-content-wrapper')[0];
-			if (!node.mdContent) throw unexpectedError;
-			if (parsedContentContainer.innerHTML !== node.mdContent)
-				parsedContentContainer.innerHTML = node.mdContent;
-			if (!element.classList.contains('rtl') && node.mdFrontmatter?.direction === 'rtl')
-				element.classList.add('rtl');
+			parsedContentContainer.innerHTML = content;
 		}
 	}
 
-	private async constructOverlay(node: RuntimeJSONCanvasNode, content: string, type: string) {
-		const color = this.utilities.getColor(node.color);
+	private constructOverlay(node: JSONCanvasNode, content: string, type: string) {
+		const color = utilities.getColor(node.color);
 		const overlay = document.createElement('div');
 		overlay.classList.add('overlay-container');
 		overlay.id = node.id;
 		overlay.style.backgroundColor = color.background;
 		overlay.style.setProperty('--active-color', color.active);
 		switch (type) {
-			case 'text':
-			case 'markdown': {
+			case 'text': {
 				overlay.classList.add('markdown-content');
 				const parsedContentWrapper = document.createElement('div');
-				parsedContentWrapper.innerHTML = Purify.sanitize(this.parser(content || ''));
+				parsedContentWrapper.innerHTML = this.parse(content || '');
 				parsedContentWrapper.classList.add('parsed-content-wrapper');
 				overlay.appendChild(parsedContentWrapper);
 				break;

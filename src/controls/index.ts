@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 import style from './styles.scss?inline';
 
 type Options = {
@@ -59,7 +60,7 @@ export default class Controls extends BaseModule<Options> {
 		this._controlsPanel.className = 'controls';
 		this._controlsPanel.classList.toggle('collapsed', this.collapsed);
 
-		this.utilities.applyStyles(this._controlsPanel, style);
+		utilities.applyStyles(this._controlsPanel, style);
 
 		this._toggleCollapseBtn = document.createElement('button');
 		this._toggleCollapseBtn.className = 'collapse-button';
@@ -108,7 +109,11 @@ export default class Controls extends BaseModule<Options> {
 		this._resetViewBtn.addEventListener('click', this.DM.resetView);
 		this._toggleFullscreenBtn.addEventListener('click', this.toggleFullscreen);
 	}
-	toggleCollapse = () => this.controlsPanel.classList.toggle('collapsed');
+	toggleCollapse = () => {
+		this.collapsed = !this.collapsed;
+		this.controlsPanel.classList.toggle('collapsed', this.collapsed);
+		if (!this.collapsed) this.updateSlider();
+	};
 	private zoomIn = () => this.DM.zoom(1.1, this.DM.middleViewer());
 	private zoomOut = () => this.DM.zoom(1 / 1.1, this.DM.middleViewer());
 	private slide = () => this.DM.zoomToScale(1.1 ** Number(this.zoomSlider.value), this.DM.middleViewer());
@@ -122,6 +127,7 @@ export default class Controls extends BaseModule<Options> {
 	private toggleFullscreen = () => this.DM.shiftFullscreen('toggle');
 
 	private updateSlider = () => {
+		if (this.collapsed) return;
 		this.zoomSlider.value = String(this.scaleToSlider(this.DM.data.scale));
 	};
 	private scaleToSlider = (scale: number) => Math.log(scale) / Math.log(1.1);

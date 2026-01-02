@@ -1,6 +1,7 @@
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 import style from './styles.scss?inline';
 
 type Options = {
@@ -50,7 +51,7 @@ export default class MistouchPreventer extends BaseModule<Options> {
 		this._preventionContainer = document.createElement('div');
 		this._preventionContainer.className = 'prevention-container hidden';
 
-		this.utilities.applyStyles(this._preventionContainer, style);
+		utilities.applyStyles(this._preventionContainer, style);
 		this._preventionContainer.appendChild(preventionBanner);
 		this.DM.data.container.appendChild(this._preventionContainer);
 

@@ -14,7 +14,7 @@ export default defineConfig({
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['dompurify', 'pointeract', 'micromark', 'micromark-extension-gfm'],
+			external: ['@needle-di/core', 'pointeract', 'micromark'],
 		},
 		lib: {
 			entry: {

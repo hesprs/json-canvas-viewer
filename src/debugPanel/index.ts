@@ -1,8 +1,7 @@
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
-import { destroyError } from '@/shared';
-import utilities from '@/utilities';
+import utilities, { destroyError } from '@/utilities';
 import style from './styles.scss?inline';
 
 export default class DebugPanel extends BaseModule {

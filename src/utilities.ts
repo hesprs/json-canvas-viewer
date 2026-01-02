@@ -11,6 +11,8 @@ export default {
 	makeHook,
 };
 
+export const destroyError = new Error("[JSONCanvasViewer] Resource hasn't been set up or has been disposed.");
+
 function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
 	const style = document.createElement('style');
 	style.innerHTML = styleString;

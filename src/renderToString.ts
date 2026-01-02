@@ -1,5 +1,5 @@
 import { micromark } from 'micromark';
-import utilities from './utilities';
+import utilities from '@/utilities';
 
 type Parse = (markdown: string) => string;
 

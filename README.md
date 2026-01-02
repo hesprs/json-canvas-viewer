@@ -34,6 +34,7 @@ This project is derived from [sofanati-nour/obsidian-canvas-web-renderer](https:
 - Mistouch prevention (optional extension)
 - Responsive design with mobile and touchpad adaptation
 - TypeScript native support
+- [Server-side rendering (**SSR**) support](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB-Development#server-side-rendering)
 - 🧩 Out-of-the-box **extensibility** and tree-shaking
 - 🔥 **More performant** than rendering canvases in Obsidian!
 

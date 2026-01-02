@@ -53,6 +53,12 @@ declare global {
 		nodes?: Array<JSONCanvasNode>;
 		edges?: Array<JSONCanvasEdge>;
 	}
+
+	//@ts-expect-error: TS doesn't recognize this as a module
+	declare module '*.scss?inline' {
+		const content: string;
+		export default content;
+	}
 }
 
 export type Coordinates = {

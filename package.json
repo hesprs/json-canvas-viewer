@@ -19,6 +19,7 @@
 		"name": "Hēsperus",
 		"email": "hesprs@outlook.com"
 	},
+	"sideEffects": false,
 	"publishConfig": {
 		"provenance": true,
 		"access": "public"

@@ -1,24 +1,41 @@
 import type { GeneralModuleCtor } from '@/baseModule';
-import type utilities from '@/utilities';
 
 declare global {
-	interface JSONCanvasNode {
+	interface JSONCanvasGenericNode {
 		id: string;
 		type: 'group' | 'file' | 'text' | 'link';
 		x: number;
 		y: number;
 		width: number;
 		height: number;
+		styleAttributes?: Record<string, string>;
+		color?: string;
+	}
+
+	interface JSONCanvasGroupNode extends JSONCanvasGenericNode {
+		type: 'group';
 		label?: string;
 		background?: string;
 		backgroundStyle?: 'cover' | 'ratio' | 'repeat';
-		styleAttributes?: Record<string, string>;
-		color?: string;
-		text?: string;
-		file?: string;
-		subpath?: string;
-		url?: string;
 	}
+
+	interface JSONCanvasFileNode extends JSONCanvasGenericNode {
+		type: 'file';
+		file: string;
+		subpath?: string;
+	}
+
+	interface JSONCanvasTextNode extends JSONCanvasGenericNode {
+		type: 'text';
+		text: string;
+	}
+
+	interface JSONCanvasLinkNode extends JSONCanvasGenericNode {
+		type: 'link';
+		url: string;
+	}
+
+	type JSONCanvasNode = JSONCanvasGroupNode | JSONCanvasFileNode | JSONCanvasTextNode | JSONCanvasLinkNode;
 
 	interface JSONCanvasEdge {
 		id: string;
@@ -33,12 +50,8 @@ declare global {
 	}
 
 	interface JSONCanvas {
-		nodes: Array<JSONCanvasNode>;
-		edges: Array<JSONCanvasEdge>;
-		metadata: {
-			version: string;
-			frontmatter: Record<string, string>;
-		};
+		nodes?: Array<JSONCanvasNode>;
+		edges?: Array<JSONCanvasEdge>;
 	}
 }
 
@@ -88,7 +101,6 @@ export type DefaultOptions = {
 	container: HTMLElement;
 	canvasPath: string;
 };
-export type Utilities = typeof utilities;
 
 export type ModuleInput = Array<GeneralModuleCtor>;
 

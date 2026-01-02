@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
 import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 import style from './styles.scss?inline';
 
 export default class DebugPanel extends BaseModule {
@@ -20,12 +21,12 @@ export default class DebugPanel extends BaseModule {
 		this._debugPanel = document.createElement('div');
 		this._debugPanel.className = 'debug-panel';
 		const HTMLContainer = this.DM.data.container;
-		this.utilities.applyStyles(HTMLContainer, style);
+		utilities.applyStyles(HTMLContainer, style);
 		HTMLContainer.appendChild(this._debugPanel);
 	}
 
 	private update = () => {
-		const round = this.utilities.round;
+		const round = utilities.round;
 		const data = this.DM.data;
 		this.debugPanel.innerHTML = `<p>Scale: ${round(data.scale, 3)}</p><p>Offset: ${round(data.offsetX, 1)}, ${round(data.offsetY, 1)}</p>`;
 	};

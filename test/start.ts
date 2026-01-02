@@ -1,4 +1,5 @@
 import { Controls, DebugPanel, JSONCanvasViewer, Minimap, MistouchPreventer } from '@';
+import { gfm, gfmHtml } from 'micromark-extension-gfm';
 
 new JSONCanvasViewer(
 	{
@@ -7,6 +8,10 @@ new JSONCanvasViewer(
 		controlsCollapsed: true,
 		mistouchPreventer: {
 			preventAtStart: false,
+		},
+		micromark: {
+			extensions: [gfm()],
+			htmlExtensions: [gfmHtml()],
 		},
 	},
 	[Controls, DebugPanel, Minimap, MistouchPreventer],

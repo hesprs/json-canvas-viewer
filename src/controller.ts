@@ -1,7 +1,7 @@
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
-import { makeHook } from '@/shared';
 import style from '@/styles.scss?inline';
+import utilities from '@/utilities';
 
 type Options = {
 	noShadow?: boolean;
@@ -27,8 +27,8 @@ export default class Controller extends BaseModule<Options> {
 	};
 
 	hooks = {
-		onResize: makeHook<[number, number]>(),
-		onRefresh: makeHook(),
+		onResize: utilities.makeHook<[number, number]>(),
+		onRefresh: utilities.makeHook(),
 	};
 
 	constructor(...args: BaseArgs) {
@@ -43,7 +43,7 @@ export default class Controller extends BaseModule<Options> {
 		const noShadow = this.options.noShadow || false;
 		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
 
-		this.utilities.applyStyles(realContainer, style);
+		utilities.applyStyles(realContainer, style);
 
 		const HTMLContainer = this.DM.data.container;
 		HTMLContainer.classList.add('container');

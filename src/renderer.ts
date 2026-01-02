@@ -1,7 +1,8 @@
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import Controller from '@/controller';
 import DataManager from '@/dataManager';
-import { destroyError, unexpectedError } from '@/shared';
+import { destroyError } from '@/shared';
+import utilities from '@/utilities';
 
 interface viewport {
 	left: number;
@@ -60,7 +61,7 @@ export default class Renderer extends BaseModule {
 
 	private optimizeDPR = () => {
 		const container = this.DM.data.container;
-		this.utilities.resizeCanvasForDPR(this.canvas, container.offsetWidth, container.offsetHeight);
+		utilities.resizeCanvasForDPR(this.canvas, container.offsetWidth, container.offsetHeight);
 	};
 
 	private redraw = () => {
@@ -170,33 +171,25 @@ export default class Renderer extends BaseModule {
 	};
 
 	private drawNodeBackground = (node: JSONCanvasNode) => {
-		const colors = this.utilities.getColor(node.color);
+		const colors = utilities.getColor(node.color);
 		const radius = NODE_RADIUS;
 		this.ctx.globalAlpha = 1.0;
 		this.ctx.fillStyle = colors.background;
-		this.utilities.drawRoundRect(
-			this.ctx,
-			node.x + 1,
-			node.y + 1,
-			node.width - 2,
-			node.height - 2,
-			radius,
-		);
+		utilities.drawRoundRect(this.ctx, node.x + 1, node.y + 1, node.width - 2, node.height - 2, radius);
 		this.ctx.fill();
 		this.ctx.strokeStyle = colors.border;
 		this.ctx.lineWidth = 2;
-		this.utilities.drawRoundRect(this.ctx, node.x, node.y, node.width, node.height, radius);
+		utilities.drawRoundRect(this.ctx, node.x, node.y, node.width, node.height, radius);
 		this.ctx.stroke();
 	};
 
-	private drawGroup = (node: JSONCanvasNode, scale: number) => {
+	private drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
 		this.drawNodeBackground(node);
 		if (node.label)
-			this.drawLabelBar(node.x, node.y, node.label, this.utilities.getColor(node.color).border, scale);
+			this.drawLabelBar(node.x, node.y, node.label, utilities.getColor(node.color).border, scale);
 	};
 
-	private drawFileNode = (node: JSONCanvasNode) => {
-		if (!node.file) throw unexpectedError;
+	private drawFileNode = (node: JSONCanvasFileNode) => {
 		this.ctx.fillStyle = FONT_COLOR;
 		this.ctx.font = '16px sans-serif';
 		this.ctx.fillText(node.file, node.x + 5, node.y - 10);
@@ -204,8 +197,7 @@ export default class Renderer extends BaseModule {
 
 	private drawEdge = (edge: RuntimeJSONCanvasEdge) => {
 		const { fromNode, toNode } = this.getEdgeNodes(edge);
-		if (!fromNode || !toNode) throw unexpectedError;
-		const gac = this.utilities.getAnchorCoord;
+		const gac = utilities.getAnchorCoord;
 		const [startX, startY] = gac(fromNode, edge.fromSide);
 		const [endX, endY] = gac(toNode, edge.toSide);
 		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
@@ -250,7 +242,7 @@ export default class Renderer extends BaseModule {
 			const labelHeight = 20;
 			this.ctx.fillStyle = '#222';
 			this.ctx.beginPath();
-			this.utilities.drawRoundRect(
+			utilities.drawRoundRect(
 				this.ctx,
 				x - labelWidth / 2,
 				y - labelHeight / 2 - 2,

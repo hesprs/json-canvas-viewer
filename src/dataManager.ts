@@ -1,6 +1,6 @@
+import { BaseModule } from '@/baseModule';
 import type { Coordinates, NodeBounds } from '@/declarations';
-import { makeHook, unexpectedError } from '@/shared';
-import { BaseModule } from './baseModule';
+import utilities from '@/utilities';
 
 const GRID_CELL_SIZE = 800;
 const INITIAL_VIEWPORT_PADDING = 100;
@@ -8,11 +8,11 @@ const INITIAL_VIEWPORT_PADDING = 100;
 export default class DataManager extends BaseModule {
 	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
 	hooks = {
-		onToggleFullscreen: makeHook<[boolean]>(),
-		onCanvasFetched: makeHook(),
+		onToggleFullscreen: utilities.makeHook<[boolean]>(),
+		onCanvasFetched: utilities.makeHook(),
 	};
 	data = {
-		canvasData: undefined as unknown as JSONCanvas,
+		canvasData: undefined as unknown as Required<JSONCanvas>,
 		nodeMap: {} as Record<string, JSONCanvasNode>,
 		canvasBaseDir: undefined as unknown as string,
 		nodeBounds: undefined as unknown as NodeBounds,
@@ -25,10 +25,16 @@ export default class DataManager extends BaseModule {
 	loadCanvas = async () => {
 		const path = this.options.canvasPath;
 		try {
-			this.resolvePath(path);
-			this.data.canvasData = await fetch(path).then(res => res.json());
-			this.data.canvasData.nodes.forEach((node: JSONCanvasNode) => {
-				if (node.type === 'file' && node.file && !node.file.includes('http')) {
+			this.data.canvasBaseDir = utilities.resolvePath(path);
+			this.data.canvasData = Object.assign(
+				{
+					nodes: [],
+					edges: [],
+				},
+				await fetch(path).then(res => res.json()),
+			);
+			this.data.canvasData.nodes.forEach(node => {
+				if (node.type === 'file' && !node.file.includes('http')) {
 					const file = node.file.split('/');
 					node.file = file[file.length - 1];
 				}
@@ -39,14 +45,6 @@ export default class DataManager extends BaseModule {
 			this.hooks.onCanvasFetched();
 		} catch (err) {
 			console.error('Failed to load canvas data:', err);
-		}
-	};
-
-	private resolvePath = (path: string) => {
-		if (/^https?:\/\//.test(path)) this.data.canvasBaseDir = path.substring(0, path.lastIndexOf('/') + 1);
-		else {
-			const lastSlash = path.lastIndexOf('/');
-			this.data.canvasBaseDir = lastSlash !== -1 ? path.substring(0, lastSlash + 1) : './';
 		}
 	};
 
@@ -76,15 +74,12 @@ export default class DataManager extends BaseModule {
 
 	// how should the app handle node interactions
 	private judgeInteract = (node: JSONCanvasNode | null) => {
-		const type = !node ? 'default' : node.type;
-		switch (type) {
+		switch (node?.type) {
 			case 'text':
 			case 'link':
 				return 'select';
 			case 'file': {
-				const file = node?.file;
-				if (!file) throw unexpectedError;
-				if (file.match(/\.(md|wav|mp3)$/i)) return 'select';
+				if (node.file.match(/\.(md|wav|mp3)$/i)) return 'select';
 				else return 'non-interactive';
 			}
 			default:

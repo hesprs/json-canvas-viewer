@@ -199,7 +199,7 @@ export default class Renderer extends BaseModule {
 		const gac = utilities.getAnchorCoord;
 		const [startX, startY] = gac(fromNode, edge.fromSide);
 		const [endX, endY] = gac(toNode, edge.toSide);
-        const { active } = utilities.getColor(edge.color);
+		const { active } = utilities.getColor(edge.color);
 		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
 		if (!edge.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
@@ -221,7 +221,7 @@ export default class Renderer extends BaseModule {
 			startControlY,
 			endControlX,
 			endControlY,
-            active
+			active,
 		);
 		this.drawArrowhead(endX, endY, endControlX, endControlY, active);
 		if (edge.label) {

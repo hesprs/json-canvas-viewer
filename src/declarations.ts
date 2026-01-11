@@ -1,4 +1,9 @@
-import type { GeneralModuleCtor } from '@/baseModule';
+import type { BaseModule, GeneralModule, GeneralModuleCtor } from '@/baseModule';
+import type Controller from './controller';
+import type DataManager from './dataManager';
+import type InteractionHandler from './interactionHandler';
+import type OverlayManager from './overlayManager';
+import type Renderer from './renderer';
 
 declare global {
 	interface JSONCanvasGenericNode {
@@ -106,12 +111,22 @@ type AllModuleInstances<T extends ModuleInput> = InstanceType<T[number]>;
 export type DefaultOptions = {
 	container: HTMLElement;
 	canvasPath: string;
+	lazyLoad?: boolean;
 };
 
 export type ModuleInput = Array<GeneralModuleCtor>;
 
-export type Options<T extends ModuleInput> = Omit<
+export type Options<T extends ModuleInput = []> = Omit<
 	UnionToIntersection<AllModuleInstances<T>['options']>,
 	keyof DefaultOptions
 > &
 	DefaultOptions;
+
+type Ctors<T extends Array<BaseModule> | BaseModule> =
+	T extends Array<BaseModule>
+		? { [K in keyof T]: new (...args: GeneralArguments) => T[K] }
+		: [new (...args: GeneralArguments) => T];
+
+export type UserOptions<T extends Array<GeneralModule> = []> = Options<
+	Ctors<[Controller, InteractionHandler, DataManager, OverlayManager, Renderer, ...T]>
+>;

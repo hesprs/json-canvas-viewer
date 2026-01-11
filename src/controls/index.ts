@@ -8,6 +8,19 @@ type Options = {
 	controlsCollapsed?: boolean;
 };
 
+const resetIcon =
+	'<svg viewBox="-6 -6 30 30" stroke-width=".08"><path d="m14.955 7.986.116.01a1 1 0 0 1 .85 1.13 8 8 0 0 1-13.374 4.728l-.84.84c-.63.63-1.707.184-1.707-.707V10h3.987c.89 0 1.337 1.077.707 1.707l-.731.731a6 6 0 0 0 8.347-.264 6 6 0 0 0 1.63-3.33 1 1 0 0 1 1.131-.848zM11.514.813a8 8 0 0 1 1.942 1.336l.837-.837c.63-.63 1.707-.184 1.707.707V6h-3.981c-.89 0-1.337-1.077-.707-1.707l.728-.729a6 6 0 0 0-9.98 3.591 1 1 0 1 1-1.98-.281A8 8 0 0 1 11.514.813Z" /></svg>';
+const enterFullscreenIcon =
+	'<svg viewBox="-5.28 -5.28 34.56 34.56" fill="none"><path d="M4 9V5.6c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.76 4 5.04 4 5.6 4H9M4 15v3.4c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437C4.76 20 5.04 20 5.6 20H9m6-16h3.4c.56 0 .84 0 1.054.109a1 1 0 0 1 .437.437C20 4.76 20 5.04 20 5.6V9m0 6v3.4c0 .56 0 .84-.109 1.054a1 1 0 0 1-.437.437C19.24 20 18.96 20 18.4 20H15" stroke-width="2.4" stroke-linecap="round"/></svg>';
+const exitFullscreenIcon =
+	'<svg viewBox="-40.32 -40.32 176.64 176.64"><path d="M30 60H6a6 6 0 0 0 0 12h18v18a6 6 0 0 0 12 0V66a5.997 5.997 0 0 0-6-6Zm60 0H66a5.997 5.997 0 0 0-6 6v24a6 6 0 0 0 12 0V72h18a6 6 0 0 0 0-12ZM66 36h24a6 6 0 0 0 0-12H72V6a6 6 0 0 0-12 0v24a5.997 5.997 0 0 0 6 6ZM30 0a5.997 5.997 0 0 0-6 6v18H6a6 6 0 0 0 0 12h24a5.997 5.997 0 0 0 6-6V6a5.997 5.997 0 0 0-6-6Z"/></svg>';
+const zoomInIcon =
+	'<svg viewBox="-1.2 -1.2 26.4 26.4"><path d="M6 12h12m-6-6v12" stroke-width="2" stroke-linecap="round" /></svg>';
+const zoomOutIcon =
+	'<svg viewBox="-1.2 -1.2 26.4 26.4"><path d="M6 12h12" stroke-width="2" stroke-linecap="round" /></svg>';
+const toggleCollapseIcon =
+	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
+
 export default class Controls extends BaseModule<Options> {
 	private _controlsPanel: HTMLDivElement | null = null;
 	private _toggleCollapseBtn: HTMLButtonElement | null = null;
@@ -63,20 +76,18 @@ export default class Controls extends BaseModule<Options> {
 
 		this._toggleCollapseBtn = document.createElement('button');
 		this._toggleCollapseBtn.className = 'collapse-button';
-		this._toggleCollapseBtn.innerHTML =
-			'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
+		this._toggleCollapseBtn.innerHTML = toggleCollapseIcon;
 		this._controlsPanel.appendChild(this._toggleCollapseBtn);
 
 		const controlsContent = document.createElement('div');
 		controlsContent.className = 'controls-content';
 
 		this._toggleFullscreenBtn = document.createElement('button');
-		this._toggleFullscreenBtn.innerHTML = `<svg viewBox="-5.28 -5.28 34.56 34.56" fill="none"><path d="M4 9V5.6c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.76 4 5.04 4 5.6 4H9M4 15v3.4c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437C4.76 20 5.04 20 5.6 20H9m6-16h3.4c.56 0 .84 0 1.054.109a1 1 0 0 1 .437.437C20 4.76 20 5.04 20 5.6V9m0 6v3.4c0 .56 0 .84-.109 1.054a1 1 0 0 1-.437.437C19.24 20 18.96 20 18.4 20H15" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+		this._toggleFullscreenBtn.innerHTML = enterFullscreenIcon;
 		controlsContent.appendChild(this._toggleFullscreenBtn);
 
 		this._zoomOutBtn = document.createElement('button');
-		this._zoomOutBtn.innerHTML =
-			'<svg viewBox="-1.2 -1.2 26.4 26.4"><path d="M6 12h12" stroke-width="2" stroke-linecap="round" /></svg>';
+		this._zoomOutBtn.innerHTML = zoomOutIcon;
 		controlsContent.appendChild(this._zoomOutBtn);
 
 		this._zoomSlider = document.createElement('input');
@@ -88,13 +99,11 @@ export default class Controls extends BaseModule<Options> {
 		controlsContent.appendChild(this._zoomSlider);
 
 		this._zoomInBtn = document.createElement('button');
-		this._zoomInBtn.innerHTML =
-			'<svg viewBox="-1.2 -1.2 26.4 26.4"><path d="M6 12h12m-6-6v12" stroke-width="2" stroke-linecap="round" /></svg>';
+		this._zoomInBtn.innerHTML = zoomInIcon;
 		controlsContent.appendChild(this._zoomInBtn);
 
 		this._resetViewBtn = document.createElement('button');
-		this._resetViewBtn.innerHTML =
-			'<svg viewBox="-6 -6 30 30" stroke-width=".08"><path d="m14.955 7.986.116.01a1 1 0 0 1 .85 1.13 8 8 0 0 1-13.374 4.728l-.84.84c-.63.63-1.707.184-1.707-.707V10h3.987c.89 0 1.337 1.077.707 1.707l-.731.731a6 6 0 0 0 8.347-.264 6 6 0 0 0 1.63-3.33 1 1 0 0 1 1.131-.848zM11.514.813a8 8 0 0 1 1.942 1.336l.837-.837c.63-.63 1.707-.184 1.707.707V6h-3.981c-.89 0-1.337-1.077-.707-1.707l.728-.729a6 6 0 0 0-9.98 3.591 1 1 0 1 1-1.98-.281A8 8 0 0 1 11.514.813Z" /></svg>';
+		this._resetViewBtn.innerHTML = resetIcon;
 		controlsContent.appendChild(this._resetViewBtn);
 
 		this._controlsPanel.appendChild(controlsContent);
@@ -118,10 +127,8 @@ export default class Controls extends BaseModule<Options> {
 	private slide = () => this.DM.zoomToScale(1.1 ** Number(this.zoomSlider.value), this.DM.middleViewer());
 
 	private updateFullscreenBtn = (enter: boolean) => {
-		if (enter)
-			this.toggleFullscreenBtn.innerHTML = `<svg viewBox="-5.28 -5.28 34.56 34.56" fill="none"><path d="M4 9V5.6c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.76 4 5.04 4 5.6 4H9M4 15v3.4c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437C4.76 20 5.04 20 5.6 20H9m6-16h3.4c.56 0 .84 0 1.054.109a1 1 0 0 1 .437.437C20 4.76 20 5.04 20 5.6V9m0 6v3.4c0 .56 0 .84-.109 1.054a1 1 0 0 1-.437.437C19.24 20 18.96 20 18.4 20H15" stroke-width="2.4" stroke-linecap="round"/></svg>`;
-		else
-			this.toggleFullscreenBtn.innerHTML = `<svg viewBox="-40.32 -40.32 176.64 176.64"><path d="M30 60H6a6 6 0 0 0 0 12h18v18a6 6 0 0 0 12 0V66a5.997 5.997 0 0 0-6-6Zm60 0H66a5.997 5.997 0 0 0-6 6v24a6 6 0 0 0 12 0V72h18a6 6 0 0 0 0-12ZM66 36h24a6 6 0 0 0 0-12H72V6a6 6 0 0 0-12 0v24a5.997 5.997 0 0 0 6 6ZM30 0a5.997 5.997 0 0 0-6 6v18H6a6 6 0 0 0 0 12h24a5.997 5.997 0 0 0 6-6V6a5.997 5.997 0 0 0-6-6Z"/></svg>`;
+		if (enter) this.toggleFullscreenBtn.innerHTML = exitFullscreenIcon;
+		else this.toggleFullscreenBtn.innerHTML = enterFullscreenIcon;
 	};
 	private toggleFullscreen = () => this.DM.shiftFullscreen('toggle');
 

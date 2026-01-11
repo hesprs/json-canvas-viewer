@@ -17,26 +17,24 @@ This project is derived from [sofanati-nour/obsidian-canvas-web-renderer](https:
 
 - **Documentation**: [project wiki](https://github.com/hesprs/json-canvas-viewer/wiki)
 - **More about JSON Canvas**: [jsoncanvas.org](https://jsoncanvas.org/)
+- **Demo**: [in my portfolio](https://hesprs.github.io/json-canvas-viewer)
 
 ## 🐶 Features
 
 - View JSON Canvas files (`.canvas`) in a web browser
-- Full markdown syntax support (auto-parsed to HTML)
 - Embed into websites easily
 - Interactive pan and zoom functionality
-- Support for different node types:
-  - Text nodes
-  - File nodes (including Markdown files)
-  - Link nodes (embedded web content)
-  - Group nodes with custom colors
-- Edge connections between nodes with labels
-- Minimap for easy navigation (optional extension)
-- Mistouch prevention (optional extension)
+- Can display 100% of canvas features described in the [official spec](https://jsoncanvas.org/spec/1.0/)
 - Responsive design with mobile and touchpad adaptation
-- TypeScript native support
-- [Server-side rendering (**SSR**) support](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB-Development#server-side-rendering)
-- 🧩 Out-of-the-box **extensibility** and tree-shaking
-- 🔥 **More performant** than rendering canvases in Obsidian!
+- Supports Lazy loading
+- TypeScript native
+- [Supports Server-side rendering (SSR)](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#server-side-rendering)
+- 🔥 More performant than rendering canvases in Obsidian!
+- 🧩 Out-of-the-box extensibility and tree-shaking, current optional modules include:
+  - [`Minimap`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#minimap) for easy navigation
+  - [`Controls`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#controls) displays zoom in/out and fullscreen buttons
+  - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
+  - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
 
 ## 🚀 Quick Start
 

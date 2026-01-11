@@ -5,7 +5,7 @@ new JSONCanvasViewer(
 	{
 		container: document.body,
 		canvasPath: 'Example Canvas/introduction.canvas',
-		controlsCollapsed: true,
+        lazyLoad: true,
 		mistouchPreventer: {
 			preventAtStart: false,
 		},

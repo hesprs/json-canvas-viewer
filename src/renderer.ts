@@ -185,7 +185,7 @@ export default class Renderer extends BaseModule {
 	private drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
 		this.drawNodeBackground(node);
 		if (node.label)
-			this.drawLabelBar(node.x, node.y, node.label, utilities.getColor(node.color).border, scale);
+			this.drawLabelBar(node.x, node.y, node.label, utilities.getColor(node.color).active, scale);
 	};
 
 	private drawFileNode = (node: JSONCanvasFileNode) => {
@@ -199,6 +199,7 @@ export default class Renderer extends BaseModule {
 		const gac = utilities.getAnchorCoord;
 		const [startX, startY] = gac(fromNode, edge.fromSide);
 		const [endX, endY] = gac(toNode, edge.toSide);
+        const { active } = utilities.getColor(edge.color);
 		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
 		if (!edge.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
@@ -220,8 +221,9 @@ export default class Renderer extends BaseModule {
 			startControlY,
 			endControlX,
 			endControlY,
+            active
 		);
-		this.drawArrowhead(endX, endY, endControlX, endControlY);
+		this.drawArrowhead(endX, endY, endControlX, endControlY, active);
 		if (edge.label) {
 			const t = 0.5;
 			const x =
@@ -323,16 +325,17 @@ export default class Renderer extends BaseModule {
 		c1y: number,
 		c2x: number,
 		c2y: number,
+		color: string,
 	) => {
 		this.ctx.beginPath();
 		this.ctx.moveTo(startX, startY);
 		this.ctx.bezierCurveTo(c1x, c1y, c2x, c2y, endX, endY);
-		this.ctx.strokeStyle = '#ccc';
+		this.ctx.strokeStyle = color;
 		this.ctx.lineWidth = 2;
 		this.ctx.stroke();
 	};
 
-	private drawArrowhead = (tipX: number, tipY: number, fromX: number, fromY: number) => {
+	private drawArrowhead = (tipX: number, tipY: number, fromX: number, fromY: number, color: string) => {
 		const dx = tipX - fromX;
 		const dy = tipY - fromY;
 		const length = Math.sqrt(dx * dx + dy * dy);
@@ -344,7 +347,7 @@ export default class Renderer extends BaseModule {
 		const rightX = tipX - unitX * ARROW_LENGTH + unitY * ARROW_WIDTH;
 		const rightY = tipY - unitY * ARROW_LENGTH - unitX * ARROW_WIDTH;
 		this.ctx.beginPath();
-		this.ctx.fillStyle = '#ccc';
+		this.ctx.fillStyle = color;
 		this.ctx.moveTo(tipX, tipY);
 		this.ctx.lineTo(leftX, leftY);
 		this.ctx.lineTo(rightX, rightY);

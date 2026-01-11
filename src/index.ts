@@ -1,7 +1,8 @@
 export { type BaseArgs, BaseModule } from '@/baseModule';
-export { JSONCanvasViewer } from '@/canvasViewer';
+export { default as JSONCanvasViewer } from '@/canvasViewer';
 export { default as Controls } from '@/controls';
 export { default as DebugPanel } from '@/debugPanel';
+export type { UserOptions as Options } from '@/declarations';
 export { default as Minimap } from '@/minimap';
 export { default as MistouchPreventer } from '@/mistouchPreventer';
 export { default as renderToString } from '@/renderToString';

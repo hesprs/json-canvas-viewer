@@ -199,7 +199,5 @@ export default class DataManager extends BaseModule {
 		};
 	};
 
-	dispose = () => {
-		this.data.container.remove();
-	};
+	dispose = () => this.data.container.remove();
 }

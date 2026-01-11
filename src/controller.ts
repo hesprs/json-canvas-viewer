@@ -11,10 +11,8 @@ export default class Controller extends BaseModule<Options> {
 	private animationId: null | number = null;
 	private resizeAnimationId: null | number = null;
 	private DM: DataManager;
-	private perFrame: {
-		lastScale: number;
-		lastOffsets: { x: number; y: number };
-	} = {
+	private resizeObserver: ResizeObserver;
+	private perFrame = {
 		lastScale: 1,
 		lastOffsets: { x: 0, y: 0 },
 	};
@@ -48,6 +46,7 @@ export default class Controller extends BaseModule<Options> {
 		const HTMLContainer = this.DM.data.container;
 		HTMLContainer.classList.add('container');
 		realContainer.appendChild(HTMLContainer);
+		this.resizeObserver = new ResizeObserver(this.onResize);
 	}
 
 	private onFetched = () => {
@@ -88,7 +87,6 @@ export default class Controller extends BaseModule<Options> {
 			this.refresh();
 		});
 	};
-	private resizeObserver: ResizeObserver = new ResizeObserver(this.onResize);
 
 	dispose = () => {
 		if (this.animationId) cancelAnimationFrame(this.animationId);

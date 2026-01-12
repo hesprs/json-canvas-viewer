@@ -1,9 +1,11 @@
 import { micromark } from 'micromark';
-import utilities from '@/utilities';
+import { resolvePath } from '@/utilities';
 
 type Parse = (markdown: string) => string;
 
-export default async function (path: string, micromarkOptions?: Parameters<typeof micromark>[1]) {
+// #region Render to String
+
+export async function renderToString(path: string, micromarkOptions?: Parameters<typeof micromark>[1]) {
 	const parse = (markdown: string) => micromark(markdown, micromarkOptions);
 	const render = (node: JSONCanvasNode) => renderer(node, parse);
 	const nodes = Object.assign(
@@ -13,7 +15,7 @@ export default async function (path: string, micromarkOptions?: Parameters<typeo
 		},
 		await fetch(path).then(res => res.json()),
 	).nodes as Array<JSONCanvasNode>;
-	const basePath = utilities.resolvePath(path);
+	const basePath = resolvePath(path);
 	nodes.forEach(node => {
 		if (node.type === 'file' && !node.file.includes('http')) {
 			const file = node.file.split('/');
@@ -60,3 +62,14 @@ async function loadMarkdown(path: string, parse: Parse) {
 	}
 	return parsedContent;
 }
+
+// #endregion ==========================================================================
+
+// #region Fetch Canvas
+export async function fetchCanvas(path: string) {
+	return {
+		data: (await fetch(path).then(res => res.json())) as JSONCanvas,
+		attachmentBaseDir: resolvePath(path),
+	};
+}
+// #endregion ==========================================================================

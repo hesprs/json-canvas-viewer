@@ -1,11 +1,12 @@
 export { type BaseArgs, BaseModule } from '@/baseModule';
+export { default as jsonCanvasTransform } from '@/bridges/vitePlugin';
 export { default as JSONCanvasViewer } from '@/canvasViewer';
 export { default as Controls } from '@/controls';
 export { default as DebugPanel } from '@/debugPanel';
 export type { UserOptions as Options } from '@/declarations';
+export { fetchCanvas, renderToString } from '@/helpers';
 export { default as Minimap } from '@/minimap';
 export { default as MistouchPreventer } from '@/mistouchPreventer';
-export { default as renderToString } from '@/renderToString';
 export { default as canvasUtils } from '@/utilities';
 
 import Controller from '@/controller';

@@ -1,23 +1,46 @@
-# JSON Canvas Viewer
+<h1 align="center">
+    <img src="assets/logo.svg" alt="JSON Canvas Viewer logo" width="280px">
+    <br />
+    JSON Canvas Viewer
+    <br />
+</h1>
 
-[![npm](https://img.shields.io/npm/v/json-canvas-viewer?logo=npm&labelColor=red&logoColor=white&color=333333)](https://www.npmjs.com/package/json-canvas-viewer)
-[![Gzipped + Minified Size](https://img.shields.io/bundlephobia/minzip/json-canvas-viewer?style=flat&logo=webpack&labelColor=orange&logoColor=white&color=333333&label=Minified%2bGzipped)](https://bundlephobia.com/package/json-canvas-viewer)
-[![ci](https://img.shields.io/github/actions/workflow/status/hesprs/json-canvas-viewer/ci.yml?style=flat&logo=github&logoColor=white&label=CI&labelColor=d4ab00&color=333333)](https://github.com/hesprs/json-canvas-viewer/actions)
-[![CodeFactor](https://img.shields.io/codefactor/grade/github/hesprs/json-canvas-viewer?style=flat&logo=codefactor&logoColor=white&label=Code%20Quality&labelColor=17b37a&color=333333)](https://www.codefactor.io/repository/github/hesprs/json-canvas-viewer)
-![TypeScript](https://img.shields.io/badge/Types-Strict-333333?logo=typescript&labelColor=blue&logoColor=white)
-[![Snyk Security](https://img.shields.io/badge/Snyk%20Security-Monitored-333333?logo=snyk&style=flat&labelColor=8A2BE2&logoColor=white)](https://snyk.io/test/npm/json-canvas-viewer)
-[![Documentation](https://img.shields.io/badge/Documentation-Ready-333333?labelColor=5C73E7&logo=github&logoColor=white)](https://github.com/hesprs/json-canvas-viewer/wiki)
-![Made by Humans](https://img.shields.io/badge/%F0%9F%96%90%EF%B8%8F%20Made%20by-Humans-333333?labelColor=25C260)
+<h4 align="center">An extensible web-based viewer for JSON Canvas</h4>
 
-![Canvas Viewer](test/preview.png)
+<p align="center">
+    <a href="https://www.npmjs.com/package/json-canvas-viewer">
+        <img src="https://img.shields.io/npm/v/json-canvas-viewer?logo=npm&labelColor=red&logoColor=white&color=333333" alt="npm">
+    </a>
+    <a href="https://bundlephobia.com/package/json-canvas-viewer">
+        <img src="https://img.shields.io/bundlephobia/minzip/json-canvas-viewer?style=flat&logo=webpack&labelColor=orange&logoColor=white&color=333333&label=Minified%2bGzipped" alt="Gzipped + Minified Size">
+    </a>
+    <a href="https://github.com/hesprs/json-canvas-viewer/actions">
+        <img src="https://img.shields.io/github/actions/workflow/status/hesprs/json-canvas-viewer/ci.yml?style=flat&logo=github&logoColor=white&label=CI&labelColor=d4ab00&color=333333" alt="ci">
+    </a>
+    <a href="https://www.codefactor.io/repository/github/hesprs/json-canvas-viewer">
+        <img src="https://img.shields.io/codefactor/grade/github/hesprs/json-canvas-viewer?style=flat&logo=codefactor&logoColor=white&label=Code%20Quality&labelColor=17b37a&color=333333" alt="CodeFactor">
+    </a>
+    <img src="https://img.shields.io/badge/Types-Strict-333333?logo=typescript&labelColor=blue&logoColor=white" alt="TypeScript">
+    <a href="https://snyk.io/test/npm/json-canvas-viewer">
+        <img src="https://img.shields.io/badge/Snyk%20Security-Monitored-333333?logo=snyk&style=flat&labelColor=8A2BE2&logoColor=white" alt="Snyk Security">
+    </a>
+    <a href="https://github.com/hesprs/json-canvas-viewer/wiki">
+        <img src="https://img.shields.io/badge/Documentation-Ready-333333?labelColor=5C73E7&logo=github&logoColor=white" alt="Documentation">
+    </a>
+    <img src="https://img.shields.io/badge/%F0%9F%96%90%EF%B8%8F%20Made%20by-Humans-333333?labelColor=25C260" alt="Made by Humans">
+</p>
 
-A **TypeScript-based** viewer for **JSON Canvas** files. View and interact with your canvas files directly in the browser, or embed the viewer in front-end projects with ease. It is built without frameworks so it can be easily integrated into any framework.
-
-This project is derived from [sofanati-nour/obsidian-canvas-web-renderer](https://github.com/sofanati-nour/obsidian-canvas-web-renderer), but is far more developed and optimized.
-
-- **Documentation**: [project wiki](https://github.com/hesprs/json-canvas-viewer/wiki)
-- **More about JSON Canvas**: [jsoncanvas.org](https://jsoncanvas.org/)
-- **Demo**: [in my portfolio](https://hesprs.github.io/json-canvas-viewer)
+<p align="center">
+    <a href="https://hesprs.github.io/json-canvas-viewer">
+        <strong>Demo</strong>
+    </a> • 
+    <a href="https://github.com/hesprs/json-canvas-viewer/wiki">
+        <strong>Documentation</strong>
+    </a> • 
+    <a href="https://jsoncanvas.org/">
+        <strong>About JSON Canvas</strong>
+    </a>
+</p>
 
 ## 🐶 Features
 
@@ -28,6 +51,7 @@ This project is derived from [sofanati-nour/obsidian-canvas-web-renderer](https:
 - Responsive design with mobile and touchpad adaptation
 - Supports Lazy loading
 - TypeScript native
+- Seamless integration with Vite, Vue, React or vanilla JS.
 - [Supports Server-side rendering (SSR)](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#server-side-rendering)
 - 🔥 More performant than rendering canvases in Obsidian!
 - 🧩 Out-of-the-box extensibility and tree-shaking, current optional modules include:

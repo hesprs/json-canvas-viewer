@@ -56,6 +56,7 @@ export default class Renderer extends BaseModule {
 		this._canvas.className = 'main-canvas';
 		this.ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 		this.DM.data.container.appendChild(this._canvas);
+		this.onDispose(this.dispose);
 	}
 
 	private optimizeDPR = () => {
@@ -355,7 +356,7 @@ export default class Renderer extends BaseModule {
 		this.ctx.fill();
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		if (this.zoomInOptimize.timeout) {
 			clearTimeout(this.zoomInOptimize.timeout);
 			this.zoomInOptimize.timeout = null;

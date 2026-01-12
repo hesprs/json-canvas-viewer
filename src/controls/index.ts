@@ -65,7 +65,7 @@ export default class Controls extends BaseModule<Options> {
 		super(...args);
 		this.collapsed = this.options.controlsCollapsed || false;
 		this.DM = this.container.get(DataManager);
-		this.DM.hooks.onToggleFullscreen.subscribe(this.updateFullscreenBtn);
+		this.DM.onToggleFullscreen.subscribe(this.updateFullscreenBtn);
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateSlider);
 
 		this._controlsPanel = document.createElement('div');
@@ -116,6 +116,8 @@ export default class Controls extends BaseModule<Options> {
 		this._zoomSlider.addEventListener('input', this.slide);
 		this._resetViewBtn.addEventListener('click', this.DM.resetView);
 		this._toggleFullscreenBtn.addEventListener('click', this.toggleFullscreen);
+
+		this.onDispose(this.dispose);
 	}
 	toggleCollapse = () => {
 		this.collapsed = !this.collapsed;
@@ -138,7 +140,7 @@ export default class Controls extends BaseModule<Options> {
 	};
 	private scaleToSlider = (scale: number) => Math.log(scale) / Math.log(1.1);
 
-	dispose = () => {
+	private dispose = () => {
 		this.toggleCollapseBtn.removeEventListener('click', this.toggleCollapse);
 		this.zoomInBtn.removeEventListener('click', this.zoomIn);
 		this.zoomOutBtn.removeEventListener('click', this.zoomOut);

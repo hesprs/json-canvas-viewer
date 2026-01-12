@@ -51,7 +51,6 @@ export default class Minimap extends BaseModule<Options> {
 		this.collapsed = this.options.minimapCollapsed || false;
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateViewportRectangle);
 		this.DM = this.container.get(DataManager);
-		this.DM.hooks.onCanvasFetched.subscribe(this.drawMinimap);
 
 		this._minimapContainer = document.createElement('div');
 		this._minimapContainer.className = 'minimap-container';
@@ -83,6 +82,9 @@ export default class Minimap extends BaseModule<Options> {
 
 		this._toggleMinimapBtn.addEventListener('click', this.toggleCollapse);
 		utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
+
+		this.onStart(this.start);
+		this.onDispose(this.dispose);
 	}
 
 	toggleCollapse = () => {
@@ -91,7 +93,7 @@ export default class Minimap extends BaseModule<Options> {
 		if (!this.collapsed) this.updateViewportRectangle();
 	};
 
-	private drawMinimap = () => {
+	private start = () => {
 		const bounds = this.DM.data.nodeBounds;
 		if (!bounds) return;
 		const displayWidth = this.minimap.clientWidth;
@@ -161,7 +163,7 @@ export default class Minimap extends BaseModule<Options> {
 		this.viewportRectangle.style.height = `${viewRectHeight}px`;
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		this.toggleMinimapBtn.removeEventListener('click', this.toggleCollapse);
 		this.minimapCtx.clearRect(0, 0, this.minimap.clientWidth, this.minimap.clientHeight);
 		this.minimapContainer.remove();

@@ -59,6 +59,8 @@ export default class MistouchPreventer extends BaseModule<Options> {
 		window.addEventListener('pointerdown', this.onPointerDown);
 		window.addEventListener('pointermove', this.onPointerMove);
 		window.addEventListener('pointerup', this.onPointerUp);
+
+		this.onDispose(this.dispose);
 	}
 
 	private onPointerDown = (e: PointerEvent) => {
@@ -110,7 +112,7 @@ export default class MistouchPreventer extends BaseModule<Options> {
 		setTimeout(() => this.DM.data.container.classList.remove('numb'), 50); // minimum delay to prevent triggering undesired button touch
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		window.removeEventListener('pointerdown', this.onPointerDown);
 		window.removeEventListener('pointermove', this.onPointerMove);
 		window.removeEventListener('pointerup', this.onPointerUp);

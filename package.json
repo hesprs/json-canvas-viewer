@@ -28,12 +28,12 @@
 	"packageManager": "pnpm@10.24.0",
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.10",
-		"@types/node": "^25.0.3",
+		"@types/node": "^25.0.6",
 		"micromark-extension-gfm": "^3.0.0",
-		"sass": "^1.97.1",
+		"sass": "^1.97.2",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
-		"vite": "^7.3.0"
+		"vite": "^7.3.1"
 	},
 	"files": ["dist"],
 	"scripts": {

@@ -22,6 +22,7 @@ export default class DebugPanel extends BaseModule {
 		const HTMLContainer = this.DM.data.container;
 		utilities.applyStyles(HTMLContainer, style);
 		HTMLContainer.appendChild(this._debugPanel);
+		this.onDispose(this.dispose);
 	}
 
 	private update = () => {
@@ -30,7 +31,7 @@ export default class DebugPanel extends BaseModule {
 		this.debugPanel.innerHTML = `<p>Scale: ${round(data.scale, 3)}</p><p>Offset: ${round(data.offsetX, 1)}, ${round(data.offsetY, 1)}</p>`;
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		this.debugPanel.remove();
 		this._debugPanel = null;
 	};

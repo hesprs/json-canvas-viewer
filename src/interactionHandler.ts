@@ -22,6 +22,8 @@ export default class InteractionHandler extends BaseModule<Options> {
 	private pointeract: Pointeract<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
 	private DM: DataManager;
 	onClick = utilities.makeHook<[string | null]>();
+	stopInteraction: Pointeract['stop'];
+	startInteraction: Pointeract['start'];
 
 	constructor(...args: BaseArgs) {
 		super(...args);
@@ -39,12 +41,12 @@ export default class InteractionHandler extends BaseModule<Options> {
 		const OM = this.container.get(OverlayManager);
 		OM.hooks.onInteractionStart.subscribe(this.stopInteraction);
 		OM.hooks.onInteractionEnd.subscribe(this.startInteraction);
-		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
-	}
-	stopInteraction: Pointeract['stop'];
-	startInteraction: Pointeract['start'];
 
-	private onFetched = () => {
+		this.onStart(this.start);
+		this.onDispose(this.dispose);
+	}
+
+	private start = () => {
 		this.pointeract.on('pan', this.onPan);
 		this.pointeract.on('drag', this.onPan);
 		this.pointeract.on('zoom', this.onZoom);
@@ -71,7 +73,7 @@ export default class InteractionHandler extends BaseModule<Options> {
 		this.onClick(node ? node.id : null);
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		this.pointeract.off('pan', this.onPan);
 		this.pointeract.off('zoom', this.onZoom);
 		this.pointeract.off('trueClick', this.onTrueClick);

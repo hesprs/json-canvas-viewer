@@ -1,13 +1,8 @@
 import { type BaseArgs, BaseModule } from '@/baseModule';
 import DataManager from '@/dataManager';
-import style from '@/styles.scss?inline';
 import utilities from '@/utilities';
 
-type Options = {
-	noShadow?: boolean;
-};
-
-export default class Controller extends BaseModule<Options> {
+export default class Controller extends BaseModule {
 	private animationId: null | number = null;
 	private resizeAnimationId: null | number = null;
 	private DM: DataManager;
@@ -31,26 +26,13 @@ export default class Controller extends BaseModule<Options> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
+		this.onStart(this.start);
+		this.onDispose(this.dispose);
 		this.DM = this.container.get(DataManager);
-		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
-
-		const parentContainer = this.options.container;
-		while (parentContainer.firstElementChild) parentContainer.firstElementChild.remove();
-		parentContainer.innerHTML = '';
-
-		const noShadow = this.options.noShadow || false;
-		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
-
-		utilities.applyStyles(realContainer, style);
-
-		const HTMLContainer = this.DM.data.container;
-		HTMLContainer.classList.add('container');
-		realContainer.appendChild(HTMLContainer);
 		this.resizeObserver = new ResizeObserver(this.onResize);
 	}
 
-	private onFetched = () => {
-		this.DM.resetView();
+	private start = () => {
 		this.resizeObserver.observe(this.DM.data.container);
 		this.animationId = requestAnimationFrame(this.draw);
 	};
@@ -65,7 +47,7 @@ export default class Controller extends BaseModule<Options> {
 		this.animationId = requestAnimationFrame(this.draw);
 	};
 
-	private refresh = () => {
+	refresh = () => {
 		this.perFrame.lastScale = this.DM.data.scale;
 		this.perFrame.lastOffsets = {
 			x: this.DM.data.offsetX,
@@ -88,7 +70,7 @@ export default class Controller extends BaseModule<Options> {
 		});
 	};
 
-	dispose = () => {
+	private dispose = () => {
 		if (this.animationId) cancelAnimationFrame(this.animationId);
 		if (this.resizeAnimationId) cancelAnimationFrame(this.resizeAnimationId);
 		this.resizeObserver.disconnect();

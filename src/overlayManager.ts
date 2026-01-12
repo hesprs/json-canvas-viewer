@@ -34,15 +34,17 @@ export default class OverlayManager extends BaseModule<Options> {
 		this.DM = this.container.get(DataManager);
 		this.IH = this.container.get(InteractionHandler, { lazy: true });
 		const controller = this.container.get(Controller);
-		this.DM.hooks.onCanvasFetched.subscribe(this.onFetched);
 		controller.hooks.onRefresh.subscribe(this.updateOverlays);
 
 		this._overlaysLayer = document.createElement('div');
 		this._overlaysLayer.className = 'overlays';
 		this.DM.data.container.appendChild(this.overlaysLayer);
+
+		this.onStart(this.start);
+		this.onDispose(this.dispose);
 	}
 
-	private onFetched = () => {
+	private start = () => {
 		this.IH().onClick.subscribe(this.select);
 		const cbd = this.DM.data.canvasBaseDir;
 		const createOverlay = async (node: JSONCanvasNode) => {
@@ -184,7 +186,7 @@ export default class OverlayManager extends BaseModule<Options> {
 		return overlay;
 	}
 
-	dispose = () => {
+	private dispose = () => {
 		while (this.overlaysLayer.firstElementChild) {
 			const child = this.overlaysLayer.firstElementChild;
 			if (this.eventListeners[child.id]) {

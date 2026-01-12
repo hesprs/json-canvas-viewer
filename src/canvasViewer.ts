@@ -6,6 +6,7 @@ import type { ModuleInput, Options } from '@/declarations';
 import InteractionHandler from '@/interactionHandler';
 import OverlayManager from '@/overlayManager';
 import Renderer from '@/renderer';
+import utilities from './utilities';
 
 type InternalModules = [
 	typeof DataManager,
@@ -20,6 +21,8 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 	private allModules: ModuleInput;
 	private IO: IntersectionObserver | null = null;
 	container: Container;
+	onStart = utilities.makeHook();
+	onDispose = utilities.makeHook();
 
 	constructor(options: Options<[...InternalModules, ...M]>, modules?: M) {
 		this.container = new Container();
@@ -27,7 +30,7 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 		const bind = (Class: GeneralModuleCtor) => {
 			this.container.bind({
 				provide: Class,
-				useFactory: () => new Class(this.container, this.options),
+				useFactory: () => new Class(this.container, this.options, this.onStart, this.onDispose),
 			});
 		};
 		this.allModules = [
@@ -54,7 +57,7 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 		this.allModules.forEach(Module => {
 			this.container.get(Module);
 		});
-		this.container.get(DataManager).loadCanvas();
+		this.onStart();
 	};
 
 	private onVisibilityCheck = (entries: Array<IntersectionObserverEntry>) => {
@@ -73,11 +76,7 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 		this.IO = null;
 		const container = this.options.container;
 		while (container.firstChild) container.firstChild.remove();
-		this.allModules.reverse();
-		this.allModules.forEach(Module => {
-			const module = this.container.get(Module);
-			if (module.dispose) module.dispose();
-		});
+		this.onDispose();
 		this.container.unbindAll();
 	};
 }

@@ -1,51 +1,85 @@
-import { BaseModule } from '@/baseModule';
+import { type BaseArgs, BaseModule } from '@/baseModule';
 import type { Coordinates, NodeBounds } from '@/declarations';
+import style from '@/styles.scss?inline';
 import utilities from '@/utilities';
 
 const GRID_CELL_SIZE = 800;
 const INITIAL_VIEWPORT_PADDING = 100;
 
-export default class DataManager extends BaseModule {
-	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
-	hooks = {
-		onToggleFullscreen: utilities.makeHook<[boolean]>(),
-		onCanvasFetched: utilities.makeHook(),
+type Options = {
+	noShadow?: boolean;
+	canvas: {
+		data: JSONCanvas;
+		attachmentBaseDir?: string;
 	};
-	data = {
-		canvasData: undefined as unknown as Required<JSONCanvas>,
-		nodeMap: {} as Record<string, JSONCanvasNode>,
-		canvasBaseDir: undefined as unknown as string,
-		nodeBounds: undefined as unknown as NodeBounds,
-		offsetX: 0,
-		offsetY: 0,
-		scale: 1,
-		container: document.createElement('div'),
+};
+
+export default class DataManager extends BaseModule<Options> {
+	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
+	onToggleFullscreen = utilities.makeHook<[boolean]>();
+
+	data: {
+		canvasData: Required<JSONCanvas>;
+		nodeMap: Record<string, JSONCanvasNode>;
+		canvasBaseDir: string;
+		nodeBounds: NodeBounds;
+		offsetX: number;
+		offsetY: number;
+		scale: number;
+		container: HTMLDivElement;
 	};
 
-	loadCanvas = async () => {
-		const path = this.options.canvasPath;
-		try {
-			this.data.canvasBaseDir = utilities.resolvePath(path);
-			this.data.canvasData = Object.assign(
-				{
-					nodes: [],
-					edges: [],
-				},
-				await fetch(path).then(res => res.json()),
-			);
-			this.data.canvasData.nodes.forEach(node => {
-				if (node.type === 'file' && !node.file.includes('http')) {
-					const file = node.file.split('/');
-					node.file = file[file.length - 1];
-				}
-				this.data.nodeMap[node.id] = node;
-			});
-			this.data.nodeBounds = this.calculateNodeBounds();
-			this.buildSpatialGrid();
-			this.hooks.onCanvasFetched();
-		} catch (err) {
-			console.error('Failed to load canvas data:', err);
-		}
+	constructor(...args: BaseArgs) {
+		super(...args);
+		const parentContainer = this.options.container;
+		while (parentContainer.firstElementChild) parentContainer.firstElementChild.remove();
+		parentContainer.innerHTML = '';
+
+		const noShadow = this.options.noShadow || false;
+		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
+
+		utilities.applyStyles(realContainer, style);
+
+		const HTMLContainer = document.createElement('div');
+		HTMLContainer.classList.add('container');
+		realContainer.appendChild(HTMLContainer);
+		const canvasData = Object.assign(
+			{
+				nodes: [],
+				edges: [],
+			},
+			this.options.canvas.data,
+		);
+
+		this.data = {
+			canvasData: canvasData,
+			nodeMap: {},
+			canvasBaseDir: this.processBaseDir(this.options.canvas.attachmentBaseDir),
+			nodeBounds: this.calculateNodeBounds(canvasData),
+			offsetX: 0,
+			offsetY: 0,
+			scale: 1,
+			container: HTMLContainer,
+		};
+
+		this.data.canvasData.nodes.forEach(node => {
+			if (node.type === 'file' && !node.file.includes('http')) {
+				const file = node.file.split('/');
+				node.file = file[file.length - 1];
+			}
+			this.data.nodeMap[node.id] = node;
+		});
+
+		this.buildSpatialGrid();
+		this.resetView();
+		this.onDispose(this.dispose);
+	}
+
+	private processBaseDir = (baseDir: string | undefined) => {
+		if (!baseDir) return './';
+		const lastChar = baseDir?.slice(-1);
+		if (lastChar === '/') return baseDir;
+		return `${baseDir}/`;
 	};
 
 	findNodeAt = (screenCoords: Coordinates) => {
@@ -87,12 +121,12 @@ export default class DataManager extends BaseModule {
 		}
 	};
 
-	private calculateNodeBounds() {
+	private calculateNodeBounds(canvasData: Required<JSONCanvas>) {
 		let minX = Infinity,
 			minY = Infinity,
 			maxX = -Infinity,
 			maxY = -Infinity;
-		this.data.canvasData.nodes.forEach(node => {
+		canvasData.nodes.forEach(node => {
 			minX = Math.min(minX, node.x);
 			minY = Math.min(minY, node.y);
 			maxX = Math.max(maxX, node.x + node.width);
@@ -148,10 +182,10 @@ export default class DataManager extends BaseModule {
 	shiftFullscreen = (option: string = 'toggle') => {
 		if (!document.fullscreenElement && (option === 'toggle' || option === 'enter')) {
 			this.data.container.requestFullscreen();
-			this.hooks.onToggleFullscreen(true);
+			this.onToggleFullscreen(true);
 		} else if (document.fullscreenElement && (option === 'toggle' || option === 'exit')) {
 			document.exitFullscreen();
-			this.hooks.onToggleFullscreen(false);
+			this.onToggleFullscreen(false);
 		}
 	};
 	resetView = () => {
@@ -199,5 +233,5 @@ export default class DataManager extends BaseModule {
 		};
 	};
 
-	dispose = () => this.data.container.remove();
+	private dispose = () => this.data.container.remove();
 }

@@ -6,17 +6,6 @@ import type OverlayManager from './overlayManager';
 import type Renderer from './renderer';
 
 declare global {
-	interface JSONCanvasGenericNode {
-		id: string;
-		type: 'group' | 'file' | 'text' | 'link';
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		styleAttributes?: Record<string, string>;
-		color?: string;
-	}
-
 	interface JSONCanvasGroupNode extends JSONCanvasGenericNode {
 		type: 'group';
 		label?: string;
@@ -64,6 +53,23 @@ declare global {
 		const content: string;
 		export default content;
 	}
+
+	//@ts-expect-error: TS doesn't recognize this as a module
+	declare module '*.canvas' {
+		const content: JSONCanvas;
+		export default content;
+	}
+}
+
+interface JSONCanvasGenericNode {
+	id: string;
+	type: 'group' | 'file' | 'text' | 'link';
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+	styleAttributes?: Record<string, string>;
+	color?: string;
 }
 
 export type Coordinates = {
@@ -110,7 +116,6 @@ type AllModuleInstances<T extends ModuleInput> = InstanceType<T[number]>;
 
 export type DefaultOptions = {
 	container: HTMLElement;
-	canvasPath: string;
 	lazyLoad?: boolean;
 };
 

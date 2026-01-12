@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import jsonCanvasTransform from './src/bridges/vitePlugin';
 
 export default defineConfig({
 	root: 'test',
@@ -8,6 +9,7 @@ export default defineConfig({
 			'@': resolve(__dirname, 'src/'),
 		},
 	},
+	plugins: [jsonCanvasTransform],
 	build: {
 		outDir: resolve(__dirname, 'dist'),
 		emptyOutDir: true,

@@ -8,7 +8,7 @@ Welcome to the JSON Canvas Viewer repository!
 
 - [**🚀 Quick Start**](1-🚀-Quick-Start.md)
 - [**🖇️ Integration with Existing Paradigms**](4-🖇️-SSR-and-Bridges.md)
-- [**🧑‍💻 Development**](5-🧑‍💻-Develop-A-Module.md)
+- [**🧑‍💻 Development**](5-🧑‍💻-Develop-a-Module.md)
 
 ## Get Involved
 

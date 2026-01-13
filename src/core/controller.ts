@@ -1,6 +1,6 @@
-import { type BaseArgs, BaseModule } from '@/baseModule';
-import DataManager from '@/dataManager';
-import utilities from '@/utilities';
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import DataManager from '$/dataManager';
+import utilities from '$/utilities';
 
 export default class Controller extends BaseModule {
 	private animationId: null | number = null;

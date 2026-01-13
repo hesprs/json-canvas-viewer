@@ -1,6 +1,6 @@
 import type { Container } from '@needle-di/core';
-import type { DefaultOptions, Empty, GeneralFunction, GeneralObject } from '@/declarations';
-import type utilities from '@/utilities';
+import type { DefaultOptions, Empty, GeneralFunction, GeneralObject } from '$/declarations';
+import type utilities from '$/utilities';
 
 type Hook = ReturnType<typeof utilities.makeHook>;
 

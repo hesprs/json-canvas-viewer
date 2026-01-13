@@ -9,10 +9,10 @@ import {
 	type StdEvents,
 	WheelPanZoom,
 } from 'pointeract';
-import { type BaseArgs, BaseModule } from '@/baseModule';
-import DataManager from '@/dataManager';
-import OverlayManager from '@/overlayManager';
-import utilities from '@/utilities';
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import DataManager from '$/dataManager';
+import OverlayManager from '$/overlayManager';
+import utilities from '$/utilities';
 
 type Options = {
 	pointeract?: PointeractOptions<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;

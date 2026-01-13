@@ -6,6 +6,28 @@
 	"types": "dist/types/index.d.ts",
 	"main": "dist/index.cjs",
 	"module": "dist/index.js",
+	"exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./dev": {
+			"types": "./dist/types/dev.d.ts",
+			"import": "./dist/dev.js",
+			"require": "./dist/dev.cjs"
+		},
+		"./modules": {
+			"types": "./dist/types/modules.d.ts",
+			"import": "./dist/modules.js",
+			"require": "./dist/modules.cjs"
+		},
+		"./bridges": {
+			"types": "./dist/types/bridges.d.ts",
+			"import": "./dist/bridges.js",
+			"require": "./dist/bridges.cjs"
+		}
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
@@ -29,7 +51,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.10",
 		"@types/node": "^25.0.6",
-		"micromark-extension-gfm": "^3.0.0",
+		"dompurify": "^3.3.1",
+		"marked": "^17.0.1",
 		"sass": "^1.97.2",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
@@ -39,12 +62,11 @@
 	"scripts": {
 		"dev": "vite",
 		"lint": "biome check --write",
-		"build": "vite build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+		"build": "vite build && BUILD=chimp vite build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"check": "tsc --noEmit && biome check"
 	},
 	"dependencies": {
 		"@needle-di/core": "^1.1.0",
-		"micromark": "^4.0.2",
 		"pointeract": "^1.0.1"
 	}
 }

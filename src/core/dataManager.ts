@@ -1,17 +1,16 @@
-import { type BaseArgs, BaseModule } from '@/baseModule';
-import type { Coordinates, NodeBounds } from '@/declarations';
-import style from '@/styles.scss?inline';
-import utilities from '@/utilities';
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import type { Coordinates, NodeBounds } from '$/declarations';
+import style from '$/styles.scss?inline';
+import utilities from '$/utilities';
 
 const GRID_CELL_SIZE = 800;
 const INITIAL_VIEWPORT_PADDING = 100;
 
 type Options = {
 	noShadow?: boolean;
-	canvas: {
-		data: JSONCanvas;
-		attachmentBaseDir?: string;
-	};
+	canvas: JSONCanvas;
+	attachmentDir?: string;
+	extraCSS?: string;
 };
 
 export default class DataManager extends BaseModule<Options> {
@@ -38,7 +37,7 @@ export default class DataManager extends BaseModule<Options> {
 		const noShadow = this.options.noShadow || false;
 		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
 
-		utilities.applyStyles(realContainer, style);
+		utilities.applyStyles(realContainer, style + this.options.extraCSS);
 
 		const HTMLContainer = document.createElement('div');
 		HTMLContainer.classList.add('container');
@@ -48,13 +47,13 @@ export default class DataManager extends BaseModule<Options> {
 				nodes: [],
 				edges: [],
 			},
-			this.options.canvas.data,
+			this.options.canvas,
 		);
 
 		this.data = {
 			canvasData: canvasData,
 			nodeMap: {},
-			canvasBaseDir: this.processBaseDir(this.options.canvas.attachmentBaseDir),
+			canvasBaseDir: this.processBaseDir(this.options.attachmentDir),
 			nodeBounds: this.calculateNodeBounds(canvasData),
 			offsetX: 0,
 			offsetY: 0,

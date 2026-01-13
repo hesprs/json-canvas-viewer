@@ -1,12 +1,12 @@
-import { micromark } from 'micromark';
-import { type BaseArgs, BaseModule } from '@/baseModule';
-import Controller from '@/controller';
-import DataManager from '@/dataManager';
-import InteractionHandler from '@/interactionHandler';
-import utilities, { destroyError } from '@/utilities';
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import Controller from '$/controller';
+import DataManager from '$/dataManager';
+import InteractionHandler from '$/interactionHandler';
+import utilities, { destroyError } from '$/utilities';
+import type { MarkdownParser } from './declarations';
 
 type Options = {
-	micromark?: Parameters<typeof micromark>[1];
+	markdownParser?: MarkdownParser;
 };
 
 export default class OverlayManager extends BaseModule<Options> {
@@ -16,7 +16,7 @@ export default class OverlayManager extends BaseModule<Options> {
 	private eventListeners: Record<string, Array<EventListener | null>> = {};
 	private DM: DataManager;
 	private IH: () => InteractionHandler;
-	private parse: (markdown: string) => string;
+	private parse: MarkdownParser;
 
 	private get overlaysLayer() {
 		if (!this._overlaysLayer) throw destroyError;
@@ -30,7 +30,7 @@ export default class OverlayManager extends BaseModule<Options> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.parse = (markdown: string) => micromark(markdown, this.options.micromark);
+		this.parse = this.options.markdownParser || ((markdown: string) => markdown);
 		this.DM = this.container.get(DataManager);
 		this.IH = this.container.get(InteractionHandler, { lazy: true });
 		const controller = this.container.get(Controller);
@@ -90,8 +90,8 @@ export default class OverlayManager extends BaseModule<Options> {
 			const response = await fetch(this.DM.data.canvasBaseDir + node.file);
 			const result = await response.text();
 			const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-			if (frontmatterMatch) parsedContent = this.parse(frontmatterMatch[2]);
-			else parsedContent = this.parse(result);
+			if (frontmatterMatch) parsedContent = await this.parse(frontmatterMatch[2]);
+			else parsedContent = await this.parse(result);
 		} catch (err) {
 			console.error('[JSONCanvasViewer] Failed to load markdown:', err);
 			parsedContent = 'Failed to load content.';
@@ -104,10 +104,10 @@ export default class OverlayManager extends BaseModule<Options> {
 		this.overlaysLayer.style.transform = `translate(${data.offsetX}px, ${data.offsetY}px) scale(${data.scale})`;
 	};
 
-	private updateOverlay(node: JSONCanvasNode, content: string, type: string) {
+	private async updateOverlay(node: JSONCanvasNode, content: string, type: string) {
 		let element = this.overlays[node.id];
 		if (!element) {
-			element = this.constructOverlay(node, content, type);
+			element = await this.constructOverlay(node, content, type);
 			this.overlaysLayer.appendChild(element);
 			this.overlays[node.id] = element;
 			element.style.left = `${node.x}px`;
@@ -120,7 +120,7 @@ export default class OverlayManager extends BaseModule<Options> {
 		}
 	}
 
-	private constructOverlay(node: JSONCanvasNode, content: string, type: string) {
+	private async constructOverlay(node: JSONCanvasNode, content: string, type: string) {
 		const color = utilities.getColor(node.color);
 		const overlay = document.createElement('div');
 		overlay.classList.add('overlay-container');
@@ -131,7 +131,7 @@ export default class OverlayManager extends BaseModule<Options> {
 			case 'text': {
 				overlay.classList.add('markdown-content');
 				const parsedContentWrapper = document.createElement('div');
-				parsedContentWrapper.innerHTML = this.parse(content || '');
+				parsedContentWrapper.innerHTML = await this.parse(content || '');
 				parsedContentWrapper.classList.add('parsed-content-wrapper');
 				overlay.appendChild(parsedContentWrapper);
 				break;

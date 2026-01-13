@@ -62,54 +62,75 @@
 
 ## 🚀 Quick Start
 
-We recommend using your favourite package manager to install the package.
+### Setup
+
+You firstly need a markdown-to-HTML parser, which is of the type below:
+
+```TypeScript
+type MarkdownParser = (markdown: string) => string | Promise<string>;
+```
+
+For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` is a development dependency only, when configured correctly, markdown parsing will happen only at build time.**
+
+Then we recommend using your favourite package manager to install the package.
 
 ```sh
 # npm
 npm add json-canvas-viewer
+npm add marked -D
 
 # pnpm
 pnpm add json-canvas-viewer
+pnpm add marked -D
 
 # yarn
 yarn add json-canvas-viewer
+yarn add marked -D
 ```
 
-Or include the following lines directly in your HTML file:
-
-```html
-<script type="module">
-    import { JSONCanvasViewer } from 'https://unpkg.com/json-canvas-viewer/dist/index.js';
-</script>
-```
-
-This link ships the latest ESM version by default, to access CJS version or earlier versions, try using a different URL like:
-
-```html
-<script src="https://unpkg.com/json-canvas-viewer@3.2.0/dist/index.cjs"></script>
-```
-
-The link above ships version 3.2.0 in CJS.
-
-Then we can instantiate the viewer:
+You also need to configure your bundler to support seamless canvas resolution. Currently, we only support Vite:
 
 ```TypeScript
-import { Controls, JSONCanvasViewer, Minimap, MistouchPreventer } from 'json-canvas-viewer';
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { jsonCanvasVitePlugin } from 'json-canvas-viewer/bridges';
+import  { marked } from 'marked';
+
+export default defineConfig({
+    // ... your other config
+    plugins: [
+        jsonCanvasVitePlugin(marked),
+        // ... your other plugins
+    ]
+})
+```
+
+The argument is any markdown parser, when empty, build-time parsing is disabled.
+
+The setup above gives you:
+- bundler resolution of `.canvas` file as modules
+- build-time parsing of `.canvas` files (less client-side overhead)
+- ease for later framework integration and SSR
+
+### Instantiation
+
+Instantiate the viewer:
+
+```TypeScript
+import { JSONCanvasViewer } from 'json-canvas-viewer';
+import { Minimap } from 'json-canvas-viewer/modules';
+import canvasData from 'path/to/your.canvas';
 
 new JSONCanvasViewer(
 	{
 		container: document.body, // The element to attach the viewer to
-		canvasPath: './Example/introduction.canvas', // The path to the canvas to load
-		controlsCollapsed: true, // Other options, depending on the modules you passed in
-		mistouchPreventer: {
-			preventAtStart: false,
-		},
+		canvas: canvasData, // The path to the canvas to load
 	},
-	[Controls, Minimap, MistouchPreventer], // The modules to load
+	[Minimap], // The modules to load
 );
 ```
 
-And the viewer should be right in the body, you can instantiate the viewer multiple times to render multiple canvases.
+And the viewer should be right there, you can instantiate the viewer multiple times to render multiple canvases.
 
 ## 🤝 Get Involved
 

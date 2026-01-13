@@ -63,13 +63,15 @@ You should always choose this version for serious uses. It provides the viewer i
 
 ### Setup
 
-We recommend using your favourite package manager to install the package. You also need a markdown-to-HTML parser, which is of the type below:
+You firstly need a markdown-to-HTML parser, which is of the type below:
 
 ```TypeScript
 type MarkdownParser = (markdown: string) => string | Promise<string>;
 ```
 
 For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` is a development dependency only, when configured correctly, markdown parsing will happen only at build time.**
+
+Then we recommend using your favourite package manager to install the package.
 
 ```sh
 # npm

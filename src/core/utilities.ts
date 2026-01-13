@@ -1,4 +1,4 @@
-import type { GeneralArguments } from '@/declarations';
+import type { GeneralArguments } from '$/declarations';
 
 export default {
 	round,
@@ -119,15 +119,7 @@ function round(roundedNum: number, digits: number) {
 	return Math.round(roundedNum * factor) / factor;
 }
 
-export function resolvePath(path: string) {
-	if (/^https?:\/\//.test(path)) return path.substring(0, path.lastIndexOf('/') + 1);
-	else {
-		const lastSlash = path.lastIndexOf('/');
-		return lastSlash !== -1 ? path.substring(0, lastSlash + 1) : './';
-	}
-}
-
-function makeHook<Args extends GeneralArguments = []>() {
+function makeHook<Args extends GeneralArguments = []>(reverse: boolean = false) {
 	type MatchingFunc = (...args: Args) => unknown;
 	type Hook = {
 		(...args: Args): void;
@@ -136,9 +128,15 @@ function makeHook<Args extends GeneralArguments = []>() {
 		unsubscribe(callback: MatchingFunc): void;
 	};
 	const result: Hook = (...args: Args) => {
-		result.subs.forEach(callback => {
-			callback(...args);
-		});
+		if (reverse) {
+			const items = Array.from(result.subs).reverse();
+			items.forEach(callback => {
+				callback(...args);
+			});
+		} else
+			result.subs.forEach(callback => {
+				callback(...args);
+			});
 	};
 	result.subs = new Set();
 	result.subscribe = (callback: MatchingFunc) => {

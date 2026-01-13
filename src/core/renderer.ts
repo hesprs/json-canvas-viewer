@@ -1,7 +1,7 @@
-import { type BaseArgs, BaseModule } from '@/baseModule';
-import Controller from '@/controller';
-import DataManager from '@/dataManager';
-import utilities, { destroyError } from '@/utilities';
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import Controller from '$/controller';
+import DataManager from '$/dataManager';
+import utilities, { destroyError } from '$/utilities';
 
 interface viewport {
 	left: number;

@@ -1,12 +1,12 @@
 import { Container } from '@needle-di/core';
-import type { GeneralModuleCtor } from '@/baseModule';
-import Controller from '@/controller';
-import DataManager from '@/dataManager';
-import type { ModuleInput, Options } from '@/declarations';
-import InteractionHandler from '@/interactionHandler';
-import OverlayManager from '@/overlayManager';
-import Renderer from '@/renderer';
-import utilities from './utilities';
+import type { GeneralModuleCtor } from '$/baseModule';
+import Controller from '$/controller';
+import DataManager from '$/dataManager';
+import type { ModuleInput, Options } from '$/declarations';
+import InteractionHandler from '$/interactionHandler';
+import OverlayManager from '$/overlayManager';
+import Renderer from '$/renderer';
+import utilities from '$/utilities';
 
 type InternalModules = [
 	typeof DataManager,
@@ -20,9 +20,9 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 	private options: Options<[...InternalModules, ...M]>;
 	private allModules: ModuleInput;
 	private IO: IntersectionObserver | null = null;
+	private onStart = utilities.makeHook();
+	private onDispose = utilities.makeHook(true);
 	container: Container;
-	onStart = utilities.makeHook();
-	onDispose = utilities.makeHook();
 
 	constructor(options: Options<[...InternalModules, ...M]>, modules?: M) {
 		this.container = new Container();
@@ -43,7 +43,7 @@ export default class JSONCanvasViewer<M extends ModuleInput = []> {
 		];
 
 		this.allModules.forEach(bind);
-		if (this.options.lazyLoad) {
+		if (this.options.lazyLoading) {
 			this.IO = new IntersectionObserver(this.onVisibilityCheck, {
 				root: null,
 				rootMargin: '50px',

@@ -1,25 +1,16 @@
-import { Controls, DebugPanel, JSONCanvasViewer, Minimap, MistouchPreventer, fetchCanvas } from '@';
-import { gfm, gfmHtml } from 'micromark-extension-gfm';
-import data from './example/introduction.canvas';
-
-console.log(data)
-console.log('ssss')
+import { JSONCanvasViewer } from '@';
+import { Controls, DebugPanel, Minimap, MistouchPreventer } from '@/modules';
+import canvas from './example/introduction.canvas';
 
 new JSONCanvasViewer(
 	{
 		container: document.body,
-		canvas: {
-            data,
-            attachmentBaseDir: './example'
-        },
+		canvas,
+		attachmentDir: './example',
 		// canvas: await fetchCanvas('Example Canvas/introduction.canvas'),
-        lazyLoad: true,
+		lazyLoading: true,
 		mistouchPreventer: {
 			preventAtStart: false,
-		},
-		micromark: {
-			extensions: [gfm()],
-			htmlExtensions: [gfmHtml()],
 		},
 	},
 	[Controls, DebugPanel, Minimap, MistouchPreventer],

@@ -1,6 +1,6 @@
-import type { BaseModule, GeneralModule, GeneralModuleCtor } from '@/baseModule';
-import type Controller from './controller';
-import type DataManager from './dataManager';
+import type { BaseModule, GeneralModule, GeneralModuleCtor } from '$/baseModule';
+import type Controller from '$/controller';
+import type DataManager from '$/dataManager';
 import type InteractionHandler from './interactionHandler';
 import type OverlayManager from './overlayManager';
 import type Renderer from './renderer';
@@ -116,10 +116,12 @@ type AllModuleInstances<T extends ModuleInput> = InstanceType<T[number]>;
 
 export type DefaultOptions = {
 	container: HTMLElement;
-	lazyLoad?: boolean;
+	lazyLoading?: boolean;
 };
 
 export type ModuleInput = Array<GeneralModuleCtor>;
+
+export type MarkdownParser = (markdown: string) => string | Promise<string>;
 
 export type Options<T extends ModuleInput = []> = Omit<
 	UnionToIntersection<AllModuleInstances<T>['options']>,

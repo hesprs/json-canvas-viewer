@@ -29,7 +29,7 @@
 		}
 	},
 	"repository": {
-		"type": "git",
+        "type": "git",
 		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
 	},
 	"homepage": "https://github.com/hesprs/json-canvas-viewer#readme",
@@ -51,18 +51,21 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.10",
 		"@types/node": "^25.0.6",
+		"@vitejs/plugin-vue": "^6.0.3",
 		"dompurify": "^3.3.1",
 		"marked": "^17.0.1",
 		"sass": "^1.97.2",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
-		"vite": "^7.3.1"
+		"vite": "^7.3.1",
+		"vue": "^3.5.26",
+		"vue-tsc": "^3.2.2"
 	},
 	"files": ["dist"],
 	"scripts": {
 		"dev": "vite",
 		"lint": "biome check --write",
-		"build": "vite build && BUILD=chimp vite build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+		"build": "vite build && BUILD=chimp vite build && vue-tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"check": "tsc --noEmit && biome check"
 	},
 	"dependencies": {

@@ -19,6 +19,6 @@ This project welcomes anyone that have ideas to improve it.
 - [Start a new thread in Discussions](https://github.com/hesprs/pointeract/discussions/new) if you have feature requests or questions, please avoid posting them in Issues.
 - [Report a vulnerability](https://github.com/hesprs/pointeract/security/advisories/new) if you find one, please do not disclose it publicly.
 
-## 📝 Copyright & License
+## Copyright & License
 
 Copyright ©️ 2025-2026 Hesprs (Hēsperus) | [MIT License](https://mit-license.org/)

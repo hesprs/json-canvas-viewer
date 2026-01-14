@@ -1,4 +1,4 @@
-import type { BaseModule, GeneralModule, GeneralModuleCtor } from '$/baseModule';
+import type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
 import type Controller from '$/controller';
 import type DataManager from '$/dataManager';
 import type InteractionHandler from './interactionHandler';
@@ -46,12 +46,6 @@ declare global {
 	interface JSONCanvas {
 		nodes?: Array<JSONCanvasNode>;
 		edges?: Array<JSONCanvasEdge>;
-	}
-
-	//@ts-expect-error: TS doesn't recognize this as a module
-	declare module '*.scss?inline' {
-		const content: string;
-		export default content;
 	}
 
 	//@ts-expect-error: TS doesn't recognize this as a module
@@ -112,28 +106,24 @@ type Indexable = string | number | symbol;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
 	? I
 	: never;
-type AllModuleInstances<T extends ModuleInput> = InstanceType<T[number]>;
+
+export type ModuleInputCtor = Array<GeneralModuleCtor>;
+type ModuleInputInstance = Array<GeneralModule>;
+type ModuleInput = ModuleInputCtor | ModuleInputInstance;
+
+export type Instances<T extends ModuleInput> = T extends ModuleInputCtor
+	? InstanceType<T[number]>
+	: T[number];
 
 export type DefaultOptions = {
 	container: HTMLElement;
 	lazyLoading?: boolean;
 };
 
-export type ModuleInput = Array<GeneralModuleCtor>;
-
 export type MarkdownParser = (markdown: string) => string | Promise<string>;
 
-export type Options<T extends ModuleInput = []> = Omit<
-	UnionToIntersection<AllModuleInstances<T>['options']>,
-	keyof DefaultOptions
-> &
-	DefaultOptions;
+export type Options<T extends ModuleInput> = UnionToIntersection<Instances<T>['options']>;
 
-type Ctors<T extends Array<BaseModule> | BaseModule> =
-	T extends Array<BaseModule>
-		? { [K in keyof T]: new (...args: GeneralArguments) => T[K] }
-		: [new (...args: GeneralArguments) => T];
+type InternalModules = [DataManager, Controller, OverlayManager, InteractionHandler, Renderer];
 
-export type UserOptions<T extends Array<GeneralModule> = []> = Options<
-	Ctors<[Controller, InteractionHandler, DataManager, OverlayManager, Renderer, ...T]>
->;
+export type UserOptions<M extends ModuleInput> = Options<M> & Options<InternalModules>;

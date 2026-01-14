@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import vue from '@vitejs/plugin-vue';
 import { marked } from 'marked';
 import { defineConfig } from 'vite';
 import jsonCanvasTransform from './src/bridges/vitePlugin';
@@ -13,14 +14,14 @@ const fullConfig = defineConfig({
 			$: resolve(__dirname, 'src/core/'),
 		},
 	},
-	plugins: [jsonCanvasTransform(marked)],
+	plugins: [jsonCanvasTransform(marked), vue()],
 	build: {
 		outDir: resolve(__dirname, 'dist'),
 		emptyOutDir: true,
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['@needle-di/core', 'pointeract'],
+			external: ['@needle-di/core', 'pointeract', 'vue'],
 		},
 		lib: {
 			entry: {
@@ -37,14 +38,12 @@ const fullConfig = defineConfig({
 });
 
 const chimpConfig = defineConfig({
-	root: 'test',
 	resolve: {
 		alias: {
 			'@': resolve(__dirname, 'src/'),
 			$: resolve(__dirname, 'src/core/'),
 		},
 	},
-	plugins: [jsonCanvasTransform(marked)],
 	build: {
 		outDir: resolve(__dirname, 'dist'),
 		emptyOutDir: false,

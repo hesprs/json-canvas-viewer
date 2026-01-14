@@ -51,14 +51,24 @@
 - Responsive design with mobile and touchpad adaptation
 - Supports Lazy loading
 - TypeScript native
-- Seamless integration with Vite, Vue, React or vanilla JS.
-- [Supports Server-side rendering (SSR)](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#server-side-rendering)
 - 🔥 More performant than rendering canvases in Obsidian!
 - 🧩 Out-of-the-box extensibility and tree-shaking, current optional modules include:
   - [`Minimap`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#minimap) for easy navigation
   - [`Controls`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#controls) displays zoom in/out and fullscreen buttons
   - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
   - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
+
+## 🧩 Integration with Existing Paradigms
+
+JSON Canvas Viewer currently can work seamlessly with the following techstacks / technologies (including but not limited to):
+
+- ✅ Vanilla JS/TS: natural support
+- ✅ Server-side Rendering: [`RenderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#server-side-rendering)
+- ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#setup-1)
+- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#vue-component)
+- 🟡 React: work in progress, yet it's simply a wrapper around the main `JSONCanvasViewer` class, you can create one in seconds.
+
+🙌 Contributors are welcomed!
 
 ## 🚀 Quick Start
 
@@ -70,7 +80,7 @@ You firstly need a markdown-to-HTML parser, which is of the type below:
 type MarkdownParser = (markdown: string) => string | Promise<string>;
 ```
 
-For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` is a development dependency only, when configured correctly, markdown parsing will happen only at build time.**
+For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` will be a development dependency, when configured correctly, markdown parsing will happen only at build time.**
 
 Then we recommend using your favourite package manager to install the package.
 

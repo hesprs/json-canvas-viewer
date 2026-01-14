@@ -2,29 +2,21 @@ import { Container } from '@needle-di/core';
 import type { GeneralModuleCtor } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
-import type { ModuleInput, Options } from '$/declarations';
+import type { ModuleInputCtor, UserOptions } from '$/declarations';
 import InteractionHandler from '$/interactionHandler';
 import OverlayManager from '$/overlayManager';
 import Renderer from '$/renderer';
 import utilities from '$/utilities';
 
-type InternalModules = [
-	typeof DataManager,
-	typeof Controller,
-	typeof OverlayManager,
-	typeof InteractionHandler,
-	typeof Renderer,
-];
-
-export default class JSONCanvasViewer<M extends ModuleInput = []> {
-	private options: Options<[...InternalModules, ...M]>;
-	private allModules: ModuleInput;
+export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
+	private options: UserOptions<M>;
+	private allModules: ModuleInputCtor;
 	private IO: IntersectionObserver | null = null;
 	private onStart = utilities.makeHook();
 	private onDispose = utilities.makeHook(true);
 	container: Container;
 
-	constructor(options: Options<[...InternalModules, ...M]>, modules?: M) {
+	constructor(options: UserOptions<M>, modules?: M) {
 		this.container = new Container();
 		this.options = options;
 		const bind = (Class: GeneralModuleCtor) => {

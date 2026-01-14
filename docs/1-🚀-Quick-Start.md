@@ -1,10 +1,8 @@
-# 🚀 Quick Start
-
 We provide you two versions of JSON Canvas Viewer - `chimp` version and `full` version.
 
 ## 🐒 Chimpanzee Version
 
-This version is specially built for fast trials and environments that do not have bundlers or package managers. It has everything integrated into one file, including `DOMPurify` that secures your clients from XSS attacks, enabling you to use within seconds. However, it's **not recommended** for production use since it does not support tree-shaking.
+This version is specially built for fast trials and environments that do not have bundlers or package managers. It has everything integrated into one file, enabling you to use within seconds. However, it's **not recommended** for production use since it does not support deep customization or tree-shaking.
 
 ### Setup
 
@@ -69,7 +67,7 @@ You firstly need a markdown-to-HTML parser, which is of the type below:
 type MarkdownParser = (markdown: string) => string | Promise<string>;
 ```
 
-For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` is a development dependency only, when configured correctly, markdown parsing will happen only at build time.**
+For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` will be a development dependency, when configured correctly, markdown parsing will happen only at build time.**
 
 Then we recommend using your favourite package manager to install the package.
 

@@ -7,7 +7,7 @@ type Hook = ReturnType<typeof utilities.makeHook>;
 export type BaseArgs = [Container, GeneralObject, Hook, Hook];
 
 export type GeneralModuleCtor = typeof BaseModule<GeneralObject>;
-export type GeneralModule = InstanceType<GeneralModuleCtor>;
+export type GeneralModule = BaseModule<GeneralObject>;
 
 export class BaseModule<O extends GeneralObject = Empty> {
 	onStart: (callback: GeneralFunction) => void;

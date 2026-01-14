@@ -8,8 +8,10 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"noEmit": true,
+		"jsx": "preserve",
+		"verbatimModuleSyntax": true,
 		"allowImportingTsExtensions": true,
-		"lib": ["ESNext", "DOM"],
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"paths": {
 			"@/*": ["./src/*"],
 			"@": ["./src"],

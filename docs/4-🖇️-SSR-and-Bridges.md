@@ -26,7 +26,10 @@ During client-side code execution, pre-rendered HTML will be replaced with the a
 
 ## Vue Component
 
-A Vue3 wrapper (`JSONCanvasViewerVue`) is ready to use in the full version of JSON Canvas Viewer. This component comes with natural support of SSR. For maximum customizability, the component comes **unstyled**, you can assign class yourself.
+A Vue3 wrapper (`JSONCanvasViewerVue`) is ready to use in the full version of JSON Canvas Viewer. Note that:
+- This component comes with natural support of SSR.
+- This component comes **unstyled**, you can assign class yourself.
+- You need to wrap it with a `<Suspense></Suspense>`.
 
 Below is a minimal example:
 
@@ -44,7 +47,9 @@ const modules = [Minimap, MistouchPreventer, Controls];
 </script>
 
 <template>
-    <JSONCanvasViewerVue class="viewer" :modules :options />
+    <suspense>
+        <JSONCanvasViewerVue class="viewer" :modules :options />
+    </Suspense>
     <!-- ... your other components -->
 </template>
 

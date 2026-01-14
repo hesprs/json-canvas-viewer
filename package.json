@@ -29,20 +29,14 @@
 		}
 	},
 	"repository": {
-		"type": "git",
+        "type": "git",
 		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
 	},
 	"homepage": "https://github.com/hesprs/json-canvas-viewer#readme",
 	"bugs": {
 		"url": "https://github.com/hesprs/json-canvas-viewer/issues"
 	},
-	"keywords": [
-		"obsidian",
-		"json-canvas",
-		"front-end",
-		"html-canvas",
-		"typescript"
-	],
+	"keywords": ["obsidian", "json-canvas", "front-end", "html-canvas", "typescript"],
 	"author": {
 		"name": "Hēsperus",
 		"email": "hesprs@outlook.com"
@@ -67,9 +61,7 @@
 		"vue": "^3.5.26",
 		"vue-tsc": "^3.2.2"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"dev": "vite",
 		"lint": "biome check --write",

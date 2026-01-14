@@ -49,12 +49,6 @@ declare global {
 	}
 
 	//@ts-expect-error: TS doesn't recognize this as a module
-	declare module '*.scss?inline' {
-		const content: string;
-		export default content;
-	}
-
-	//@ts-expect-error: TS doesn't recognize this as a module
 	declare module '*.canvas' {
 		const content: JSONCanvas;
 		export default content;

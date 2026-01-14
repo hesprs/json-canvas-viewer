@@ -1,8 +1,4 @@
-# 🧩 Modules
-
-JSON Canvas Viewer is built in a modular way, its core is simply the composition of several internal modules. It's also very extensible, you can easily add your own modules to customize the viewer. About how to write your own module, please refer to [Develop a Module](5-🧑‍💻-Develop-a-Module.md).
-
-Actually, we have built some extended modules for you to use:
+JSON Canvas Viewer is built in a modular way, its core is simply the composition of several internal modules. It's also very extensible, you can easily add your own modules to customize the viewer. About how to write your own module, please refer to [Develop a Module](5-🧑‍💻-Develop-a-Module.md).Actually, we have built some extended modules for you to use:
 
 ## Minimap
 

@@ -14,7 +14,18 @@
 	},
 	"linter": {
 		"enabled": true,
-		"rules": { "recommended": true }
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				"noImportantStyles": "off"
+			},
+			"correctness": {
+				"noUnknownPseudoClass": "off"
+			}
+		},
+		"domains": {
+			"vue": "recommended"
+		}
 	},
 	"javascript": {
 		"formatter": {
@@ -33,15 +44,21 @@
 	"html": {
 		"formatter": {
 			"indentScriptAndStyle": false,
+			"enabled": true,
 			"selfCloseVoidElements": "always"
-		}
+		},
+		"experimentalFullSupportEnabled": true
 	},
 	"overrides": [
 		{
-			"includes": ["*.md"],
-			"formatter": {
-				"indentStyle": "space",
-				"indentWidth": 2
+			"includes": ["**/*.vue"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnusedImports": "off",
+						"noUnusedVariables": "off"
+					}
+				}
 			}
 		}
 	],

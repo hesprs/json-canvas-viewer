@@ -1,3 +1,4 @@
+export type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
 export { type BaseArgs, BaseModule } from '$/baseModule';
 export { default as Controller } from '$/controller';
 export { default as DataManager } from '$/dataManager';

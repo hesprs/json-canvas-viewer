@@ -1,5 +1,3 @@
-# 🧑‍💻 Develop a Module
-
 Development of modules on the infrastructure of `json-canvas-viewer` requires an understanding of [our source code](https://github.com/hesprs/json-canvas-viewer/tree/main/src) and architecture. Important points include:
 - The entire viewer is built on an entry class `JSONCanvasViewer` and several modules.
 - This project uses dependency injection to manage modules.
@@ -38,6 +36,12 @@ This setup gives you available properties:
 - `this.onStart`: The hook to be called when the viewer is prepared, different from the constructor, this hook is called after all the modules are initialized, and the canvas is about to be interactable.
 - `this.onDispose`: The hook to be called when the viewer is disposed.
 
+## Accessing Module Types
+
+Although all modules extent `BaseModule`, you may encounter troubles when trying to use its type to denote the generic type of modules.
+
+Hence, we provide types `GeneralModule` and `GeneralModuleCtor` for this purpose. You can import them from `json-canvas-viewer/dev`.
+
 ## Define Options
 
 To ensure the correctness of option types, you need to pass a type parameter to the `BaseModule` class, for example:
@@ -68,7 +72,7 @@ Controller,
 DataManager,
 InteractionHandler,
 Renderer,
-OverlayManager,
+OverlayManager
 ```
 
 Then you can access services in your module with `needle-di`. E.g., when you want to use `DataManager`:
@@ -92,7 +96,7 @@ The package also provides a `canvasUtils` export, which provides some useful fun
 The following example shows the code of module `DebugPanel`:
 
 ```TypeScript
-import { type BaseArgs, BaseModule, DataManager, Controller, canvasUtils } from 'json-canvas-viewer';
+import { type BaseArgs, BaseModule, DataManager, Controller, canvasUtils } from 'json-canvas-viewer/dev';
 import style from './styles.scss?inline'; // access the styles as a string if you are using Vite
 
 // for demonstration only, we create a useless option

@@ -1,5 +1,3 @@
-# 🏗️ Construction Details
-
 ## Constructor Arguments
 
 The constructor receives arguments `(options, modules?)`.
@@ -39,17 +37,30 @@ An array of modules to load, currently available modules are documented in [Modu
 - `viewer.dispose()`: cleans up and removes the viewer from DOM.
 - `viewer.container`: the DI container, the viewer uses dependency injection internally. Accessing the container unlocks the full potential of customization.
 
-## Accessing Options
+## Accessing Option Type
 
 Sometimes you may need to access the options type without truly instantiating a viewer. The viewer has an exported `Options` type that can be used for this. You can also pass modules to it:
 
 ```ts
 import type { Options } from "json-canvas-viewer";
-import { Minimap, MistouchPrevention } from "json-canvas-viewer/modules";
-type MyOptions = Options<[Minimap, MistouchPrevention]>;
+import { Minimap, MistouchPreventer } from "json-canvas-viewer/modules";
+type MyOptions = Options<[Minimap, MistouchPreventer]>;
 ```
 
-The `MyOptions` type above is the type of the options object can be passed to the viewer that loads the `Minimap` and `MistouchPrevention` optional modules.
+The `MyOptions` type above is the type of the options object can be passed to the viewer that loads the `Minimap` and `MistouchPreventer` optional modules.
+
+> [!TIP]
+> `Options` type is designed to be flexible, it accepts an array of either module constructors or their instances, for example:
+>
+> ``` TypeScript
+> import { Minimap, MistouchPreventer } from "json-canvas-viewer/modules";
+> import type { Options } from "json-canvas-viewer";
+>
+> type MyOptions1 = Options<[Minimap, MistouchPreventer]>;
+> type MyOptions2 = Options<[typeof Minimap, typeof MistouchPreventer]>;
+> ```
+>
+> In the above example, `MyOptions1` and `MyOptions2` are equivalent.
 
 ---
 

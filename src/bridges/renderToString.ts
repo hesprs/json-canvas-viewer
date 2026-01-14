@@ -1,4 +1,4 @@
-import type { MarkdownParser } from '@/core/declarations';
+import type { MarkdownParser } from '$/declarations';
 
 export default async function (options: {
 	canvas: JSONCanvas;

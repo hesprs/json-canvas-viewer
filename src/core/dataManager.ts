@@ -13,13 +13,29 @@ type Options = {
 	extraCSS?: string;
 };
 
+export interface MapNodeItem {
+	type: 'node';
+	ref: JSONCanvasNode;
+	fileName?: string;
+}
+
+export interface MapEdgeItem {
+	type: 'edge';
+	ref: JSONCanvasEdge;
+	controlPoints?: Array<number>;
+}
+
+type MapItem = MapEdgeItem | MapNodeItem;
+
+type CanvasMap = Record<string, MapItem>;
+
 export default class DataManager extends BaseModule<Options> {
 	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
 	onToggleFullscreen = utilities.makeHook<[boolean]>();
 
 	data: {
 		canvasData: Required<JSONCanvas>;
-		nodeMap: Record<string, JSONCanvasNode>;
+		canvasMap: CanvasMap;
 		canvasBaseDir: string;
 		nodeBounds: NodeBounds;
 		offsetX: number;
@@ -52,7 +68,7 @@ export default class DataManager extends BaseModule<Options> {
 
 		this.data = {
 			canvasData: canvasData,
-			nodeMap: {},
+			canvasMap: {},
 			canvasBaseDir: this.processBaseDir(this.options.attachmentDir),
 			nodeBounds: this.calculateNodeBounds(canvasData),
 			offsetX: 0,
@@ -62,11 +78,25 @@ export default class DataManager extends BaseModule<Options> {
 		};
 
 		this.data.canvasData.nodes.forEach(node => {
-			if (node.type === 'file' && !node.file.includes('http')) {
-				const file = node.file.split('/');
-				node.file = file[file.length - 1];
+			this.data.canvasMap[node.id] = {
+				type: 'node',
+				ref: node,
+			};
+			const target = this.data.canvasMap[node.id] as MapNodeItem;
+			const ref = target.ref;
+			if (ref.type === 'file') {
+				const path = ref.file.split('/');
+				const fileName = path.pop() || '';
+				target.fileName = fileName;
+				if (!ref.file.startsWith('http://') && !ref.file.startsWith('https://'))
+					ref.file = this.data.canvasBaseDir + fileName;
 			}
-			this.data.nodeMap[node.id] = node;
+		});
+		this.data.canvasData.edges.forEach(edge => {
+			this.data.canvasMap[edge.id] = {
+				type: 'edge',
+				ref: edge,
+			};
 		});
 
 		this.buildSpatialGrid();

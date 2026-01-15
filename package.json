@@ -1,6 +1,6 @@
 {
 	"name": "json-canvas-viewer",
-	"version": "3.3.0",
+	"version": "3.3.1",
 	"description": "An extensible web-based viewer for JSON Canvas, easy to embed into websites.",
 	"type": "module",
 	"types": "dist/types/index.d.ts",
@@ -29,14 +29,20 @@
 		}
 	},
 	"repository": {
-        "type": "git",
+		"type": "git",
 		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
 	},
-	"homepage": "https://github.com/hesprs/json-canvas-viewer#readme",
+	"homepage": "https://hesprs.github.io/json-canvas-viewer",
 	"bugs": {
 		"url": "https://github.com/hesprs/json-canvas-viewer/issues"
 	},
-	"keywords": ["obsidian", "json-canvas", "front-end", "html-canvas", "typescript"],
+	"keywords": [
+		"obsidian",
+		"json-canvas",
+		"front-end",
+		"html-canvas",
+		"typescript"
+	],
 	"author": {
 		"name": "Hēsperus",
 		"email": "hesprs@outlook.com"
@@ -51,9 +57,11 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.10",
 		"@types/node": "^25.0.6",
+		"@types/react": "^19.2.8",
 		"@vitejs/plugin-vue": "^6.0.3",
 		"dompurify": "^3.3.1",
 		"marked": "^17.0.1",
+		"react": "^19.2.3",
 		"sass": "^1.97.2",
 		"tsc-alias": "^1.8.16",
 		"typescript": "^5.9.3",
@@ -61,7 +69,9 @@
 		"vue": "^3.5.26",
 		"vue-tsc": "^3.2.2"
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "vite",
 		"lint": "biome check --write",

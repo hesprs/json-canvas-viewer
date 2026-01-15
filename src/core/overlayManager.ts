@@ -46,7 +46,6 @@ export default class OverlayManager extends BaseModule<Options> {
 
 	private start = () => {
 		this.IH().onClick.subscribe(this.select);
-		const cbd = this.DM.data.canvasBaseDir;
 		const createOverlay = async (node: JSONCanvasNode) => {
 			switch (node.type) {
 				case 'text': {
@@ -56,9 +55,8 @@ export default class OverlayManager extends BaseModule<Options> {
 				case 'file': {
 					if (node.file.match(/\.md$/i)) this.loadMarkdownForNode(node);
 					else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
-						this.updateOverlay(node, cbd + node.file, 'image');
-					else if (node.file.match(/\.(mp3|wav)$/i))
-						this.updateOverlay(node, cbd + node.file, 'audio');
+						this.updateOverlay(node, node.file, 'image');
+					else if (node.file.match(/\.(mp3|wav)$/i)) this.updateOverlay(node, node.file, 'audio');
 					break;
 				}
 				case 'link': {
@@ -67,8 +65,8 @@ export default class OverlayManager extends BaseModule<Options> {
 				}
 			}
 		};
-		Object.values(this.DM.data.nodeMap).forEach(node => {
-			createOverlay(node);
+		Object.values(this.DM.data.canvasMap).forEach(node => {
+			if (node.type === 'node') createOverlay(node.ref);
 		});
 	};
 
@@ -87,7 +85,7 @@ export default class OverlayManager extends BaseModule<Options> {
 		this.updateOverlay(node, 'Loading...', 'text');
 		let parsedContent: string;
 		try {
-			const response = await fetch(this.DM.data.canvasBaseDir + node.file);
+			const response = await fetch(node.file);
 			const result = await response.text();
 			const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
 			if (frontmatterMatch) parsedContent = await this.parse(frontmatterMatch[2]);

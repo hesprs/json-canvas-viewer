@@ -71,17 +71,6 @@ export type Coordinates = {
 	y: number;
 };
 
-export type RuntimeData = {
-	offsetX: number;
-	offsetY: number;
-	scale: number;
-	canvasData: JSONCanvas;
-	nodeMap: Record<string, JSONCanvasNode>;
-	canvasBaseDir: string;
-	nodeBounds: NodeBounds;
-	container: HTMLDivElement;
-};
-
 export type NodeBounds = {
 	minX: number;
 	minY: number;

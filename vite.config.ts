@@ -21,7 +21,7 @@ const fullConfig = defineConfig({
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['@needle-di/core', 'pointeract', 'vue'],
+			external: ['@needle-di/core', 'pointeract', 'vue', 'react'],
 		},
 		lib: {
 			entry: {

@@ -7,15 +7,15 @@ import renderToString from './renderToString';
 type ComponentOptions<T extends ModuleInputCtor> = {
 	modules?: T;
 	options: Omit<UserOptions<T>, 'container'>;
-	isSSR?: boolean;
+	isPrerendering?: boolean;
 };
 
 const props = defineProps<ComponentOptions<T>>();
 
-const isSSR = props.isSSR || typeof window === 'undefined';
+const isPrerendering = props.isPrerendering || typeof window === 'undefined';
 const viewerRef = useTemplateRef('viewerRef');
 let viewer: JSONCanvasViewer<ModuleInputCtor> | null = null;
-const prerender = isSSR ? await renderToString(props.options) : '';
+const prerender = isPrerendering ? await renderToString(props.options) : '';
 
 onMounted(() => {
 	if (!viewerRef.value) return;

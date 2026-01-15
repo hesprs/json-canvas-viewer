@@ -68,7 +68,7 @@ JSON Canvas Viewer currently can work seamlessly with the following techstacks /
 - ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)
 - ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)
 
-🙌 Contributors are welcomed!
+🙌 Contributions are welcomed!
 
 ## 🚀 Quick Start
 

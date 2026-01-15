@@ -1,4 +1,4 @@
-## Server Side Rendering
+## Prerendering
 
 `json-canvas-viewer/bridges` provides an export `renderToString` async function that renders the canvas content to a string:
 

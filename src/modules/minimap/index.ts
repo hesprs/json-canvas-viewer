@@ -125,9 +125,9 @@ export default class Minimap extends BaseModule<Options> {
 	};
 
 	private drawMinimapEdge = (edge: JSONCanvasEdge) => {
-		const nodeMap = this.DM.data.nodeMap;
-		const fromNode = nodeMap[edge.fromNode];
-		const toNode = nodeMap[edge.toNode];
+		const canvasMap = this.DM.data.canvasMap;
+		const fromNode = canvasMap[edge.fromNode].ref as JSONCanvasNode;
+		const toNode = canvasMap[edge.toNode].ref as JSONCanvasNode;
 		if (!fromNode || !toNode) return;
 		const [startX, startY] = utilities.getAnchorCoord(fromNode, edge.fromSide);
 		const [endX, endY] = utilities.getAnchorCoord(toNode, edge.toSide);

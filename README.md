@@ -63,10 +63,10 @@
 JSON Canvas Viewer currently can work seamlessly with the following techstacks / technologies (including but not limited to):
 
 - ✅ Vanilla JS/TS: natural support
-- ✅ Server-side Rendering: [`RenderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#server-side-rendering)
+- ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#prerendering)
 - ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#setup-1)
-- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-SSR-and-Bridges#vue-component)
-- 🟡 React: work in progress, yet it's simply a wrapper around the main `JSONCanvasViewer` class, you can create one in seconds.
+- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)
+- ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)
 
 🙌 Contributors are welcomed!
 
@@ -120,7 +120,7 @@ The argument is any markdown parser, when empty, build-time parsing is disabled.
 The setup above gives you:
 - bundler resolution of `.canvas` file as modules
 - build-time parsing of `.canvas` files (less client-side overhead)
-- ease for later framework integration and SSR
+- ease for later framework integration and prerendering
 
 ### Instantiation
 

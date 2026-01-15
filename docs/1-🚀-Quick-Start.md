@@ -57,7 +57,7 @@ You can now start your dev server and a interactive canvas should be right in th
 
 ## 📦 Full Version
 
-You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and Vite/SSR bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
+You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and Vite/prerendering bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
 
 ### Setup
 
@@ -107,7 +107,7 @@ The argument is any markdown parser, when empty, build-time parsing is disabled.
 The setup above gives you:
 - bundler resolution of `.canvas` file as modules
 - build-time parsing of `.canvas` files (less client-side overhead)
-- ease for later framework integration and SSR
+- ease for later framework integration and prerendering
 
 ### Instantiation
 

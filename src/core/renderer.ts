@@ -1,6 +1,6 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
-import DataManager from '$/dataManager';
+import DataManager, { type MapEdgeItem, type MapNodeItem } from '$/dataManager';
 import utilities, { destroyError } from '$/utilities';
 
 interface viewport {
@@ -8,10 +8,6 @@ interface viewport {
 	right: number;
 	top: number;
 	bottom: number;
-}
-
-interface RuntimeJSONCanvasEdge extends JSONCanvasEdge {
-	controlPoints?: Array<number>;
 }
 
 const ARROW_LENGTH = 12;
@@ -101,19 +97,13 @@ export default class Renderer extends BaseModule {
 		this.ctx.save();
 		this.ctx.translate(offsetX, offsetY);
 		this.ctx.scale(scale, scale);
-		const canvasData = this.DM.data.canvasData;
-		canvasData.nodes.forEach(node => {
-			switch (node.type) {
-				case 'group':
-					this.drawGroup(node, scale);
-					break;
-				case 'file':
-					this.drawFileNode(node);
-					break;
+		Object.values(this.DM.data.canvasMap).forEach(item => {
+			if (item.type === 'edge') this.drawEdge(item);
+			else {
+				const node = item.ref;
+				if (node.type === 'file') this.drawFile(item);
+				else if (node.type === 'group') this.drawGroup(node, scale);
 			}
-		});
-		canvasData.edges.forEach(edge => {
-			this.drawEdge(edge);
 		});
 		this.ctx.restore();
 	}
@@ -189,20 +179,23 @@ export default class Renderer extends BaseModule {
 			this.drawLabelBar(node.x, node.y, node.label, utilities.getColor(node.color).active, scale);
 	};
 
-	private drawFileNode = (node: JSONCanvasFileNode) => {
+	private drawFile = (item: MapNodeItem) => {
 		this.ctx.fillStyle = FONT_COLOR;
+		const node = item.ref;
 		this.ctx.font = '16px sans-serif';
-		this.ctx.fillText(node.file, node.x + 5, node.y - 10);
+		this.ctx.fillText(item.fileName || '', node.x + 5, node.y - 10);
 	};
 
-	private drawEdge = (edge: RuntimeJSONCanvasEdge) => {
-		const { fromNode, toNode } = this.getEdgeNodes(edge);
+	private drawEdge = (item: MapEdgeItem) => {
+		const edge = item.ref;
+		const fromNode = this.DM.data.canvasMap[edge.fromNode].ref as JSONCanvasNode;
+		const toNode = this.DM.data.canvasMap[edge.toNode].ref as JSONCanvasNode;
 		const gac = utilities.getAnchorCoord;
 		const [startX, startY] = gac(fromNode, edge.fromSide);
 		const [endX, endY] = gac(toNode, edge.toSide);
 		const { active } = utilities.getColor(edge.color);
 		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
-		if (!edge.controlPoints) {
+		if (!item.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
 				startX,
 				startY,
@@ -211,8 +204,8 @@ export default class Renderer extends BaseModule {
 				edge.fromSide,
 				edge.toSide,
 			);
-			edge.controlPoints = [startControlX, startControlY, endControlX, endControlY];
-		} else [startControlX, startControlY, endControlX, endControlY] = edge.controlPoints;
+			item.controlPoints = [startControlX, startControlY, endControlX, endControlY];
+		} else [startControlX, startControlY, endControlX, endControlY] = item.controlPoints;
 		this.drawCurvedPath(
 			startX,
 			startY,
@@ -261,11 +254,6 @@ export default class Renderer extends BaseModule {
 			this.ctx.textBaseline = 'alphabetic';
 		}
 	};
-
-	private getEdgeNodes = (edge: JSONCanvasEdge) => ({
-		fromNode: this.DM.data.nodeMap[edge.fromNode],
-		toNode: this.DM.data.nodeMap[edge.toNode],
-	});
 
 	private getControlPoints = (
 		startX: number,

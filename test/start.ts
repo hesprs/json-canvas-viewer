@@ -1,12 +1,11 @@
 import { JSONCanvasViewer } from '@';
 import { Controls, DebugPanel, Minimap, MistouchPreventer } from '@/modules';
-import canvas from './example/introduction.canvas';
+import canvas from './demo.canvas';
 
 new JSONCanvasViewer(
 	{
 		container: document.body,
 		canvas,
-		attachmentDir: './example',
 		// canvas: await fetchCanvas('Example Canvas/introduction.canvas'),
 		lazyLoading: true,
 		mistouchPreventer: {

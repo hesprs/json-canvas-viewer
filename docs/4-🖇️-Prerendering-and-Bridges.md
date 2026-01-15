@@ -1,8 +1,6 @@
 ## Server Side Rendering
 
-We've experimented with a viable path using **progressive enhancement** for server-side rendering JSON canvases.
-
-`json-canvas-viewer/bridges` provides an export `renderToString` async function that renders the canvas to a string:
+`json-canvas-viewer/bridges` provides an export `renderToString` async function that renders the canvas content to a string:
 
 ```TypeScript
 renderToString(options: {
@@ -27,7 +25,7 @@ During client-side code execution, pre-rendered HTML will be replaced with the a
 ## Vue Component
 
 A Vue3 wrapper (`JSONCanvasViewerVue`) is ready to use in the full version of JSON Canvas Viewer. Note that:
-- This component comes with natural support of SSR.
+- This component comes with natural support of prerendering.
 - This component comes **unstyled**, you can assign class yourself.
 - You need to wrap it with a `<Suspense></Suspense>`.
 
@@ -47,7 +45,7 @@ const modules = [Minimap, MistouchPreventer, Controls];
 </script>
 
 <template>
-    <suspense>
+    <Suspense>
         <JSONCanvasViewerVue class="viewer" :modules :options />
     </Suspense>
     <!-- ... your other components -->
@@ -76,10 +74,40 @@ The component has props of:
 {
     options: <JSON Canvas Viewer Options>;
     modules?: <JSON Canvas Viewer Module>[];
-    isSSR?: boolean;
+    isPrerendering?: boolean;
 }
 ```
 
 - `modules`: The optional modules to load, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#modules).
 - `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options). **Note that the `container` field is omitted**.
-- `isSSR`: Whether to run in SSR mode. If not defined, it will be inferred from the existence of `window`, which is reliable enough that in most cases you don't need to specify this property.
+- `isPrerendering`: Whether to run in prerendering mode. If not defined, it will be inferred from the existence of `window`, which is reliable enough that in most cases you don't need to specify this property.
+
+## React Component
+
+We've also crafted a React component (`JSONCanvasViewerReact`) that wraps around the viewer. It can be found the the full version of the viewer at `json-canvas-viewer/bridges`. Note that:
+- Unlike the Vue component, you need to manually decide when to prerender. We recommend placing this component into a **server component** to perform prerendering, likely your main page.
+- This component comes **unstyled**, you can assign class yourself.
+
+Below is a minimal example (in your server component):
+
+```tsx
+// app/page.tsx
+import { renderToString, JSONCanvasViewerReact } from 'json-canvas-viewer/bridges';
+
+export default async function Page() {
+  const html = await renderToString({ /* ... */ });
+  
+  return (
+    <main>
+      {/* ... your other components */}
+      <JSONCanvasViewerReact prerenderedContent={html} />
+    </main>
+  );
+}
+```
+
+It accepts six props:
+- `prerenderedContent`: the content to be prerendered, you almost always need to pass in the result of `renderToString`. Setting this prop does not have impact on client-side execution.
+- `modules`: The optional modules to load, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#modules).
+- `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options). **Note that the `container` field is omitted**.
+- `className`, `style`, `id`: the same as setting `className`, `style`, and `id` to a normal HTML element.

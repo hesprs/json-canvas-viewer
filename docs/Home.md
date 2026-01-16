@@ -4,7 +4,7 @@ Welcome to the JSON Canvas Viewer repository!
 
 **Note**: JSON Canvas Viewer supports both ESM and CJS. Across this documentation, we'll use ESM in examples.
 
-## Roadmap
+## Map
 
 - [**🚀 Quick Start**](1-🚀-Quick-Start.md)
 - [**🖇️ Integration with Existing Paradigms**](4-🖇️-Prerendering-and-Bridges.md)

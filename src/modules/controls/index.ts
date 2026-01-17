@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
 import utilities, { destroyError } from '$/utilities';
+
 import style from './styles.scss?inline';
 
 type Options = {
@@ -126,7 +127,8 @@ export default class Controls extends BaseModule<Options> {
 	};
 	private zoomIn = () => this.DM.zoom(1.1, this.DM.middleViewer());
 	private zoomOut = () => this.DM.zoom(1 / 1.1, this.DM.middleViewer());
-	private slide = () => this.DM.zoomToScale(1.1 ** Number(this.zoomSlider.value), this.DM.middleViewer());
+	private slide = () =>
+		this.DM.zoomToScale(1.1 ** Number(this.zoomSlider.value), this.DM.middleViewer());
 
 	private updateFullscreenBtn = (enter: boolean) => {
 		if (enter) this.toggleFullscreenBtn.innerHTML = exitFullscreenIcon;

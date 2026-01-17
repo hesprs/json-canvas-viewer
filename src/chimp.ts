@@ -10,5 +10,5 @@ export { default as JSONCanvasViewer } from '$';
 export const parser = async (markdown: string) => purify.sanitize(await marked(markdown));
 
 export async function fetchCanvas(path: `${string}.canvas` | `${string}.json`) {
-	return await fetch(path).then(res => res.json());
+	return await fetch(path).then((res) => res.json());
 }

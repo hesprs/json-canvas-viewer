@@ -10,7 +10,9 @@ export default {
 	makeHook,
 };
 
-export const destroyError = new Error("[JSONCanvasViewer] Resource hasn't been set up or has been disposed.");
+export const destroyError = new Error(
+	"[JSONCanvasViewer] Resource hasn't been set up or has been disposed.",
+);
 
 function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
 	const style = document.createElement('style');
@@ -130,11 +132,11 @@ function makeHook<Args extends GeneralArguments = []>(reverse: boolean = false) 
 	const result: Hook = (...args: Args) => {
 		if (reverse) {
 			const items = Array.from(result.subs).reverse();
-			items.forEach(callback => {
+			items.forEach((callback) => {
 				callback(...args);
 			});
 		} else
-			result.subs.forEach(callback => {
+			result.subs.forEach((callback) => {
 				callback(...args);
 			});
 	};

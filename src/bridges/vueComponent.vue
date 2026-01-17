@@ -32,5 +32,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<section ref="viewerRef" v-html="prerender" style="max-height: 100vh; max-width: 100vw;" />
+	<section ref="viewerRef" v-html="prerender" style="max-height: 100vh; max-width: 100vw" />
 </template>

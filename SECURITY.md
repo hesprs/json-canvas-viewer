@@ -5,6 +5,7 @@ If you believe you have found a security vulnerability of `json-canvas-viewer`, 
 Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.
 
 Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+
 - The type of issue
 - Full paths of source file(s) that causes this issue
 - Places that would malfunction or be used maliciously due to the issue

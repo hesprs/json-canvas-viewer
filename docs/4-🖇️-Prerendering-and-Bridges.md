@@ -13,10 +13,12 @@ renderToString(options: {
 - `options`: the [same requirements](2-🏗️-Construction-Details.md#options) as `canvas`, `attachmentDir`, and `markdownParser` passed in the main constructor options.
 
 You can use the returned string as the `innerHTML` of your container element. To achieve this:
+
 - in `React`: `dangerouslySetInnerHTML`
 - in `Vue`: `v-html`
 
 **Disclaimer: for customizability, `json-canvas-viewer` does not sanitize the output, but it is basically safe provided**:
+
 - if you are using the chimp version, the default `parser` output is sanitized by `DOMPurify`.
 - if you are using the full version, since you directly import the canvas file, the file is under your control, so there's no risk of XSS. Alternatively, you can include a sanitizer in your build-time parser.
 
@@ -25,6 +27,7 @@ During client-side code execution, pre-rendered HTML will be replaced with the a
 ## Vue Component
 
 A Vue3 wrapper (`JSONCanvasViewerVue`) is ready to use in the full version of JSON Canvas Viewer. Note that:
+
 - This component comes with natural support of prerendering.
 - This component comes **unstyled**, you can assign class yourself.
 - You need to wrap it with a `<Suspense></Suspense>`.
@@ -33,22 +36,22 @@ Below is a minimal example:
 
 ```vue
 <script lang="ts" setup>
-import { JSONCanvasViewerVue } from 'json-canvas-viewer/bridges'
+import { JSONCanvasViewerVue } from 'json-canvas-viewer/bridges';
 import { Minimap, MistouchPreventer, Controls } from 'json-canvas-viewer/modules';
-import canvas from 'path/to/your.canvas'
+import canvas from 'path/to/your.canvas';
 const options = {
-    lazyLoading: true,
-    canvas,
-    minimapCollapsed: true,
-}
+	lazyLoading: true,
+	canvas,
+	minimapCollapsed: true,
+};
 const modules = [Minimap, MistouchPreventer, Controls];
 </script>
 
 <template>
-    <Suspense>
-        <JSONCanvasViewerVue class="viewer" :modules :options />
-    </Suspense>
-    <!-- ... your other components -->
+	<Suspense>
+		<JSONCanvasViewerVue class="viewer" :modules :options />
+	</Suspense>
+	<!-- ... your other components -->
 </template>
 
 <style scoped>
@@ -85,6 +88,7 @@ The component has props of:
 ## React Component
 
 We've also crafted a React component (`JSONCanvasViewerReact`) that wraps around the viewer. It can be found the the full version of the viewer at `json-canvas-viewer/bridges`. Note that:
+
 - Unlike the Vue component, you need to manually decide when to prerender. We recommend placing this component into a **server component** to perform prerendering, likely your main page.
 - This component comes **unstyled**, you can assign class yourself.
 
@@ -95,18 +99,21 @@ Below is a minimal example (in your server component):
 import { renderToString, JSONCanvasViewerReact } from 'json-canvas-viewer/bridges';
 
 export default async function Page() {
-  const html = await renderToString({ /* ... */ });
-  
-  return (
-    <main>
-      {/* ... your other components */}
-      <JSONCanvasViewerReact prerenderedContent={html} />
-    </main>
-  );
+	const html = await renderToString({
+		/* ... */
+	});
+
+	return (
+		<main>
+			{/* ... your other components */}
+			<JSONCanvasViewerReact prerenderedContent={html} />
+		</main>
+	);
 }
 ```
 
 It accepts six props:
+
 - `prerenderedContent`: the content to be prerendered, you almost always need to pass in the result of `renderToString`. Setting this prop does not have impact on client-side execution.
 - `modules`: The optional modules to load, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#modules).
 - `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options). **Note that the `container` field is omitted**.

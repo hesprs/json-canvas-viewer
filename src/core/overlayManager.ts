@@ -3,6 +3,7 @@ import Controller from '$/controller';
 import DataManager from '$/dataManager';
 import InteractionHandler from '$/interactionHandler';
 import utilities, { destroyError } from '$/utilities';
+
 import type { MarkdownParser } from './declarations';
 
 type Options = {
@@ -49,24 +50,25 @@ export default class OverlayManager extends BaseModule<Options> {
 		const createOverlay = async (node: JSONCanvasNode) => {
 			switch (node.type) {
 				case 'text': {
-					this.updateOverlay(node, node.text, 'text');
+					await this.updateOverlay(node, node.text, 'text');
 					break;
 				}
 				case 'file': {
-					if (node.file.match(/\.md$/i)) this.loadMarkdownForNode(node);
+					if (node.file.match(/\.md$/i)) await this.loadMarkdownForNode(node);
 					else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
-						this.updateOverlay(node, node.file, 'image');
-					else if (node.file.match(/\.(mp3|wav)$/i)) this.updateOverlay(node, node.file, 'audio');
+						await this.updateOverlay(node, node.file, 'image');
+					else if (node.file.match(/\.(mp3|wav)$/i))
+						await this.updateOverlay(node, node.file, 'audio');
 					break;
 				}
 				case 'link': {
-					this.updateOverlay(node, node.url, 'link');
+					await this.updateOverlay(node, node.url, 'link');
 					break;
 				}
 			}
 		};
-		Object.values(this.DM.data.canvasMap).forEach(node => {
-			if (node.type === 'node') createOverlay(node.ref);
+		Object.values(this.DM.data.canvasMap).forEach(async (node) => {
+			if (node.type === 'node') await createOverlay(node.ref);
 		});
 	};
 
@@ -82,7 +84,7 @@ export default class OverlayManager extends BaseModule<Options> {
 	};
 
 	private loadMarkdownForNode = async (node: JSONCanvasFileNode) => {
-		this.updateOverlay(node, 'Loading...', 'text');
+		await this.updateOverlay(node, 'Loading...', 'text');
 		let parsedContent: string;
 		try {
 			const response = await fetch(node.file);
@@ -94,7 +96,7 @@ export default class OverlayManager extends BaseModule<Options> {
 			console.error('[JSONCanvasViewer] Failed to load markdown:', err);
 			parsedContent = 'Failed to load content.';
 		}
-		this.updateOverlay(node, parsedContent, 'text');
+		await this.updateOverlay(node, parsedContent, 'text');
 	};
 
 	private updateOverlays = () => {
@@ -113,7 +115,8 @@ export default class OverlayManager extends BaseModule<Options> {
 			element.style.width = `${node.width}px`;
 			element.style.height = `${node.height}px`;
 		} else if (type === 'text') {
-			const parsedContentContainer = element.getElementsByClassName('parsed-content-wrapper')[0];
+			const parsedContentContainer =
+				element.getElementsByClassName('parsed-content-wrapper')[0];
 			parsedContentContainer.innerHTML = content;
 		}
 	}

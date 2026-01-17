@@ -1,6 +1,6 @@
-import type { Container } from '@needle-di/core';
 import type { DefaultOptions, Empty, GeneralFunction, GeneralObject } from '$/declarations';
 import type utilities from '$/utilities';
+import type { Container } from '@needle-di/core';
 
 type Hook = ReturnType<typeof utilities.makeHook>;
 
@@ -19,8 +19,10 @@ export class BaseModule<O extends GeneralObject = Empty> {
 		onDispose: Hook,
 	) {
 		Object.assign(this.options, options);
-		this.onStart = onStart.subscribe;
-		this.onDispose = onDispose.subscribe;
+		this.onStart = (...args: Parameters<typeof onStart.subscribe>) =>
+			onStart.subscribe(...args);
+		this.onDispose = (...args: Parameters<typeof onDispose.subscribe>) =>
+			onDispose.subscribe(...args);
 	}
 	options = {} as DefaultOptions & O;
 }

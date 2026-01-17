@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
 import JSONCanvasViewer from '$';
 import type { ModuleInputCtor, UserOptions } from '$/declarations';
+import { useEffect, useRef } from 'react';
 
 export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
 	modules,
@@ -26,7 +26,7 @@ export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
 			modules,
 		);
 		return instance.dispose;
-	}, []);
+	});
 
 	return (
 		<section

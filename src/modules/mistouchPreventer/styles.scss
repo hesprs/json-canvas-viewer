@@ -16,7 +16,13 @@
 	@extend .full;
 	@extend .flex-center;
 	overflow: visible;
-	transition: background 200ms, opacity 200ms, box-shadow 200ms, border 200ms, filter 200ms, backdrop-filter 200ms;
+	transition:
+		background 200ms,
+		opacity 200ms,
+		box-shadow 200ms,
+		border 200ms,
+		filter 200ms,
+		backdrop-filter 200ms;
 	&.hidden {
 		pointer-events: none;
 		opacity: 0;

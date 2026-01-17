@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
 import utilities, { destroyError } from '$/utilities';
+
 import style from './styles.scss?inline';
 
 type Options = {
@@ -148,7 +149,8 @@ export default class Minimap extends BaseModule<Options> {
 		const viewWidth = container.clientWidth / scale;
 		const viewHeight = container.clientHeight / scale;
 		const viewportCenterX = -this.DM.data.offsetX / scale + container.clientWidth / (2 * scale);
-		const viewportCenterY = -this.DM.data.offsetY / scale + container.clientHeight / (2 * scale);
+		const viewportCenterY =
+			-this.DM.data.offsetY / scale + container.clientHeight / (2 * scale);
 		const viewRectX =
 			this.minimapCache.centerX +
 			(viewportCenterX - viewWidth / 2 - bounds.centerX) * this.minimapCache.scale;

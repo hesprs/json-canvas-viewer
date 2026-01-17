@@ -51,7 +51,9 @@ export default class DataManager extends BaseModule<Options> {
 		parentContainer.innerHTML = '';
 
 		const noShadow = this.options.noShadow || false;
-		const realContainer = noShadow ? parentContainer : parentContainer.attachShadow({ mode: 'open' });
+		const realContainer = noShadow
+			? parentContainer
+			: parentContainer.attachShadow({ mode: 'open' });
 
 		utilities.applyStyles(realContainer, style + this.options.extraCSS);
 
@@ -77,7 +79,7 @@ export default class DataManager extends BaseModule<Options> {
 			container: HTMLContainer,
 		};
 
-		this.data.canvasData.nodes.forEach(node => {
+		this.data.canvasData.nodes.forEach((node) => {
 			this.data.canvasMap[node.id] = {
 				type: 'node',
 				ref: node,
@@ -92,7 +94,7 @@ export default class DataManager extends BaseModule<Options> {
 					ref.file = this.data.canvasBaseDir + fileName;
 			}
 		});
-		this.data.canvasData.edges.forEach(edge => {
+		this.data.canvasData.edges.forEach((edge) => {
 			this.data.canvasMap[edge.id] = {
 				type: 'edge',
 				ref: edge,
@@ -155,7 +157,7 @@ export default class DataManager extends BaseModule<Options> {
 			minY = Infinity,
 			maxX = -Infinity,
 			maxY = -Infinity;
-		canvasData.nodes.forEach(node => {
+		canvasData.nodes.forEach((node) => {
 			minX = Math.min(minX, node.x);
 			minY = Math.min(minY, node.y);
 			maxX = Math.max(maxX, node.x + node.width);
@@ -208,12 +210,12 @@ export default class DataManager extends BaseModule<Options> {
 		this.data.offsetX = x;
 		this.data.offsetY = y;
 	};
-	shiftFullscreen = (option: string = 'toggle') => {
+	shiftFullscreen = async (option: string = 'toggle') => {
 		if (!document.fullscreenElement && (option === 'toggle' || option === 'enter')) {
-			this.data.container.requestFullscreen();
+			await this.data.container.requestFullscreen();
 			this.onToggleFullscreen(true);
 		} else if (document.fullscreenElement && (option === 'toggle' || option === 'exit')) {
-			document.exitFullscreen();
+			await document.exitFullscreen();
 			this.onToggleFullscreen(false);
 		}
 	};

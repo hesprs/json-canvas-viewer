@@ -1,5 +1,7 @@
 import { JSONCanvasViewer } from '@';
+
 import { Controls, DebugPanel, Minimap, MistouchPreventer } from '@/modules';
+
 import canvas from './demo.canvas';
 
 new JSONCanvasViewer(

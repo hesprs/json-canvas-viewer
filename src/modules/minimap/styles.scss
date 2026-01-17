@@ -1,7 +1,9 @@
 .collapse-button {
 	border-radius: 8px;
 	transition: transform 200ms;
-	&:hover { background: rgba(68, 68, 68, 0.8) }
+	&:hover {
+		background: rgba(68, 68, 68, 0.8);
+	}
 }
 
 button {
@@ -27,13 +29,17 @@ button {
 	display: flex;
 	pointer-events: none;
 	transition: transform 200ms;
-	&.collapsed { transform: translateX(calc(100% - 32px)) }
+	&.collapsed {
+		transform: translateX(calc(100% - 32px));
+	}
 }
 
 .toggle-minimap {
 	margin: auto 10px 0 0;
 	pointer-events: auto;
-	.collapsed & { transform: rotate(180deg) }
+	.collapsed & {
+		transform: rotate(180deg);
+	}
 }
 
 .minimap {
@@ -63,15 +69,21 @@ button {
 }
 
 .container {
-    @container (max-width: 768px) {
-        .minimap { transform: scale(0.6) }
-        .toggle-minimap {
-            transform: translateY(-60px);
-		    .collapsed & { transform: translateY(-60px) rotate(180deg) }
-        }
-        .minimap-container {
-		    transform: translateY(60px) translateX(80px);
-		    &.collapsed { transform: translateY(60px) translateX(calc(100% - 32px)) }
-        }
-    }
+	@container (max-width: 768px) {
+		.minimap {
+			transform: scale(0.6);
+		}
+		.toggle-minimap {
+			transform: translateY(-60px);
+			.collapsed & {
+				transform: translateY(-60px) rotate(180deg);
+			}
+		}
+		.minimap-container {
+			transform: translateY(60px) translateX(80px);
+			&.collapsed {
+				transform: translateY(60px) translateX(calc(100% - 32px));
+			}
+		}
+	}
 }

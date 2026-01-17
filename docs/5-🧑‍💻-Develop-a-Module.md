@@ -1,11 +1,13 @@
 Development of modules on the infrastructure of `json-canvas-viewer` requires an understanding of [our source code](https://github.com/hesprs/json-canvas-viewer/tree/main/src) and architecture. Important points include:
+
 - The entire viewer is built on an entry class `JSONCanvasViewer` and several modules.
 - This project uses dependency injection to manage modules.
 - Essential libraries used:
-  - [`needle-di`](https://needle-di.io/): dependency injection library
-  - [`pointeract`](https://pointeract.consensia.cc/): resolves user interactions
+    - [`needle-di`](https://needle-di.io/): dependency injection library
+    - [`pointeract`](https://pointeract.consensia.cc/): resolves user interactions
 
 **Internal modules include**:
+
 - `Controller`: controls the rendering loop
 - `Renderer`: renders the non-interactive parts of the viewer
 - `InteractionHandler`: handles user interactions
@@ -31,6 +33,7 @@ class MyModule extends BaseModule {
 ```
 
 This setup gives you available properties:
+
 - `this.container`: The DI container, you can retrieve everything you need from here.
 - `this.options`: The full options the user passes in.
 - `this.onStart`: The hook to be called when the viewer is prepared, different from the constructor, this hook is called after all the modules are initialized, and the canvas is about to be interactable.

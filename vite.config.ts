@@ -1,7 +1,9 @@
 import { resolve } from 'node:path';
+
 import vue from '@vitejs/plugin-vue';
 import { marked } from 'marked';
 import { defineConfig } from 'vite';
+
 import jsonCanvasTransform from './src/bridges/vitePlugin';
 
 const isBuildingChimp = process.env.BUILD === 'chimp';
@@ -55,7 +57,7 @@ const chimpConfig = defineConfig({
 			},
 			name: 'JSONCanvasViewer',
 			formats: ['es', 'cjs'],
-			fileName: format => `chimp.${format === 'cjs' ? 'cjs' : 'js'}`,
+			fileName: (format) => `chimp.${format === 'cjs' ? 'cjs' : 'js'}`,
 		},
 	},
 });

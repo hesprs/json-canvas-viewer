@@ -42,8 +42,8 @@ An array of modules to load, currently available modules are documented in [Modu
 Sometimes you may need to access the options type without truly instantiating a viewer. The viewer has an exported `Options` type that can be used for this. You can also pass modules to it:
 
 ```ts
-import type { Options } from "json-canvas-viewer";
-import { Minimap, MistouchPreventer } from "json-canvas-viewer/modules";
+import type { Options } from 'json-canvas-viewer';
+import { Minimap, MistouchPreventer } from 'json-canvas-viewer/modules';
 type MyOptions = Options<[Minimap, MistouchPreventer]>;
 ```
 
@@ -52,7 +52,7 @@ The `MyOptions` type above is the type of the options object can be passed to th
 > [!TIP]
 > `Options` type is designed to be flexible, it accepts an array of either module constructors or their instances, for example:
 >
-> ``` TypeScript
+> ```TypeScript
 > import { Minimap, MistouchPreventer } from "json-canvas-viewer/modules";
 > import type { Options } from "json-canvas-viewer";
 >

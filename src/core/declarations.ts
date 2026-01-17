@@ -1,6 +1,8 @@
+// oxlint-disable typescript/no-explicit-any
 import type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
 import type Controller from '$/controller';
 import type DataManager from '$/dataManager';
+
 import type InteractionHandler from './interactionHandler';
 import type OverlayManager from './overlayManager';
 import type Renderer from './renderer';
@@ -29,7 +31,11 @@ declare global {
 		url: string;
 	}
 
-	type JSONCanvasNode = JSONCanvasGroupNode | JSONCanvasFileNode | JSONCanvasTextNode | JSONCanvasLinkNode;
+	type JSONCanvasNode =
+		| JSONCanvasGroupNode
+		| JSONCanvasFileNode
+		| JSONCanvasTextNode
+		| JSONCanvasLinkNode;
 
 	interface JSONCanvasEdge {
 		id: string;
@@ -82,16 +88,11 @@ export type NodeBounds = {
 	centerY: number;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: General Type
 export type GeneralArguments = Array<any>;
-// biome-ignore lint/suspicious/noExplicitAny: General Type
 export type GeneralObject = Record<Indexable, any>;
-// biome-ignore lint/suspicious/noExplicitAny: General Type
 export type GeneralFunction = (...args: GeneralArguments) => any;
-// biome-ignore lint/complexity/noBannedTypes: General Type
 export type Empty = {};
 type Indexable = string | number | symbol;
-// biome-ignore lint/suspicious/noExplicitAny: General Type
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
 	? I
 	: never;

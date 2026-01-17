@@ -105,6 +105,7 @@ export default defineConfig({
 The argument is any markdown parser, when empty, build-time parsing is disabled.
 
 The setup above gives you:
+
 - bundler resolution of `.canvas` file as modules
 - build-time parsing of `.canvas` files (less client-side overhead)
 - ease for later framework integration and prerendering

@@ -1,3 +1,7 @@
+import { type BaseArgs, BaseModule } from '$/baseModule';
+import DataManager from '$/dataManager';
+import OverlayManager from '$/overlayManager';
+import utilities from '$/utilities';
 import {
 	Click,
 	type Ctors,
@@ -9,17 +13,17 @@ import {
 	type StdEvents,
 	WheelPanZoom,
 } from 'pointeract';
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import DataManager from '$/dataManager';
-import OverlayManager from '$/overlayManager';
-import utilities from '$/utilities';
 
 type Options = {
-	pointeract?: PointeractOptions<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
+	pointeract?: PointeractOptions<
+		Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>
+	>;
 };
 
 export default class InteractionHandler extends BaseModule<Options> {
-	private pointeract: Pointeract<Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>>;
+	private pointeract: Pointeract<
+		Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>
+	>;
 	private DM: DataManager;
 	onClick = utilities.makeHook<[string | null]>();
 	stopInteraction: Pointeract['stop'];
@@ -66,7 +70,9 @@ export default class InteractionHandler extends BaseModule<Options> {
 		const detail = e.detail;
 		function isUIControl(target: HTMLElement | null) {
 			if (!target) return false;
-			return target.closest('.controls') || target.closest('button') || target.closest('input');
+			return (
+				target.closest('.controls') || target.closest('button') || target.closest('input')
+			);
 		}
 		if (isUIControl(e.detail.target as HTMLElement | null)) return;
 		const node = this.DM.findNodeAt({ x: detail.x, y: detail.y });

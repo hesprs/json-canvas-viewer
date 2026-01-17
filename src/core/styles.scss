@@ -14,7 +14,9 @@
 
 .container {
 	--contentTransition: color 200ms, opacity 200ms, text-shadow 200ms, fill 200ms;
-	--containerTransition: background 200ms, opacity 200ms, box-shadow 200ms, border 200ms, filter 200ms, backdrop-filter 200ms;
+	--containerTransition:
+		background 200ms, opacity 200ms, box-shadow 200ms, border 200ms, filter 200ms,
+		backdrop-filter 200ms;
 	color: #fff;
 	fill: #fff;
 	stroke: #fff;

@@ -1,4 +1,3 @@
-import { Container } from '@needle-di/core';
 import type { GeneralModuleCtor } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
@@ -7,6 +6,7 @@ import InteractionHandler from '$/interactionHandler';
 import OverlayManager from '$/overlayManager';
 import Renderer from '$/renderer';
 import utilities from '$/utilities';
+import { Container } from '@needle-di/core';
 
 export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 	private options: UserOptions<M>;
@@ -22,7 +22,8 @@ export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 		const bind = (Class: GeneralModuleCtor) => {
 			this.container.bind({
 				provide: Class,
-				useFactory: () => new Class(this.container, this.options, this.onStart, this.onDispose),
+				useFactory: () =>
+					new Class(this.container, this.options, this.onStart, this.onDispose),
 			});
 		};
 		this.allModules = [
@@ -46,14 +47,14 @@ export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 	}
 
 	private load = () => {
-		this.allModules.forEach(Module => {
+		this.allModules.forEach((Module) => {
 			this.container.get(Module);
 		});
 		this.onStart();
 	};
 
 	private onVisibilityCheck = (entries: Array<IntersectionObserverEntry>) => {
-		entries.forEach(entry => {
+		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				this.load();
 				this.IO?.disconnect();

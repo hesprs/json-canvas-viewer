@@ -9,7 +9,7 @@ export default function (parser?: MarkdownParser) {
 				const json = JSON.parse(code) as JSONCanvas;
 				if (parser && json.nodes)
 					await Promise.all(
-						json.nodes.map(async node => {
+						json.nodes.map(async (node) => {
 							if (node.type === 'text') node.text = await parser(node.text);
 						}),
 					);

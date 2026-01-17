@@ -5,29 +5,29 @@ export default async function (options: {
 	attachmentDir?: string;
 	markdownParser?: MarkdownParser;
 }) {
-	const render = (node: JSONCanvasNode) =>
-		renderer(node, options.markdownParser || ((markdown: string) => markdown));
+	const render = async (node: JSONCanvasNode) =>
+		await renderer(node, options.markdownParser || ((markdown: string) => markdown));
 	const nodes = options.canvas.nodes || [];
 	const basePath = options.attachmentDir || './';
-	nodes.forEach(node => {
+	nodes.forEach((node) => {
 		if (node.type === 'file' && !node.file.includes('http')) {
 			const file = node.file.split('/');
 			node.file = basePath + file.pop();
 		}
 	});
 	let result = '';
-	nodes.forEach(node => {
-		result += render(node);
+	nodes.forEach(async (node) => {
+		result += await render(node);
 	});
 	return result;
 }
 
-function renderer(node: JSONCanvasNode, parse: MarkdownParser) {
+async function renderer(node: JSONCanvasNode, parse: MarkdownParser) {
 	switch (node.type) {
 		case 'text':
-			return parse(node.text);
+			return await parse(node.text);
 		case 'file':
-			return fileProcessor(node, parse);
+			return await fileProcessor(node, parse);
 		case 'link':
 			return `<a href="${node.url}" target="_blank" rel="nofollow">${node.url}</a>`;
 		default:
@@ -35,11 +35,12 @@ function renderer(node: JSONCanvasNode, parse: MarkdownParser) {
 	}
 }
 
-function fileProcessor(node: JSONCanvasFileNode, parse: MarkdownParser) {
-	if (node.file.match(/\.md$/i)) return loadMarkdown(node.file, parse);
+async function fileProcessor(node: JSONCanvasFileNode, parse: MarkdownParser) {
+	if (node.file.match(/\.md$/i)) return await loadMarkdown(node.file, parse);
 	else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
 		return `<img src="${node.file}" alt="${node.file.split('/').pop()}">`;
 	else if (node.file.match(/\.(mp3|wav)$/i)) return `<audio src="${node.file}" controls></audio>`;
+	return '';
 }
 
 async function loadMarkdown(path: string, parse: MarkdownParser) {

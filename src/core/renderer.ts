@@ -97,7 +97,7 @@ export default class Renderer extends BaseModule {
 		this.ctx.save();
 		this.ctx.translate(offsetX, offsetY);
 		this.ctx.scale(scale, scale);
-		Object.values(this.DM.data.canvasMap).forEach(item => {
+		Object.values(this.DM.data.canvasMap).forEach((item) => {
 			if (item.type === 'edge') this.drawEdge(item);
 			else {
 				const node = item.ref;
@@ -110,8 +110,10 @@ export default class Renderer extends BaseModule {
 
 	private fakeRedraw(currentViewport: viewport, scale: number) {
 		const cssScale = scale / this.zoomInOptimize.lastDrawnScale;
-		const currentOffsetX = (this.zoomInOptimize.lastDrawnViewport.left - currentViewport.left) * scale;
-		const currentOffsetY = (this.zoomInOptimize.lastDrawnViewport.top - currentViewport.top) * scale;
+		const currentOffsetX =
+			(this.zoomInOptimize.lastDrawnViewport.left - currentViewport.left) * scale;
+		const currentOffsetY =
+			(this.zoomInOptimize.lastDrawnViewport.top - currentViewport.top) * scale;
 		this.canvas.style.transform = `translate(${currentOffsetX}px, ${currentOffsetY}px) scale(${cssScale})`;
 	}
 
@@ -165,7 +167,14 @@ export default class Renderer extends BaseModule {
 		const radius = NODE_RADIUS;
 		this.ctx.globalAlpha = 1.0;
 		this.ctx.fillStyle = colors.background;
-		utilities.drawRoundRect(this.ctx, node.x + 1, node.y + 1, node.width - 2, node.height - 2, radius);
+		utilities.drawRoundRect(
+			this.ctx,
+			node.x + 1,
+			node.y + 1,
+			node.width - 2,
+			node.height - 2,
+			radius,
+		);
 		this.ctx.fill();
 		this.ctx.strokeStyle = colors.border;
 		this.ctx.lineWidth = 2;
@@ -176,7 +185,13 @@ export default class Renderer extends BaseModule {
 	private drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
 		this.drawNodeBackground(node);
 		if (node.label)
-			this.drawLabelBar(node.x, node.y, node.label, utilities.getColor(node.color).active, scale);
+			this.drawLabelBar(
+				node.x,
+				node.y,
+				node.label,
+				utilities.getColor(node.color).active,
+				scale,
+			);
 	};
 
 	private drawFile = (item: MapNodeItem) => {
@@ -324,7 +339,13 @@ export default class Renderer extends BaseModule {
 		this.ctx.stroke();
 	};
 
-	private drawArrowhead = (tipX: number, tipY: number, fromX: number, fromY: number, color: string) => {
+	private drawArrowhead = (
+		tipX: number,
+		tipY: number,
+		fromX: number,
+		fromY: number,
+		color: string,
+	) => {
 		const dx = tipX - fromX;
 		const dy = tipY - fromY;
 		const length = Math.sqrt(dx * dx + dy * dy);

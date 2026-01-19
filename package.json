@@ -72,7 +72,7 @@
 		"@vitejs/plugin-vue": "^6.0.3",
 		"dompurify": "^3.3.1",
 		"marked": "^17.0.1",
-		"oxfmt": "^0.24.0",
+		"oxfmt": "^0.25.0",
 		"oxlint": "^1.39.0",
 		"oxlint-tsgolint": "^0.11.1",
 		"react": "^19.2.3",

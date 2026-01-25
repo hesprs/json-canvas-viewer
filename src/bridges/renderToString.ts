@@ -6,20 +6,18 @@ export default async function (options: {
 	markdownParser?: MarkdownParser;
 }) {
 	const render = async (node: JSONCanvasNode) =>
-		await renderer(node, options.markdownParser || ((markdown: string) => markdown));
-	const nodes = options.canvas.nodes || [];
-	const basePath = options.attachmentDir || './';
+		await renderer(node, options.markdownParser ?? ((markdown: string) => markdown));
+	const nodes = options.canvas.nodes ?? [];
+	const basePath = options.attachmentDir ?? './';
 	nodes.forEach((node) => {
 		if (node.type === 'file' && !node.file.includes('http')) {
 			const file = node.file.split('/');
 			node.file = basePath + file.pop();
 		}
 	});
-	let result = '';
-	nodes.forEach(async (node) => {
-		result += await render(node);
-	});
-	return result;
+	const renderedContent: Array<string> = [];
+	await Promise.all(nodes.map(async (node) => renderedContent.push(await render(node))));
+	return renderedContent.join('');
 }
 
 async function renderer(node: JSONCanvasNode, parse: MarkdownParser) {

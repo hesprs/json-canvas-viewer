@@ -68,7 +68,7 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.collapsed = this.options.controlsCollapsed || false;
+		this.collapsed = this.options.controlsCollapsed ?? false;
 		this.DM = this.container.get(DataManager);
 		this.DM.onToggleFullscreen.subscribe(this.updateFullscreenBtn);
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateSlider);

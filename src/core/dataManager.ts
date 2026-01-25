@@ -81,7 +81,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		while (viewerContainer.firstElementChild) viewerContainer.firstElementChild.remove();
 		viewerContainer.innerHTML = '';
 
-		const noShadow = this.options.noShadow || false;
+		const noShadow = this.options.noShadow ?? false;
 		const realContainer = noShadow
 			? viewerContainer
 			: viewerContainer.attachShadow({ mode: 'open' });
@@ -132,7 +132,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 			this.data.nodeMap[node.id] = item;
 			if (node.type === 'file') {
 				const path = node.file.split('/');
-				const fileName = path.pop() || '';
+				const fileName = path.pop() ?? '';
 				item.fileName = fileName;
 				if (!node.file.startsWith('http://') && !node.file.startsWith('https://'))
 					node.file = this.data.canvasBaseDir + fileName;

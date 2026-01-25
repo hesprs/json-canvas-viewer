@@ -43,7 +43,7 @@ export default class MistouchPreventer extends BaseModule<Options, Augmentation>
 		const preventionBanner = document.createElement('div');
 		preventionBanner.className = 'prevention-banner border-shadow-bg';
 		preventionBanner.textContent =
-			this.options.mistouchPreventerBannerText || 'Click on to unlock.';
+			this.options.mistouchPreventerBannerText ?? 'Click on to unlock.';
 		this.DM = this.container.get(DataManager);
 		this._preventionContainer = document.createElement('div');
 		this._preventionContainer.className = 'prevention-container hidden';

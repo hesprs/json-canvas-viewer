@@ -58,7 +58,7 @@ function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'left' | 
 }
 
 function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
-	const dpr = window.devicePixelRatio || 1;
+	const dpr = window.devicePixelRatio ?? 1;
 	const ctx = canvas.getContext('2d');
 	if (!ctx)
 		throw new Error(

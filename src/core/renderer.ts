@@ -219,7 +219,7 @@ export default class Renderer extends BaseModule<Options> {
 		this.ctx.fillStyle = this.SM.getColor().text;
 		const node = item.ref;
 		this.ctx.font = '16px sans-serif';
-		this.ctx.fillText(item.fileName || '', node.x + 5, node.y - 10);
+		this.ctx.fillText(item.fileName ?? '', node.x + 5, node.y - 10);
 	};
 
 	private drawEdge = (item: EdgeItem) => {

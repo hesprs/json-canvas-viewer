@@ -15,12 +15,12 @@ type ComponentOptions<T extends ModuleInputCtor> = {
 
 const props = defineProps<ComponentOptions<T>>();
 
-const isPrerendering = props.isPrerendering || typeof window === 'undefined';
+const isPrerendering = props.isPrerendering ?? typeof window === 'undefined';
 const viewerRef = useTemplateRef('viewerRef');
 let viewer: JSONCanvasViewerInterface<T> | null = null;
 const prerender = isPrerendering
 	? await renderToString({
-			canvas: props.canvas || {},
+			canvas: props.canvas ?? {},
 			attachmentDir: props.attachmentDir,
 			...props.options,
 		})
@@ -42,7 +42,7 @@ watch(
 onMounted(() => {
 	if (!viewerRef.value) return;
 	viewer = new JSONCanvasViewer(
-		Object.assign(props.options || {}, {
+		Object.assign(props.options ?? {}, {
 			container: viewerRef.value,
 			theme: props.theme,
 			canvas: props.canvas,

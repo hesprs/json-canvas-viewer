@@ -8,7 +8,7 @@ const schema = {
 };
 
 export default async function jsonCanvasLoader(source) {
-	const options = this.getOptions() || {};
+	const options = this.getOptions() ?? {};
 	validate(schema, options, { name: 'JSON Canvas Loader' });
 	const { parser } = options;
 

@@ -49,14 +49,14 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 			OverlayManager,
 			InteractionHandler,
 			Renderer,
-			...(modules || []),
+			...(modules ?? []),
 		];
 		this.allModules.forEach(bind);
 		this.allModules.forEach((Module) => {
 			this.container.get(Module);
 		});
 
-		const loading = this.options.loading || 'normal';
+		const loading = this.options.loading ?? 'normal';
 		if (loading === 'normal') this.load();
 		else if (loading === 'lazy') {
 			this.IO = new IntersectionObserver(this.onVisibilityCheck, {

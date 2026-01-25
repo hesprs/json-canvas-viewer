@@ -77,7 +77,7 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.changeTheme(this.options.theme || 'light');
+		this.changeTheme(this.options.theme ?? 'light');
 		this.augment({ changeTheme: this.changeTheme });
 	}
 

@@ -56,7 +56,7 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.collapsed = this.options.minimapCollapsed || false;
+		this.collapsed = this.options.minimapCollapsed ?? false;
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateViewportRectangle);
 		this.DM = this.container.get(DataManager);
 		this.SM = this.container.get(StyleManager);

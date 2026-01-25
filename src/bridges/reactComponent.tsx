@@ -29,7 +29,7 @@ export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
 	useEffect(() => {
 		if (!containerRef.current) return;
 		const instance = new JSONCanvasViewer(
-			Object.assign(options || {}, {
+			Object.assign(options ?? {}, {
 				container: containerRef.current,
 				canvas,
 				attachmentDir,

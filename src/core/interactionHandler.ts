@@ -32,7 +32,7 @@ export default class InteractionHandler extends BaseModule<Options> {
 	constructor(...args: BaseArgs) {
 		super(...args);
 		this.DM = this.container.get(DataManager);
-		const options = Object.assign(this.options.pointeract || {}, {
+		const options = Object.assign(this.options.pointeract ?? {}, {
 			coordinateOutput: 'relative',
 		});
 		this.pointeract = new Pointeract(

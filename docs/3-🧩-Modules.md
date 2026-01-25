@@ -72,9 +72,9 @@ import { MistouchPreventer } from 'json-canvas-viewer/modules';
 
 **New Options**:
 
-`preventMistouchAtStart: boolean`: whether to prevent the canvas from being mistouched when the viewer is firstly loaded.
+`preventMistouchAtStart: boolean`: whether to prevent the canvas from being mistouched when the viewer is instantiated.
 
-- Default: `true`
+- Default: `false`
 
 `mistouchPreventerBannerText: string`: The text to display in the locking banner.
 

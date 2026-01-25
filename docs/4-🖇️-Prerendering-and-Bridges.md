@@ -45,11 +45,12 @@ const options = {
 	minimapCollapsed: true,
 };
 const modules = [Minimap, MistouchPreventer, Controls];
+const isPrerendering = import.meta.env.SSR; // if you are using Vite
 </script>
 
 <template>
 	<Suspense>
-		<Viewer :modules :options :canvas />
+		<Viewer :modules :options :canvas :isPrerendering />
 	</Suspense>
 	<!-- ... your other components -->
 </template>
@@ -72,7 +73,7 @@ interface Props {
   - **Note that the `container`, `theme`, `canvas` and `attachmentDir` fields inside it are omitted**.
 - `modules`: The optional modules to load, the same requirements as documented in [Construction Details - Modules](2-🏗️-Construction-Details.md#modules).
 - `theme`, `canvas`, `attachmentDir`: same requirements as documented in [Construction Details - Options](2-🏗️-Construction-Details.md#options).
-- `isPrerendering`: Whether to run in prerendering mode. If not defined, it will be inferred from the existence of `window`, which is reliable enough that in most cases you don't need to specify this property.
+- `isPrerendering`: Whether to run in prerendering mode. If not defined, it will be `false` and prerendering won't happen.
 
 This component exposes:
 

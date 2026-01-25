@@ -15,7 +15,7 @@ type ComponentOptions<T extends ModuleInputCtor> = {
 
 const props = defineProps<ComponentOptions<T>>();
 
-const isPrerendering = props.isPrerendering ?? typeof window === 'undefined';
+const isPrerendering = props.isPrerendering ?? false;
 const viewerRef = useTemplateRef('viewerRef');
 let viewer: JSONCanvasViewerInterface<T> | null = null;
 const prerender = isPrerendering

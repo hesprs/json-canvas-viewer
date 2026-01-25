@@ -1,6 +1,6 @@
 {
 	"name": "json-canvas-viewer",
-	"version": "3.4.0",
+	"version": "3.4.1",
 	"description": "An extensible web-based viewer for JSON Canvas, easy to embed into websites.",
 	"keywords": [
 		"front-end",
@@ -52,7 +52,7 @@
 			"require": "./dist/bridges.cjs"
 		},
 		"./vue": {
-			"types": "./dist/types/bridges/vueComponent.d.ts",
+			"types": "./dist/types/bridges/vueComponent.vue.d.ts",
 			"import": "./dist/vue.js",
 			"require": "./dist/vue.cjs"
 		},

@@ -2,10 +2,10 @@
 import type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
 import type Controller from '$/controller';
 import type DataManager from '$/dataManager';
-
-import type InteractionHandler from './interactionHandler';
-import type OverlayManager from './overlayManager';
-import type Renderer from './renderer';
+import type InteractionHandler from '$/interactionHandler';
+import type OverlayManager from '$/overlayManager';
+import type Renderer from '$/renderer';
+import type StyleManager from '$/styleManager';
 
 declare global {
 	interface JSONCanvasGroupNode extends JSONCanvasGenericNode {
@@ -88,18 +88,25 @@ export type NodeBounds = {
 	centerY: number;
 };
 
+export type Box = {
+	top: number;
+	right: number;
+	bottom: number;
+	left: number;
+};
+
 export type GeneralArguments = Array<any>;
 export type GeneralObject = Record<Indexable, any>;
 export type GeneralFunction = (...args: GeneralArguments) => any;
 export type Empty = {};
-type Indexable = string | number | symbol;
+export type Indexable = string | number | symbol;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
 	? I
 	: never;
 
 export type ModuleInputCtor = Array<GeneralModuleCtor>;
 type ModuleInputInstance = Array<GeneralModule>;
-type ModuleInput = ModuleInputCtor | ModuleInputInstance;
+export type ModuleInput = ModuleInputCtor | ModuleInputInstance;
 
 export type Instances<T extends ModuleInput> = T extends ModuleInputCtor
 	? InstanceType<T[number]>
@@ -107,13 +114,25 @@ export type Instances<T extends ModuleInput> = T extends ModuleInputCtor
 
 export type DefaultOptions = {
 	container: HTMLElement;
-	lazyLoading?: boolean;
+	loading?: 'normal' | 'lazy' | 'none';
 };
 
 export type MarkdownParser = (markdown: string) => string | Promise<string>;
 
 export type Options<T extends ModuleInput> = UnionToIntersection<Instances<T>['options']>;
+export type Augmentation<T extends ModuleInput> = UnionToIntersection<
+	Instances<T>['_providedMethods']
+>;
 
-type InternalModules = [DataManager, Controller, OverlayManager, InteractionHandler, Renderer];
+type InternalModules = [
+	DataManager,
+	StyleManager,
+	Controller,
+	OverlayManager,
+	InteractionHandler,
+	Renderer,
+];
 
 export type UserOptions<M extends ModuleInput> = Options<M> & Options<InternalModules>;
+export type UserAugmentation<M extends ModuleInput> = Augmentation<M> &
+	Augmentation<InternalModules>;

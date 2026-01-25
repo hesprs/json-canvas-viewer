@@ -12,7 +12,8 @@
         <img src="https://img.shields.io/npm/v/json-canvas-viewer?logo=npm&labelColor=red&logoColor=white&color=333333" alt="npm">
     </a>
     <a href="https://bundlephobia.com/package/json-canvas-viewer">
-        <img src="https://img.shields.io/bundlephobia/minzip/json-canvas-viewer?style=flat&logo=webpack&labelColor=orange&logoColor=white&color=333333&label=Minified%2bGzipped" alt="Gzipped + Minified Size">
+        <img src="https://img.shields.io/bundlejs/size/json-canvas-viewer?format=minzip&style=flat&logo=webpack&logoColor=white&label=Minzipped%20Size&labelColor=orange&color=333333
+        " alt="Gzipped + Minified Size">
     </a>
     <a href="https://github.com/hesprs/json-canvas-viewer/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/hesprs/json-canvas-viewer/ci.yml?style=flat&logo=github&logoColor=white&label=CI&labelColor=d4ab00&color=333333" alt="ci">
@@ -51,12 +52,14 @@
 - Responsive design with mobile and touchpad adaptation
 - Supports Lazy loading
 - TypeScript native
+- Modern aesthetics with light and dark mode support
+- A [chimp version](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-chimpanzee-version) specially designed for fast trial is available
 - 🔥 More performant than rendering canvases in Obsidian!
 - 🧩 Out-of-the-box extensibility and tree-shaking, current optional modules include:
-    - [`Minimap`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#minimap) for easy navigation
-    - [`Controls`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#controls) displays zoom in/out and fullscreen buttons
-    - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
-    - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
+  - [`Minimap`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#minimap) for easy navigation
+  - [`Controls`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#controls) displays zoom in/out and fullscreen buttons
+  - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
+  - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
 
 ## 🧩 Integration with Existing Paradigms
 
@@ -64,84 +67,68 @@ JSON Canvas Viewer currently can work seamlessly with the following techstacks /
 
 - ✅ Vanilla JS/TS: natural support
 - ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#prerendering)
-- ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#setup-1)
+- ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vite)
+- ✅ Webpack: [Webpack Loader & Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#webpack)
 - ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)
 - ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)
 
 🙌 Contributions are welcomed!
 
-## 🚀 Quick Start
+## 🦾 It's the Age of Agents
 
-### Setup
+Your time is expensive, do not spend it on reading the lengthy docs of a niche library. Nowadays coding agents are smart enough to handle the viewer well.
 
-You firstly need a markdown-to-HTML parser, which is of the type below:
+Copy and paste the following prompt to OpenCode, ClaudeCode, Cursor or even a chat bot, let it handle everything for you:
 
-```TypeScript
-type MarkdownParser = (markdown: string) => string | Promise<string>;
+```markdown
+I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) interactively in a browser. Read its documentations, figure out wether to use `chimp` version or `full` version, and help me with my requirements.
+
+**Documentations**:
+
+[Readme](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/README.md)
+[Quick Start](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
+[Construction Details](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/2-%F0%9F%8F%97%EF%B8%8F-Construction-Details.md)
+[Modules](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/3-%F0%9F%A7%A9-Modules.md)
+[Prerendering, Vue, and React Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges.md)
+
+**Requirements**:
+
+<!-- your requirements here -->
 ```
 
-For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` will be a development dependency, when configured correctly, markdown parsing will happen only at build time.**
+## 🚀 Manual Trial in 5 Seconds
 
-Then we recommend using your favourite package manager to install the package.
+The HTML snippet uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/test/demo.canvas).
 
-```sh
-# npm
-npm add json-canvas-viewer
-npm add marked -D
-
-# pnpm
-pnpm add json-canvas-viewer
-pnpm add marked -D
-
-# yarn
-yarn add json-canvas-viewer
-yarn add marked -D
+```HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>🐒 Canvas Viewer</title>
+	<style>
+		body, html {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body></body>
+<script type="module">
+import { JSONCanvasViewer, parser, loadCanvas } from 'https://unpkg.com/json-canvas-viewer/dist/chimp.js';
+new JSONCanvasViewer({
+    container: document.body, // The element to attach the viewer to
+    canvas: loadCanvas('path/to/your.canvas'),  // remember to prepare your canvas
+    markdownParser: parser,
+});
+</script>
+</html>
 ```
 
-You also need to configure your bundler to support seamless canvas resolution. Currently, we only support Vite:
-
-```TypeScript
-// vite.config.ts
-import { defineConfig } from 'vite';
-import { jsonCanvasVitePlugin } from 'json-canvas-viewer/bridges';
-import  { marked } from 'marked';
-
-export default defineConfig({
-    // ... your other config
-    plugins: [
-        jsonCanvasVitePlugin(marked),
-        // ... your other plugins
-    ]
-})
-```
-
-The argument is any markdown parser, when empty, build-time parsing is disabled.
-
-The setup above gives you:
-
-- bundler resolution of `.canvas` file as modules
-- build-time parsing of `.canvas` files (less client-side overhead)
-- ease for later framework integration and prerendering
-
-### Instantiation
-
-Instantiate the viewer:
-
-```TypeScript
-import { JSONCanvasViewer } from 'json-canvas-viewer';
-import { Minimap } from 'json-canvas-viewer/modules';
-import canvasData from 'path/to/your.canvas';
-
-new JSONCanvasViewer(
-	{
-		container: document.body, // The element to attach the viewer to
-		canvas: canvasData, // The path to the canvas to load
-	},
-	[Minimap], // The modules to load
-);
-```
-
-And the viewer should be right there, you can instantiate the viewer multiple times to render multiple canvases.
+For full elaboration about the instantiation and APIs, please refer to [the documentation](https://github.com/hesprs/json-canvas-viewer/wiki).
 
 ## 🤝 Get Involved
 

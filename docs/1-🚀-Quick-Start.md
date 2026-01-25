@@ -38,7 +38,7 @@ Also prepare your `.canvas` file.
 
 ## Instantiation
 
-The chimp version has everything prepared for you, including a lightweight and secure runtime markdown parser, a canvas loader and [four optional modules](3-🧩-Modules.md). You almost always need the parser and loader, but you can choose modules according to preference.
+The chimp version has everything prepared for you, including a lightweight and secure runtime markdown parser, a canvas loader and [four optional modules](3-🧩-Modules.md). You almost always need the parser and loader, but you can choose modules according to yourself.
 
 ```JavaScript
 import { JSONCanvasViewer, parser, loadCanvas, Minimap } from 'https://unpkg.com/json-canvas-viewer/dist/chimp.js';
@@ -57,7 +57,7 @@ You can now start your dev server and a interactive canvas should be right in th
 
 ## 📦 Full Version
 
-You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and Vite/prerendering bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
+You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and prerendering / Vite / Webpack / React / Vue bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
 
 ### Setup
 
@@ -85,7 +85,9 @@ yarn add json-canvas-viewer
 yarn add marked -D
 ```
 
-You also need to configure your bundler to support seamless canvas resolution. Currently, we only support Vite:
+You also need to configure your bundler to support seamless canvas resolution. Currently, we support Vite and Webpack 5+.
+
+#### Vite
 
 ```TypeScript
 // vite.config.ts
@@ -104,7 +106,26 @@ export default defineConfig({
 
 The argument is any markdown parser, when empty, build-time parsing is disabled.
 
-The setup above gives you:
+#### Webpack
+
+```TypeScript
+// webpack.config.ts
+import webpack from 'webpack';
+import { JSONCanvasWebpackPlugin } from 'json-canvas-viewer/bridges';
+import  { marked } from 'marked';
+
+const config: webpack.Configuration = {
+    // ... your other config
+    plugins: [
+        // ... your other plugins
+        new JSONCanvasWebpackPlugin(marked),
+    ],
+};
+
+export default config;
+```
+
+The setups above gives you:
 
 - bundler resolution of `.canvas` file as modules
 - build-time parsing of `.canvas` files (less client-side overhead)
@@ -132,4 +153,4 @@ And the viewer should be right there, you can instantiate the viewer multiple ti
 
 ---
 
-**Next Read**: [Construction Detail](2-🏗️-Construction-Details.md)
+**Read Next**: [Construction Detail](2-🏗️-Construction-Details.md)

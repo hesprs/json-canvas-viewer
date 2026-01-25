@@ -9,6 +9,10 @@ type Options = {
 	controlsCollapsed?: boolean;
 };
 
+type Augmentation = {
+	toggleControlsCollapse: Controls['toggleCollapse'];
+};
+
 const resetIcon =
 	'<svg viewBox="-6 -6 30 30" stroke-width=".08"><path d="m14.955 7.986.116.01a1 1 0 0 1 .85 1.13 8 8 0 0 1-13.374 4.728l-.84.84c-.63.63-1.707.184-1.707-.707V10h3.987c.89 0 1.337 1.077.707 1.707l-.731.731a6 6 0 0 0 8.347-.264 6 6 0 0 0 1.63-3.33 1 1 0 0 1 1.131-.848zM11.514.813a8 8 0 0 1 1.942 1.336l.837-.837c.63-.63 1.707-.184 1.707.707V6h-3.981c-.89 0-1.337-1.077-.707-1.707l.728-.729a6 6 0 0 0-9.98 3.591 1 1 0 1 1-1.98-.281A8 8 0 0 1 11.514.813Z" /></svg>';
 const enterFullscreenIcon =
@@ -22,7 +26,7 @@ const zoomOutIcon =
 const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
 
-export default class Controls extends BaseModule<Options> {
+export default class Controls extends BaseModule<Options, Augmentation> {
 	private _controlsPanel: HTMLDivElement | null = null;
 	private _toggleCollapseBtn: HTMLButtonElement | null = null;
 	private _toggleFullscreenBtn: HTMLButtonElement | null = null;
@@ -76,7 +80,7 @@ export default class Controls extends BaseModule<Options> {
 		utilities.applyStyles(this._controlsPanel, style);
 
 		this._toggleCollapseBtn = document.createElement('button');
-		this._toggleCollapseBtn.className = 'collapse-button';
+		this._toggleCollapseBtn.className = 'collapse-button border-shadow-bg';
 		this._toggleCollapseBtn.innerHTML = toggleCollapseIcon;
 		this._controlsPanel.appendChild(this._toggleCollapseBtn);
 
@@ -118,6 +122,7 @@ export default class Controls extends BaseModule<Options> {
 		this._resetViewBtn.addEventListener('click', this.DM.resetView);
 		this._toggleFullscreenBtn.addEventListener('click', this.toggleFullscreen);
 
+		this.augment({ toggleControlsCollapse: this.toggleCollapse });
 		this.onDispose(this.dispose);
 	}
 	toggleCollapse = () => {
@@ -134,7 +139,7 @@ export default class Controls extends BaseModule<Options> {
 		if (enter) this.toggleFullscreenBtn.innerHTML = exitFullscreenIcon;
 		else this.toggleFullscreenBtn.innerHTML = enterFullscreenIcon;
 	};
-	private toggleFullscreen = () => this.DM.shiftFullscreen('toggle');
+	private toggleFullscreen = () => this.DM.shiftFullscreen();
 
 	private updateSlider = () => {
 		if (this.collapsed) return;

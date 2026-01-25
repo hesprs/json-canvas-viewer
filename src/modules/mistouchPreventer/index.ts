@@ -5,13 +5,16 @@ import utilities, { destroyError } from '$/utilities';
 import style from './styles.scss?inline';
 
 type Options = {
-	mistouchPreventer?: {
-		preventAtStart?: boolean;
-		labelText?: string;
-	};
+	preventMistouchAtStart?: boolean;
+	mistouchPreventerBannerText?: string;
 };
 
-export default class MistouchPreventer extends BaseModule<Options> {
+type Augmentation = {
+	startMistouchPrevention: MistouchPreventer['startPrevention'];
+	endMistouchPrevention: MistouchPreventer['endPrevention'];
+};
+
+export default class MistouchPreventer extends BaseModule<Options, Augmentation> {
 	private _preventionContainer: HTMLDivElement | null = null;
 	private preventMt: boolean = false;
 	private DM: DataManager;
@@ -36,17 +39,11 @@ export default class MistouchPreventer extends BaseModule<Options> {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		const options = Object.assign(
-			{
-				preventAtStart: true,
-				labelText: 'Click on to unlock.',
-			},
-			this.options.mistouchPreventer || {},
-		);
 
 		const preventionBanner = document.createElement('div');
-		preventionBanner.className = 'prevention-banner';
-		preventionBanner.textContent = options.labelText;
+		preventionBanner.className = 'prevention-banner border-shadow-bg';
+		preventionBanner.textContent =
+			this.options.mistouchPreventerBannerText || 'Click on to unlock.';
 		this.DM = this.container.get(DataManager);
 		this._preventionContainer = document.createElement('div');
 		this._preventionContainer.className = 'prevention-container hidden';
@@ -55,12 +52,16 @@ export default class MistouchPreventer extends BaseModule<Options> {
 		this._preventionContainer.appendChild(preventionBanner);
 		this.DM.data.container.appendChild(this._preventionContainer);
 
-		if (options.preventAtStart) this.startPrevention();
+		if (this.options.preventMistouchAtStart) this.startPrevention();
 
 		window.addEventListener('pointerdown', this.onPointerDown);
 		window.addEventListener('pointermove', this.onPointerMove);
 		window.addEventListener('pointerup', this.onPointerUp);
 
+		this.augment({
+			startMistouchPrevention: this.startPrevention,
+			endMistouchPrevention: this.endPrevention,
+		});
 		this.onDispose(this.dispose);
 	}
 

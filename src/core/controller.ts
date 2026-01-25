@@ -1,13 +1,22 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import DataManager from '$/dataManager';
+import StyleManager from '$/styleManager';
 import utilities from '$/utilities';
 
-export default class Controller extends BaseModule {
+type Augmentation = {
+	refresh: Controller['refresh'];
+};
+
+export default class Controller extends BaseModule<{}, Augmentation> {
 	private animationId: null | number = null;
 	private resizeAnimationId: null | number = null;
 	private DM: DataManager;
+	private SM: StyleManager;
 	private resizeObserver: ResizeObserver;
-	private perFrame = {
+	private perFrame: {
+		lastScale: number;
+		lastOffsets: { x: number; y: number };
+	} = {
 		lastScale: 1,
 		lastOffsets: { x: 0, y: 0 },
 	};
@@ -26,10 +35,14 @@ export default class Controller extends BaseModule {
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.onStart(this.start);
-		this.onDispose(this.dispose);
 		this.DM = this.container.get(DataManager);
+		this.SM = this.container.get(StyleManager);
 		this.resizeObserver = new ResizeObserver(this.onResize);
+		this.SM.onChangeTheme.subscribe(this.refresh);
+		this.augment({ refresh: this.refresh });
+		this.onStart(this.start);
+		this.onRestart(this.refresh);
+		this.onDispose(this.dispose);
 	}
 
 	private start = () => {
@@ -48,10 +61,9 @@ export default class Controller extends BaseModule {
 	};
 
 	refresh = () => {
-		this.perFrame.lastScale = this.DM.data.scale;
-		this.perFrame.lastOffsets = {
-			x: this.DM.data.offsetX,
-			y: this.DM.data.offsetY,
+		this.perFrame = {
+			lastScale: this.DM.data.scale,
+			lastOffsets: { x: this.DM.data.offsetX, y: this.DM.data.offsetY },
 		};
 		this.hooks.onRefresh();
 	};

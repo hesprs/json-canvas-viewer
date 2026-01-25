@@ -6,7 +6,7 @@ import { defineConfig } from 'vite';
 
 import jsonCanvasTransform from './src/bridges/vitePlugin';
 
-const isBuildingChimp = process.env.BUILD === 'chimp';
+const isBuilding = process.env.BUILD; // 'full' | 'chimp' | 'webpack_loader'
 
 const fullConfig = defineConfig({
 	root: 'test',
@@ -23,7 +23,7 @@ const fullConfig = defineConfig({
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['@needle-di/core', 'pointeract', 'vue', 'react'],
+			external: ['@needle-di/core', 'pointeract', 'vue', 'react', '@ahmedsemih/color-fns'],
 		},
 		lib: {
 			entry: {
@@ -31,10 +31,44 @@ const fullConfig = defineConfig({
 				modules: resolve(__dirname, 'src/modules.ts'),
 				dev: resolve(__dirname, 'src/dev.ts'),
 				bridges: resolve(__dirname, 'src/bridges.ts'),
+				react: resolve(__dirname, 'src/bridges/reactComponent.tsx'),
+				vue: resolve(__dirname, 'src/bridges/vueComponent.vue'),
 			},
 			name: 'JSONCanvasViewer',
 			formats: ['es', 'cjs'],
 			fileName: (format, entryName) => `${entryName}.${format === 'cjs' ? 'cjs' : 'js'}`,
+		},
+	},
+});
+
+const webpackLoaderConfig = defineConfig({
+	resolve: {
+		alias: {
+			'@': resolve(__dirname, 'src/'),
+			$: resolve(__dirname, 'src/core/'),
+		},
+	},
+	build: {
+		outDir: resolve(__dirname, 'dist'),
+		emptyOutDir: false,
+		minify: false,
+		rollupOptions: {
+			external: [
+				'@needle-di/core',
+				'pointeract',
+				'vue',
+				'react',
+				'@ahmedsemih/color-fns',
+				'schema-utils',
+			],
+		},
+		lib: {
+			entry: {
+				webpackLoader: resolve(__dirname, 'src/bridges/webpackLoader.js'),
+			},
+			name: 'JSONCanvasViewer',
+			formats: ['es'],
+			fileName: 'webpackLoader',
 		},
 	},
 });
@@ -62,4 +96,8 @@ const chimpConfig = defineConfig({
 	},
 });
 
-export default isBuildingChimp ? chimpConfig : fullConfig;
+export default isBuilding === 'chimp'
+	? chimpConfig
+	: isBuilding === 'webpack_loader'
+		? webpackLoaderConfig
+		: fullConfig;

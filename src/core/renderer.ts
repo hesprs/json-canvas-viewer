@@ -1,28 +1,32 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
-import DataManager, { type MapEdgeItem, type MapNodeItem } from '$/dataManager';
+import DataManager, { type EdgeItem, type NodeItem } from '$/dataManager';
+import type { Box } from '$/declarations';
+import StyleManager from '$/styleManager';
 import utilities, { destroyError } from '$/utilities';
 
-interface viewport {
-	left: number;
-	right: number;
-	top: number;
-	bottom: number;
-}
-
 const ARROW_LENGTH = 12;
-const ARROW_WIDTH = 7;
+const ARROW_WIDTH = 4;
 const NODE_RADIUS = 12;
-const FONT_COLOR = '#fff';
 const CSS_ZOOM_REDRAW_INTERVAL = 500;
+const NODE_BORDER_WIDTH = 1;
+const DOT_RADIUS = 1; // Dot radius in CSS pixels
+const DOT_BASE_GAP = 10; // Base gap between dots in CSS pixels
 
-export default class Renderer extends BaseModule {
+const NODE_BORDER_HALF_WIDTH = NODE_BORDER_WIDTH / 2;
+
+type Options = {
+	zoomInOptimization?: boolean;
+};
+
+export default class Renderer extends BaseModule<Options> {
 	private _canvas: HTMLCanvasElement | null;
 	private ctx: CanvasRenderingContext2D;
 	private DM: DataManager;
+	private SM: StyleManager;
 	private zoomInOptimize: {
 		lastDrawnScale: number;
-		lastDrawnViewport: viewport;
+		lastDrawnViewport: Box;
 		timeout: NodeJS.Timeout | null;
 		lastCallTime: number;
 	} = {
@@ -45,6 +49,7 @@ export default class Renderer extends BaseModule {
 	constructor(...args: BaseArgs) {
 		super(...args);
 		const controller = this.container.get(Controller);
+		this.SM = this.container.get(StyleManager);
 		controller.hooks.onRefresh.subscribe(this.redraw);
 		controller.hooks.onResize.subscribe(this.optimizeDPR);
 		this.DM = this.container.get(DataManager);
@@ -61,17 +66,21 @@ export default class Renderer extends BaseModule {
 	};
 
 	private redraw = () => {
+		const offsetX = this.DM.data.offsetX;
+		const offsetY = this.DM.data.offsetY;
+		const scale = this.DM.data.scale;
+		const currentViewport = this.getCurrentViewport(offsetX, offsetY, scale);
+		if (!this.options.zoomInOptimization) {
+			this.trueRedraw(offsetX, offsetY, scale, currentViewport);
+			return;
+		}
 		if (this.zoomInOptimize.timeout) {
 			clearTimeout(this.zoomInOptimize.timeout);
 			this.zoomInOptimize.timeout = null;
 		}
 		const now = Date.now();
-		const offsetX = this.DM.data.offsetX;
-		const offsetY = this.DM.data.offsetY;
-		const scale = this.DM.data.scale;
-		const currentViewport = this.getCurrentViewport(offsetX, offsetY, scale);
 		if (
-			this.isViewportInside(currentViewport, this.zoomInOptimize.lastDrawnViewport) &&
+			this.isInside(currentViewport, this.zoomInOptimize.lastDrawnViewport) &&
 			scale !== this.zoomInOptimize.lastDrawnScale
 		) {
 			const timeSinceLast = now - this.zoomInOptimize.lastCallTime;
@@ -89,26 +98,29 @@ export default class Renderer extends BaseModule {
 		this.trueRedraw(offsetX, offsetY, scale, currentViewport);
 	};
 
-	private trueRedraw(offsetX: number, offsetY: number, scale: number, currentViewport: viewport) {
+	private trueRedraw(offsetX: number, offsetY: number, scale: number, currentViewport: Box) {
 		this.zoomInOptimize.lastDrawnViewport = currentViewport;
 		this.zoomInOptimize.lastDrawnScale = scale;
 		this.canvas.style.transform = '';
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.ctx.save();
+		this.drawGridDots(scale, offsetX, offsetY);
 		this.ctx.translate(offsetX, offsetY);
 		this.ctx.scale(scale, scale);
-		Object.values(this.DM.data.canvasMap).forEach((item) => {
-			if (item.type === 'edge') this.drawEdge(item);
-			else {
-				const node = item.ref;
-				if (node.type === 'file') this.drawFile(item);
-				else if (node.type === 'group') this.drawGroup(node, scale);
-			}
+		Object.values(this.DM.data.nodeMap).forEach((item) => {
+			if (this.isOutside(item.box, currentViewport)) return;
+			const node = item.ref;
+			if (node.type === 'file') this.drawFile(item);
+			else if (node.type === 'group') this.drawGroup(node, scale);
+		});
+		Object.values(this.DM.data.edgeMap).forEach((item) => {
+			if (this.isOutside(item.box, currentViewport)) return;
+			this.drawEdge(item);
 		});
 		this.ctx.restore();
 	}
 
-	private fakeRedraw(currentViewport: viewport, scale: number) {
+	private fakeRedraw(currentViewport: Box, scale: number) {
 		const cssScale = scale / this.zoomInOptimize.lastDrawnScale;
 		const currentOffsetX =
 			(this.zoomInOptimize.lastDrawnViewport.left - currentViewport.left) * scale;
@@ -117,11 +129,17 @@ export default class Renderer extends BaseModule {
 		this.canvas.style.transform = `translate(${currentOffsetX}px, ${currentOffsetY}px) scale(${cssScale})`;
 	}
 
-	private isViewportInside = (inner: viewport, outer: viewport) =>
+	private isInside = (inner: Box, outer: Box) =>
 		inner.left > outer.left &&
 		inner.top > outer.top &&
 		inner.right < outer.right &&
 		inner.bottom < outer.bottom;
+
+	private isOutside = (inner: Box, outer: Box) =>
+		inner.right < outer.left ||
+		inner.bottom < outer.top ||
+		inner.left > outer.right ||
+		inner.top > outer.bottom;
 
 	private getCurrentViewport = (offsetX: number, offsetY: number, scale: number) => {
 		const left = -offsetX / scale;
@@ -132,7 +150,14 @@ export default class Renderer extends BaseModule {
 		return { left, top, right, bottom };
 	};
 
-	private drawLabelBar = (x: number, y: number, label: string, color: string, scale: number) => {
+	private drawLabelBar = (
+		x: number,
+		y: number,
+		label: string,
+		color: string,
+		textColor: string,
+		scale: number,
+	) => {
 		const barHeight = 30 * scale;
 		const radius = 6 * scale;
 		const yOffset = 8 * scale;
@@ -157,58 +182,54 @@ export default class Renderer extends BaseModule {
 		this.ctx.quadraticCurveTo(0, 0, radius, 0);
 		this.ctx.closePath();
 		this.ctx.fill();
-		this.ctx.fillStyle = FONT_COLOR;
+		this.ctx.fillStyle = textColor;
 		this.ctx.fillText(label, xPadding, barHeight * 0.65);
 		this.ctx.restore();
 	};
 
 	private drawNodeBackground = (node: JSONCanvasNode) => {
-		const colors = utilities.getColor(node.color);
+		const colors = this.SM.getColor(node.color);
 		const radius = NODE_RADIUS;
 		this.ctx.globalAlpha = 1.0;
 		this.ctx.fillStyle = colors.background;
 		utilities.drawRoundRect(
 			this.ctx,
-			node.x + 1,
-			node.y + 1,
-			node.width - 2,
-			node.height - 2,
+			node.x + NODE_BORDER_HALF_WIDTH,
+			node.y + NODE_BORDER_HALF_WIDTH,
+			node.width - NODE_BORDER_WIDTH,
+			node.height - NODE_BORDER_WIDTH,
 			radius,
 		);
 		this.ctx.fill();
 		this.ctx.strokeStyle = colors.border;
-		this.ctx.lineWidth = 2;
+		this.ctx.lineWidth = NODE_BORDER_WIDTH;
 		utilities.drawRoundRect(this.ctx, node.x, node.y, node.width, node.height, radius);
 		this.ctx.stroke();
 	};
 
 	private drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
 		this.drawNodeBackground(node);
-		if (node.label)
-			this.drawLabelBar(
-				node.x,
-				node.y,
-				node.label,
-				utilities.getColor(node.color).active,
-				scale,
-			);
+		if (node.label) {
+			const color = this.SM.getColor(node.color);
+			this.drawLabelBar(node.x, node.y, node.label, color.active, color.text, scale);
+		}
 	};
 
-	private drawFile = (item: MapNodeItem) => {
-		this.ctx.fillStyle = FONT_COLOR;
+	private drawFile = (item: NodeItem) => {
+		this.ctx.fillStyle = this.SM.getColor().text;
 		const node = item.ref;
 		this.ctx.font = '16px sans-serif';
 		this.ctx.fillText(item.fileName || '', node.x + 5, node.y - 10);
 	};
 
-	private drawEdge = (item: MapEdgeItem) => {
+	private drawEdge = (item: EdgeItem) => {
 		const edge = item.ref;
-		const fromNode = this.DM.data.canvasMap[edge.fromNode].ref as JSONCanvasNode;
-		const toNode = this.DM.data.canvasMap[edge.toNode].ref as JSONCanvasNode;
+		const fromNode = this.DM.data.nodeMap[edge.fromNode].ref;
+		const toNode = this.DM.data.nodeMap[edge.toNode].ref;
 		const gac = utilities.getAnchorCoord;
-		const [startX, startY] = gac(fromNode, edge.fromSide);
-		const [endX, endY] = gac(toNode, edge.toSide);
-		const { active } = utilities.getColor(edge.color);
+		const { x: startX, y: startY } = gac(fromNode, edge.fromSide);
+		const { x: endX, y: endY } = gac(toNode, edge.toSide);
+		const color = this.SM.getColor(edge.color);
 		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
 		if (!item.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
@@ -230,9 +251,9 @@ export default class Renderer extends BaseModule {
 			startControlY,
 			endControlX,
 			endControlY,
-			active,
+			color.active,
 		);
-		this.drawArrowhead(endX, endY, endControlX, endControlY, active);
+		this.drawArrowhead(endX, endY, endControlX, endControlY, color.active);
 		if (edge.label) {
 			const t = 0.5;
 			const x =
@@ -250,7 +271,7 @@ export default class Renderer extends BaseModule {
 			const padding = 8;
 			const labelWidth = metrics.width + padding * 2;
 			const labelHeight = 20;
-			this.ctx.fillStyle = '#222';
+			this.ctx.fillStyle = color.active;
 			this.ctx.beginPath();
 			utilities.drawRoundRect(
 				this.ctx,
@@ -261,7 +282,7 @@ export default class Renderer extends BaseModule {
 				4,
 			);
 			this.ctx.fill();
-			this.ctx.fillStyle = '#ccc';
+			this.ctx.fillStyle = color.text;
 			this.ctx.textAlign = 'center';
 			this.ctx.textBaseline = 'middle';
 			this.ctx.fillText(edge.label, x, y - 2);
@@ -318,6 +339,23 @@ export default class Renderer extends BaseModule {
 				break;
 		}
 		return [startControlX, startControlY, endControlX, endControlY];
+	};
+
+	private drawGridDots = (scale: number, offsetX: number, offsetY: number) => {
+		const scaleLevel = -Math.floor(Math.log2(scale));
+		const actualGap = DOT_BASE_GAP * 2 ** scaleLevel * scale;
+		const width = this.canvas.width;
+		const height = this.canvas.height;
+		const startX = offsetX % actualGap;
+		const startY = offsetY % actualGap;
+		this.ctx.fillStyle = this.SM.getNamedColor('dots');
+		for (let x = startX; x <= width; x += actualGap) {
+			for (let y = startY; y <= height; y += actualGap) {
+				this.ctx.beginPath();
+				this.ctx.arc(x, y, DOT_RADIUS, 0, 2 * Math.PI);
+				this.ctx.fill();
+			}
+		}
 	};
 
 	private drawCurvedPath = (

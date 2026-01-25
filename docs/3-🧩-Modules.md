@@ -1,30 +1,40 @@
-JSON Canvas Viewer is built in a modular way, its core is simply the composition of several internal modules. It's also very extensible, you can easily add your own modules to customize the viewer. About how to write your own module, please refer to [Develop a Module](5-🧑‍💻-Develop-a-Module.md).Actually, we have built some extended modules for you to use:
+## How Modules Work
+
+JSON Canvas Viewer is built in a modular way, its core is simply the composition of several internal modules. This unlocks unlimited extensibility and DX by loose coupling.
+
+By using advanced type generics and runtime logic. A module can register options to the main interface, augment new properties and methods to the main and use other modules via dependency injection.
+
+About how to write your own module, please refer to [Develop a Module](5-🧑‍💻-Develop-a-Module.md).
+
+We have built some extended modules for you to use:
+
+(**For those who are using `chimp` version, you can import the following modules by changing `json-canvas-viewer/modules` to the URL of CDN**)
 
 ## Minimap
 
 Displays a minimap of current canvas at the bottom right corner.
 
-Import:
+**Import**:
 
 ```TypeScript
 import { Minimap } from 'json-canvas-viewer/modules';
 ```
 
-New option and default value:
+**New Option**:
 
-```TypeScript
-{
-    minimapCollapsed?: false,
-}
-```
+`minimapCollapsed: boolean`: whether to start the viewer with the minimap collapsed.
 
-- `minimapCollapsed`: Whether to start the viewer with the minimap collapsed.
+- Default: `false`
 
-## Debug Panel
+**New Method Augmented to the Main**:
+
+`toggleMinimapCollapse(): void`: toggle between normal and collapsed state.
+
+### Debug Panel
 
 Displays current scale and coordinates at the bottom left corner.
 
-Import:
+**Import**:
 
 ```TypeScript
 import { DebugPanel } from 'json-canvas-viewer/modules';
@@ -34,21 +44,21 @@ import { DebugPanel } from 'json-canvas-viewer/modules';
 
 Displays zoom-in/out and fullscreen controls at the top right corner.
 
-Import:
+**Import**:
 
 ```TypeScript
 import { Controls } from 'json-canvas-viewer/modules';
 ```
 
-New option and default value:
+**New Option**:
 
-```TypeScript
-{
-    controlsCollapsed?: false,
-}
-```
+`controlsCollapsed: boolean`: whether to start the viewer with controls collapsed.
 
-- `controlsCollapsed`: Whether to start the viewer with the minimap collapsed.
+- Default: `false`
+
+**New Method Augmented to the Main**:
+
+`toggleControlsCollapse(): void`: toggle between normal and collapsed state.
 
 ## Mistouch Preventer
 
@@ -60,16 +70,18 @@ Import:
 import { MistouchPreventer } from 'json-canvas-viewer/modules';
 ```
 
-New option and default value:
+**New Options**:
 
-```TypeScript
-{
-    mistouchPreventer?: {
-		preventAtStart?: true;
-		labelText?: 'Click to unlock.';
-	};
-}
-```
+`preventMistouchAtStart: boolean`: whether to prevent the canvas from being mistouched when the viewer is firstly loaded.
 
-- `preventAtStart`: Whether to prevent the canvas from being mistouched when th viewer is created.
-- `labelText`: The text to display in the locking banner.
+- Default: `true`
+
+`mistouchPreventerBannerText: string`: The text to display in the locking banner.
+
+- Default: `Click on to unlock.`
+
+**New Methods Augmented to the Main**:
+
+`startMistouchPrevention(): void`: freezes the canvas and shows the banner.
+
+`endMistouchPrevention(): void`: unlocks the canvas and hides the banner.

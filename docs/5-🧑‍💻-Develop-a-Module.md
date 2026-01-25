@@ -3,8 +3,8 @@ Development of modules on the infrastructure of `json-canvas-viewer` requires an
 - The entire viewer is built on an entry class `JSONCanvasViewer` and several modules.
 - This project uses dependency injection to manage modules.
 - Essential libraries used:
-    - [`needle-di`](https://needle-di.io/): dependency injection library
-    - [`pointeract`](https://pointeract.consensia.cc/): resolves user interactions
+  - [`needle-di`](https://needle-di.io/): dependency injection library
+  - [`pointeract`](https://pointeract.consensia.cc/): resolves user interactions
 
 **Internal modules include**:
 
@@ -13,8 +13,9 @@ Development of modules on the infrastructure of `json-canvas-viewer` requires an
 - `InteractionHandler`: handles user interactions
 - `DataManager`: manages the canvas data and viewer states
 - `OverlayManager`: manages interactive canvas elements
+- `styleManager`: manages and applies colors and styles across the viewer
 
-The full version of JSON Canvas Viewer offers an export group of `json-canvas-viewer/dev`, which includes all the internal modules used for DI, utilities and the base module.
+The full version of JSON Canvas Viewer offers an export group of `json-canvas-viewer/dev`, which includes all the internal modules used for DI, some general module types, utilities and the base module.
 
 ## Base Module
 
@@ -35,9 +36,11 @@ class MyModule extends BaseModule {
 This setup gives you available properties:
 
 - `this.container`: The DI container, you can retrieve everything you need from here.
-- `this.options`: The full options the user passes in.
-- `this.onStart`: The hook to be called when the viewer is prepared, different from the constructor, this hook is called after all the modules are initialized, and the canvas is about to be interactable.
+- `this.options`: The full options the user passes in. About custom options, see [Define Options](#define-options).
+- `this.onStart`: The hook to be called when the viewer is prepared, different from the constructor, this hook is called after all the modules are initialized, and the canvas is about to be interactable, which is equivalent when you call `JSONCanvasViewer.load()`.
 - `this.onDispose`: The hook to be called when the viewer is disposed.
+- `this.onRestart`: The hook to be called when `JSONCanvasViewer.load()` is called and is more than once.
+- `this.augment`: inject methods and properties into the main class, see [Main Augmentation](#main-augmentation).
 
 ## Accessing Module Types
 
@@ -50,7 +53,7 @@ Hence, we provide types `GeneralModule` and `GeneralModuleCtor` for this purpose
 To ensure the correctness of option types, you need to pass a type parameter to the `BaseModule` class, for example:
 
 ```TypeScript
-import { BaseModule, BaseArgs } from "json-canvas-viewer";
+import { BaseModule, type BaseArgs } from "json-canvas-viewer";
 
 type Options = {
     useAsync?: boolean;
@@ -66,6 +69,31 @@ class MyModule extends BaseModule<Options> {
 
 Then you can see type completions when the user uses the module, or in `this.options`.
 
+## Main Augmentation
+
+You can inject methods and properties to the main instance, so that users don't need to use the DI container to access them. To ensure they are properly typed, you need to pass another type parameter to the base module:
+
+```TypeScript
+import { BaseModule, type BaseArgs } from "json-canvas-viewer";
+
+type Augmentation = {
+    log: MyModule['log'];
+}
+
+class MyModule extends BaseModule<{}, Augmentation> {
+    constructor(...args: BaseArgs) {
+        super(...args);
+        this.augment({ log: this.log });
+    }
+
+    log(toLog: string) {
+        console.log(`[MyModule]: ${toLog}`);
+    }
+}
+```
+
+**You should always ensure that `this.augment()` is called in the constructor and implements 100% the same as the type parameter.**
+
 ## Dependency Injection and Utilities
 
 You can use dependency injection to inject services into your module, all service providers are available in `json-canvas-viewer/dev`, they are:
@@ -75,7 +103,8 @@ Controller,
 DataManager,
 InteractionHandler,
 Renderer,
-OverlayManager
+OverlayManager,
+StyleManager
 ```
 
 Then you can access services in your module with `needle-di`. E.g., when you want to use `DataManager`:
@@ -107,26 +136,33 @@ type Options = {
     report?: boolean;
 };
 
-export default class DebugPanel extends BaseModule<Options> {
+type Augmentation = {
+    updateDebugPanel: DebugPanel['update'];
+}
+
+export default class DebugPanel extends BaseModule<Options, Augmentation> {
 	private _debugPanel: HTMLDivElement | null = null;
 	private DM: DataManager;
 
 	private get debugPanel() { // getter to handle nullable property
 		if (!this._debugPanel) throw new Error("[JSONCanvasViewer] Resource hasn't been set up or has been disposed.");
-		return this._debugPanel;
+	    return this._debugPanel;
 	}
 
 	constructor(...args: BaseArgs) {
 		super(...args);
 		this.DM = this.container.get(DataManager); // dependency injection
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.update); // subscribe to hooks
+
 		this._debugPanel = document.createElement('div');
 		this._debugPanel.className = 'debug-panel';
 		const HTMLContainer = this.DM.data.container;
 		canvasUtils.applyStyles(HTMLContainer, style); // access utilities
 		HTMLContainer.appendChild(this._debugPanel);
-		if (this.options.report) console.log('DebugPanel initialized'); // access custom options
+
+		if (this.options.report) console.log('DebugPanel initialized.'); // access custom options
         this.onDispose(this.dispose); // access lifecycle hook
+        this.augment({ updateDebugPanel: this.update })
 	}
 
 	private update = () => {

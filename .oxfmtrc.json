@@ -15,5 +15,12 @@
 			["index", "index-type"]
 		]
 	},
-	"ignorePatterns": ["public/googlef6d380b198d159b3.html", "yandex_86a7efad068e2d03.html"]
+	"overrides": [
+		{
+			"files": ["*.md", "*.yaml", "*.yml"],
+			"options": {
+				"tabWidth": 2
+			}
+		}
+	]
 }

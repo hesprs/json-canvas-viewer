@@ -19,7 +19,7 @@ export default class DebugPanel extends BaseModule {
 		this.DM = this.container.get(DataManager);
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.update);
 		this._debugPanel = document.createElement('div');
-		this._debugPanel.className = 'debug-panel';
+		this._debugPanel.className = 'debug-panel border-shadow-bg';
 		const HTMLContainer = this.DM.data.container;
 		utilities.applyStyles(HTMLContainer, style);
 		HTMLContainer.appendChild(this._debugPanel);

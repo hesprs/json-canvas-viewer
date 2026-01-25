@@ -1,28 +1,37 @@
-import type { DefaultOptions, Empty, GeneralFunction, GeneralObject } from '$/declarations';
+import type { DefaultOptions, Empty, GeneralObject, Indexable } from '$/declarations';
 import type utilities from '$/utilities';
 import type { Container } from '@needle-di/core';
 
 type Hook = ReturnType<typeof utilities.makeHook>;
+// oxlint-disable-next-line typescript/no-explicit-any
+export type Augmentation = Record<Indexable, any>;
 
-export type BaseArgs = [Container, GeneralObject, Hook, Hook];
+export type BaseArgs = [Container, GeneralObject, Hook, Hook, Hook, (aug: Augmentation) => void];
 
-export type GeneralModuleCtor = typeof BaseModule<GeneralObject>;
-export type GeneralModule = BaseModule<GeneralObject>;
+// oxlint-disable-next-line typescript/no-explicit-any
+export type GeneralModuleCtor = typeof BaseModule<GeneralObject, any>;
+// oxlint-disable-next-line typescript/no-explicit-any
+export type GeneralModule = BaseModule<GeneralObject, any>;
 
-export class BaseModule<O extends GeneralObject = Empty> {
-	onStart: (callback: GeneralFunction) => void;
-	onDispose: (callback: GeneralFunction) => void;
+export class BaseModule<O extends GeneralObject = Empty, A extends Augmentation = Empty> {
+	onStart: Hook['subscribe'];
+	onRestart: Hook['subscribe'];
+	onDispose: Hook['subscribe'];
+	augment: (aug: A) => void;
 	constructor(
 		protected container: Container,
 		options: GeneralObject,
 		onStart: Hook,
 		onDispose: Hook,
+		onRestart: Hook,
+		augment: (aug: A) => void,
 	) {
-		Object.assign(this.options, options);
-		this.onStart = (...args: Parameters<typeof onStart.subscribe>) =>
-			onStart.subscribe(...args);
-		this.onDispose = (...args: Parameters<typeof onDispose.subscribe>) =>
-			onDispose.subscribe(...args);
+		this.options = options as DefaultOptions & O;
+		this.onStart = onStart.subscribe;
+		this.onDispose = onDispose.subscribe;
+		this.onRestart = onRestart.subscribe;
+		this.augment = augment;
 	}
-	options = {} as DefaultOptions & O;
+	options: DefaultOptions & O;
+	declare _providedMethods: A;
 }

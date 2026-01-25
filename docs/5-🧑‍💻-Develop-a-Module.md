@@ -15,7 +15,7 @@ Development of modules on the infrastructure of `json-canvas-viewer` requires an
 - `OverlayManager`: manages interactive canvas elements
 - `styleManager`: manages and applies colors and styles across the viewer
 
-The full version of JSON Canvas Viewer offers an export group of `json-canvas-viewer/dev`, which includes all the internal modules used for DI, some general module types, utilities and the base module.
+The full version of JSON Canvas Viewer offers an export entry at `json-canvas-viewer/dev`, which includes all the internal modules used for DI, some general module types, utilities and the base module.
 
 ## Base Module
 
@@ -24,7 +24,7 @@ All functions are achieved by modules, and all modules extend `BaseModule`.
 The minimum boilerplate for a module:
 
 ```TypeScript
-import { BaseModule, BaseArgs } from "json-canvas-viewer/dev";
+import { BaseModule, type BaseArgs } from "json-canvas-viewer/dev";
 
 class MyModule extends BaseModule {
     constructor(...args: BaseArgs) {

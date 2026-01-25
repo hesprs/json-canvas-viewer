@@ -1,6 +1,6 @@
-Welcome to the JSON Canvas Viewer repository!
+Welcome to the JSON Canvas Viewer documentation!
 
-<img alt="preview" src="https://github.com/user-attachments/assets/d78d131b-e212-4e31-be81-42d02bf09bf1" />
+<img alt="preview" src="https://github.com/hesprs/json-canvas-viewer/blob/main/assets/preview.png" />
 
 **Note**: JSON Canvas Viewer supports both ESM and CJS. Across this documentation, we'll use ESM in examples.
 

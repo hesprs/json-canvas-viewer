@@ -153,4 +153,4 @@ And the viewer should be right there, you can instantiate the viewer multiple ti
 
 ---
 
-**Read Next**: [Construction Detail](2-🏗️-Construction-Details.md)
+**Read Next**: [Construction Details](2-🏗️-Construction-Details.md)

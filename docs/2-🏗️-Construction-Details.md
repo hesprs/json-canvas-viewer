@@ -54,9 +54,9 @@ An object that lets you customize the viewer. Its type grows as you use more mod
 - Default: `normal`
 - `none`: disables loading, you need to manually call `JSONCanvasViewer.load()`.
 - `lazy`: delays loading until the viewer is about to enter the user's viewport.
-- `normal`: load the canvas immediately after instantiation.
+- `normal`: loads the canvas immediately after instantiation.
 
-`zoomInOptimization`: whether to reuse previous renders if the next frame is absolutely inside previous frame.
+`zoomInOptimization`: whether to reuse previous renders if the viewport of next frame is absolutely inside the previous one.
 
 - Default: `false`
 - This can de facto improve the performance when zooming in, however it may introduce visual inconsistency and jerking.
@@ -130,9 +130,9 @@ JSON Canvas Viewer requires two stages to load a canvas - **construction stage**
 
 During construction, the viewer itself and all modules are instantiated, this is done when you instantiate the viewer. After construction, the viewer is ready to plug any canvas file.
 
-Loading happens after construction. If your `loading` is unset or `normal`, loading will happen immediately, otherwise it will happen when `load()` is called via lazy loading or yourself. During loading, the canvas data will be processed, the rendering loop are started and eventListeners are attached.
+Loading happens after construction. If your `loading` is unset or `normal`, loading will happen immediately, otherwise it will happen when `load()` is called via lazy loading or yourself. During loading, the canvas data will be processed, the rendering loops are started and eventListeners are attached.
 
-To reload or load a new canvas, simply call `load()` again. Everything will be undated efficiently on the existing viewer.
+To load or reload a new canvas, simply call `load()` again. Everything will be updated efficiently on the existing viewer.
 
 ## Accessing Types
 

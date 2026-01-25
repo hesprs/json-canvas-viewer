@@ -12,8 +12,7 @@
         <img src="https://img.shields.io/npm/v/json-canvas-viewer?logo=npm&labelColor=red&logoColor=white&color=333333" alt="npm">
     </a>
     <a href="https://bundlephobia.com/package/json-canvas-viewer">
-        <img src="https://img.shields.io/bundlejs/size/json-canvas-viewer?format=minzip&style=flat&logo=webpack&logoColor=white&label=Minzipped%20Size&labelColor=orange&color=333333
-        " alt="Gzipped + Minified Size">
+        <img src="https://img.shields.io/bundlejs/size/json-canvas-viewer?format=minzip&style=flat&logo=webpack&logoColor=white&label=Minzipped%20Size&labelColor=orange&color=333333" alt="Gzipped + Minified Size">
     </a>
     <a href="https://github.com/hesprs/json-canvas-viewer/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/hesprs/json-canvas-viewer/ci.yml?style=flat&logo=github&logoColor=white&label=CI&labelColor=d4ab00&color=333333" alt="ci">
@@ -30,6 +29,10 @@
     </a>
     <img src="https://img.shields.io/badge/%F0%9F%96%90%EF%B8%8F%20Made%20by-Humans-333333?labelColor=25C260" alt="Made by Humans">
 </p>
+
+<img align="center" src="./assets/preview.png" alt="preview image with light and dark theme">
+
+<br>
 
 <p align="center">
     <a href="https://hesprs.github.io/json-canvas-viewer">

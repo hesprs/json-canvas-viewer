@@ -1,541 +1,514 @@
 {
-  "edges": [
-    {
-      "color": "6",
-      "fromNode": "05070749b6678ecb",
-      "fromSide": "bottom",
-      "id": "69024ca37afac075",
-      "label": "After Processing",
-      "styleAttributes": {
-      },
-      "toNode": "ad03bace3d526a2d",
-      "toSide": "top"
-    },
-    {
-      "color": "5",
-      "fromNode": "7879f90910615218",
-      "fromSide": "left",
-      "id": "1ec2644450457af2",
-      "styleAttributes": {
-      },
-      "toNode": "dd6210669d6e7586",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "dd6210669d6e7586",
-      "fromSide": "right",
-      "id": "3d50d033d2b95cd0",
-      "label": "Forward Ref",
-      "styleAttributes": {
-        "path": "short-dashed"
-      },
-      "toNode": "7879f90910615218",
-      "toSide": "right"
-    },
-    {
-      "color": "5",
-      "fromNode": "3be1cd40924f4ff1",
-      "fromSide": "right",
-      "id": "69d26e847f46bc42",
-      "styleAttributes": {
-      },
-      "toNode": "7879f90910615218",
-      "toSide": "right"
-    },
-    {
-      "color": "5",
-      "fromNode": "3be1cd40924f4ff1",
-      "fromSide": "right",
-      "id": "3385235c6a13cb58",
-      "styleAttributes": {
-      },
-      "toNode": "f188948a86462f74",
-      "toSide": "right"
-    },
-    {
-      "color": "5",
-      "fromNode": "5750528f086cf0dd",
-      "fromSide": "left",
-      "id": "c44cdfc12c9eba05",
-      "styleAttributes": {
-      },
-      "toNode": "f188948a86462f74",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "5750528f086cf0dd",
-      "fromSide": "left",
-      "id": "44bab6781ea91ad3",
-      "styleAttributes": {
-      },
-      "toNode": "dd6210669d6e7586",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "5750528f086cf0dd",
-      "fromSide": "left",
-      "id": "07c96354cd6ccc4a",
-      "styleAttributes": {
-      },
-      "toNode": "7879f90910615218",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "5750528f086cf0dd",
-      "fromSide": "left",
-      "id": "4cefa24f7400341a",
-      "styleAttributes": {
-      },
-      "toNode": "3be1cd40924f4ff1",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "f407467a654f1841",
-      "styleAttributes": {
-      },
-      "toNode": "5750528f086cf0dd",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "cee4aff4dc6dd164",
-      "styleAttributes": {
-      },
-      "toNode": "f188948a86462f74",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "e127e8106fbb9b8a",
-      "styleAttributes": {
-      },
-      "toNode": "dd6210669d6e7586",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "ec4a2b2f91a2c327",
-      "styleAttributes": {
-      },
-      "toNode": "7879f90910615218",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "bf7af48c1a778405",
-      "styleAttributes": {
-      },
-      "toNode": "3be1cd40924f4ff1",
-      "toSide": "left"
-    },
-    {
-      "color": "5",
-      "fromNode": "22232f8a6f091b5e",
-      "fromSide": "right",
-      "id": "cbc78d17ed306141",
-      "styleAttributes": {
-      },
-      "toNode": "3a6b316c15b9dfd8",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "3484cb50304a8f95",
-      "fromSide": "right",
-      "id": "c863cc3999863aa4",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "e0807693f63ec21e",
-      "fromSide": "right",
-      "id": "174e433f44b17c80",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "3d072911e8eb02c7",
-      "fromSide": "right",
-      "id": "852629e4effecdb5",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "222011ffbe3e170b",
-      "fromSide": "right",
-      "id": "7f2dfd4cb35a72a5",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "07bdb2d1ee50513b",
-      "fromSide": "right",
-      "id": "5293a076e8cae9ee",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "04726f1b68830bc2",
-      "fromSide": "right",
-      "id": "8bcb6e002caa7462",
-      "styleAttributes": {
-      },
-      "toNode": "05070749b6678ecb",
-      "toSide": "left"
-    },
-    {
-      "color": "6",
-      "fromNode": "ad03bace3d526a2d",
-      "fromSide": "left",
-      "id": "6b78025b58507afe",
-      "styleAttributes": {
-      },
-      "toNode": "43c6ee8f4e535cc9",
-      "toSide": "right"
-    },
-    {
-      "color": "5",
-      "fromNode": "d53b08a635029dc8",
-      "fromSide": "left",
-      "id": "65f15bad81c4f4f3",
-      "styleAttributes": {
-      },
-      "toNode": "22232f8a6f091b5e",
-      "toSide": "bottom"
-    },
-    {
-      "fromNode": "62c0bf430454e577",
-      "fromSide": "right",
-      "id": "95150de3cd517bae",
-      "styleAttributes": {
-      },
-      "toNode": "1e4c16e7d7eaf055",
-      "toSide": "left"
-    }
-  ],
-  "metadata": {
-    "frontmatter": {
-    },
-    "version": "1.0-1.0"
-  },
-  "nodes": [
-    {
-      "color": "1",
-      "height": 240,
-      "id": "9d2fd1cf9560b5cf",
-      "label": "Main Class",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": 580
-    },
-    {
-      "color": "3",
-      "height": 240,
-      "id": "35c44106f4320a95",
-      "label": "Renderer",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": -20
-    },
-    {
-      "color": "3",
-      "height": 240,
-      "id": "3a71c9fbd8775a12",
-      "label": "Data Manager",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": 280
-    },
-    {
-      "color": "3",
-      "height": 240,
-      "id": "fc8278214b199cdb",
-      "label": "Overlay Manager",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": -620
-    },
-    {
-      "color": "3",
-      "height": 240,
-      "id": "ecc016305ff46026",
-      "label": "Interaction Hander",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": -320
-    },
-    {
-      "color": "3",
-      "height": 220,
-      "id": "3d271e1f35d6cefb",
-      "label": "Controller",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": -900
-    },
-    {
-      "color": "3",
-      "height": 180,
-      "id": "89d1ce7cd68dbeed",
-      "label": "Custom Module",
-      "type": "group",
-      "width": 478,
-      "x": 980,
-      "y": -1140
-    },
-    {
-      "height": 60,
-      "id": "3484cb50304a8f95",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -1120
-    },
-    {
-      "height": 60,
-      "id": "3a6b316c15b9dfd8",
-      "styleAttributes": {
-      },
-      "text": "### Logic",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -1040
-    },
-    {
-      "height": 60,
-      "id": "e0807693f63ec21e",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -880
-    },
-    {
-      "height": 60,
-      "id": "3d072911e8eb02c7",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -600
-    },
-    {
-      "height": 119,
-      "id": "7879f90910615218",
-      "styleAttributes": {
-      },
-      "text": "### Logic\n\n**Work**: Constructs interactive canvas elements and manages element interactions and rendering.",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -520
-    },
-    {
-      "height": 60,
-      "id": "222011ffbe3e170b",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -300
-    },
-    {
-      "file": "https://github.com/hesprs/json-canvas-viewer/raw/main/assets/logo.svg",
-      "height": 400,
-      "id": "62c0bf430454e577",
-      "type": "file",
-      "width": 400,
-      "x": 2360,
-      "y": -830
-    },
-    {
-      "height": 400,
-      "id": "1e4c16e7d7eaf055",
-      "styleAttributes": {
-      },
-      "text": "## Learn More\n\n- [Deadly simple chimp usage](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-chimpanzee-version)\n- [Full setup and Vite plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-full-version)\n- [Use as a Vue component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)\n- [Use as a React component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)\n- [Prerendering](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#prerendering)\n- [Optional modules](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules)\n- [Extend the viewer](https://github.com/hesprs/json-canvas-viewer/wiki/5-%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB-Develop-a-Module)",
-      "type": "text",
-      "width": 560,
-      "x": 2820,
-      "y": -830
-    },
-    {
-      "height": 710,
-      "id": "5a670d40836205ec",
-      "type": "link",
-      "url": "https://jsoncanvas.org",
-      "width": 1020,
-      "x": 2360,
-      "y": -250
-    },
-    {
-      "height": 100,
-      "id": "3be1cd40924f4ff1",
-      "styleAttributes": {
-      },
-      "text": "### Logic\n\n**Work**: Controls main render loop and handles viewer resize",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -800
-    },
-    {
-      "height": 120,
-      "id": "dd6210669d6e7586",
-      "styleAttributes": {
-      },
-      "text": "### Logic\n\n**Work**: Uses [Pointeract](https://pointeract.consensia.cc) to listen to interactions on the viewer and translate to `DataManager` method calls.",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": -220
-    },
-    {
-      "height": 60,
-      "id": "07bdb2d1ee50513b",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 0
-    },
-    {
-      "height": 120,
-      "id": "f188948a86462f74",
-      "styleAttributes": {
-      },
-      "text": "### Logic\n\n**Work**: Renders all groups, edges and labels that doesn't need interactivity.",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 80
-    },
-    {
-      "height": 60,
-      "id": "05070749b6678ecb",
-      "styleAttributes": {
-        "textAlign": null
-      },
-      "text": "## Central Type Machine",
-      "type": "text",
-      "width": 300,
-      "x": 1920,
-      "y": -300
-    },
-    {
-      "color": "1",
-      "height": 130,
-      "id": "22232f8a6f091b5e",
-      "styleAttributes": {
-      },
-      "text": "## Coordinator\n\n- Start/dispose hooks\n- DI container",
-      "type": "text",
-      "width": 300,
-      "x": 200,
-      "y": -335
-    },
-    {
-      "height": 60,
-      "id": "04726f1b68830bc2",
-      "styleAttributes": {
-      },
-      "text": "### Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 300
-    },
-    {
-      "height": 120,
-      "id": "5750528f086cf0dd",
-      "styleAttributes": {
-      },
-      "text": "### Logic\n\n**Work**: Initializes the canvas, manages states, and provides canvas control mathods.",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 380
-    },
-    {
-      "height": 60,
-      "id": "43c6ee8f4e535cc9",
-      "styleAttributes": {
-      },
-      "text": "## Main Interface",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 600
-    },
-    {
-      "height": 120,
-      "id": "d53b08a635029dc8",
-      "styleAttributes": {
-      },
-      "text": "## Main Logic\n\n**Work**: Controls lazy loading, provides start and dispose hooks, and manages modules.",
-      "type": "text",
-      "width": 440,
-      "x": 1000,
-      "y": 680
-    },
-    {
-      "height": 60,
-      "id": "ad03bace3d526a2d",
-      "styleAttributes": {
-      },
-      "text": "### All Available Options",
-      "type": "text",
-      "width": 300,
-      "x": 1920,
-      "y": 600
-    }
-  ]
+	"edges":[
+		{
+			"id":"69024ca37afac075",
+			"styleAttributes":{},
+			"fromNode":"05070749b6678ecb",
+			"fromSide":"bottom",
+			"toNode":"ad03bace3d526a2d",
+			"toSide":"top",
+			"color":"6",
+			"label":"After Processing"
+		},
+		{
+			"id":"1ec2644450457af2",
+			"styleAttributes":{},
+			"fromNode":"7879f90910615218",
+			"fromSide":"left",
+			"toNode":"dd6210669d6e7586",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"3d50d033d2b95cd0",
+			"styleAttributes":{"path":"short-dashed"},
+			"fromNode":"dd6210669d6e7586",
+			"fromSide":"right",
+			"toNode":"7879f90910615218",
+			"toSide":"right",
+			"color":"5",
+			"label":"Forward Ref"
+		},
+		{
+			"id":"69d26e847f46bc42",
+			"styleAttributes":{},
+			"fromNode":"3be1cd40924f4ff1",
+			"fromSide":"right",
+			"toNode":"7879f90910615218",
+			"toSide":"right",
+			"color":"5"
+		},
+		{
+			"id":"3385235c6a13cb58",
+			"styleAttributes":{},
+			"fromNode":"3be1cd40924f4ff1",
+			"fromSide":"right",
+			"toNode":"f188948a86462f74",
+			"toSide":"right",
+			"color":"5"
+		},
+		{
+			"id":"c44cdfc12c9eba05",
+			"styleAttributes":{},
+			"fromNode":"5750528f086cf0dd",
+			"fromSide":"left",
+			"toNode":"f188948a86462f74",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"44bab6781ea91ad3",
+			"styleAttributes":{},
+			"fromNode":"5750528f086cf0dd",
+			"fromSide":"left",
+			"toNode":"dd6210669d6e7586",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"07c96354cd6ccc4a",
+			"styleAttributes":{},
+			"fromNode":"5750528f086cf0dd",
+			"fromSide":"left",
+			"toNode":"7879f90910615218",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"4cefa24f7400341a",
+			"styleAttributes":{},
+			"fromNode":"5750528f086cf0dd",
+			"fromSide":"left",
+			"toNode":"3be1cd40924f4ff1",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"f407467a654f1841",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"5750528f086cf0dd",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"cee4aff4dc6dd164",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"f188948a86462f74",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"e127e8106fbb9b8a",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"dd6210669d6e7586",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"ec4a2b2f91a2c327",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"7879f90910615218",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"bf7af48c1a778405",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"3be1cd40924f4ff1",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"cbc78d17ed306141",
+			"styleAttributes":{},
+			"fromNode":"22232f8a6f091b5e",
+			"fromSide":"right",
+			"toNode":"3a6b316c15b9dfd8",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"c863cc3999863aa4",
+			"styleAttributes":{},
+			"fromNode":"3484cb50304a8f95",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"174e433f44b17c80",
+			"styleAttributes":{},
+			"fromNode":"e0807693f63ec21e",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"852629e4effecdb5",
+			"styleAttributes":{},
+			"fromNode":"3d072911e8eb02c7",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"7f2dfd4cb35a72a5",
+			"styleAttributes":{},
+			"fromNode":"222011ffbe3e170b",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"5293a076e8cae9ee",
+			"styleAttributes":{},
+			"fromNode":"07bdb2d1ee50513b",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"8bcb6e002caa7462",
+			"styleAttributes":{},
+			"fromNode":"04726f1b68830bc2",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"6b78025b58507afe",
+			"styleAttributes":{},
+			"fromNode":"ad03bace3d526a2d",
+			"fromSide":"left",
+			"toNode":"43c6ee8f4e535cc9",
+			"toSide":"right",
+			"color":"6"
+		},
+		{
+			"id":"65f15bad81c4f4f3",
+			"styleAttributes":{},
+			"fromFloating":false,
+			"fromNode":"6f2874961565b1a9",
+			"fromSide":"top",
+			"toNode":"22232f8a6f091b5e",
+			"toSide":"bottom",
+			"color":"5"
+		},
+		{
+			"id":"95150de3cd517bae",
+			"styleAttributes":{},
+			"fromNode":"62c0bf430454e577",
+			"fromSide":"right",
+			"toNode":"1e4c16e7d7eaf055",
+			"toSide":"left"
+		},
+		{
+			"id":"7179314583e20608",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromNode":"d53b08a635029dc8",
+			"fromSide":"left",
+			"toNode":"6f2874961565b1a9",
+			"toSide":"right",
+			"color":"5"
+		},
+		{
+			"id":"3f2c19f968c5d664",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromFloating":false,
+			"fromNode":"1ae6fa286a80276c",
+			"fromSide":"right",
+			"toNode":"05070749b6678ecb",
+			"toSide":"left",
+			"color":"6"
+		},
+		{
+			"id":"e43e50cee761f200",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromNode":"5750528f086cf0dd",
+			"fromSide":"left",
+			"toNode":"4640b4e7b1c2817f",
+			"toSide":"left",
+			"color":"5"
+		},
+		{
+			"id":"0c8afceb49f386c8",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromFloating":false,
+			"fromNode":"4640b4e7b1c2817f",
+			"fromSide":"right",
+			"toNode":"3be1cd40924f4ff1",
+			"toSide":"right",
+			"color":"5"
+		},
+		{
+			"id":"08a9b86c8cc587a5",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromFloating":false,
+			"fromNode":"4640b4e7b1c2817f",
+			"fromSide":"right",
+			"toNode":"7879f90910615218",
+			"toSide":"right",
+			"color":"5"
+		},
+		{
+			"id":"617fe3d9880b1c50",
+			"styleAttributes":{},
+			"toFloating":false,
+			"fromFloating":false,
+			"fromNode":"4640b4e7b1c2817f",
+			"fromSide":"right",
+			"toNode":"f188948a86462f74",
+			"toSide":"right",
+			"color":"5"
+		}
+	],
+	"metadata":{
+		"frontmatter":{},
+		"version":"1.0-1.0"
+	},
+	"nodes":[
+		{"id":"9d2fd1cf9560b5cf","type":"group","x":980,"y":580,"width":478,"height":240,"color":"1","label":"Main Class"},
+		{"id":"35c44106f4320a95","type":"group","x":980,"y":-20,"width":478,"height":240,"color":"3","label":"Renderer"},
+		{"id":"3a71c9fbd8775a12","type":"group","x":980,"y":280,"width":478,"height":240,"color":"3","label":"Data Manager"},
+		{"id":"fc8278214b199cdb","type":"group","x":980,"y":-620,"width":478,"height":240,"color":"3","label":"Overlay Manager"},
+		{"id":"ecc016305ff46026","type":"group","x":980,"y":-320,"width":478,"height":240,"color":"3","label":"Interaction Hander"},
+		{"id":"197ccbfc946052f6","type":"group","x":980,"y":-920,"width":478,"height":240,"color":"3","label":"Style Manager"},
+		{"id":"3d271e1f35d6cefb","type":"group","x":980,"y":-1200,"width":478,"height":220,"color":"3","label":"Controller"},
+		{"id":"89d1ce7cd68dbeed","type":"group","x":980,"y":-1440,"width":478,"height":180,"color":"3","label":"Custom Module"},
+		{
+			"id":"3d072911e8eb02c7",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":-600,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"7879f90910615218",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Constructs interactive canvas elements and manages element interactions and rendering.",
+			"type":"text",
+			"x":1000,
+			"y":-520,
+			"width":440,
+			"height":119
+		},
+		{
+			"id":"222011ffbe3e170b",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":-300,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"dd6210669d6e7586",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Uses [Pointeract](https://pointeract.consensia.cc) to listen to interactions on the viewer and translate to `DataManager` method calls.",
+			"type":"text",
+			"x":1000,
+			"y":-220,
+			"width":440,
+			"height":120
+		},
+		{
+			"id":"07bdb2d1ee50513b",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":0,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"f188948a86462f74",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Renders all groups, edges and labels that doesn't need interactivity.",
+			"type":"text",
+			"x":1000,
+			"y":80,
+			"width":440,
+			"height":120
+		},
+		{
+			"id":"04726f1b68830bc2",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":300,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"5750528f086cf0dd",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Initializes the canvas, manages states, and provides canvas control mathods.",
+			"type":"text",
+			"x":1000,
+			"y":380,
+			"width":440,
+			"height":120
+		},
+		{
+			"id":"43c6ee8f4e535cc9",
+			"styleAttributes":{},
+			"text":"## Main Interface",
+			"type":"text",
+			"x":1000,
+			"y":600,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"d53b08a635029dc8",
+			"styleAttributes":{},
+			"text":"## Main Logic\n\n**Work**: Controls lazy loading, provides start and dispose hooks, and manages modules.",
+			"type":"text",
+			"x":1000,
+			"y":680,
+			"width":440,
+			"height":120
+		},
+		{
+			"id":"3484cb50304a8f95",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":-1420,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"3a6b316c15b9dfd8",
+			"styleAttributes":{},
+			"text":"### Logic",
+			"type":"text",
+			"x":1000,
+			"y":-1340,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"3be1cd40924f4ff1",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Controls main render loop and handles viewer resize",
+			"type":"text",
+			"x":1000,
+			"y":-1100,
+			"width":440,
+			"height":100
+		},
+		{
+			"id":"e0807693f63ec21e",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":-1180,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"4640b4e7b1c2817f",
+			"styleAttributes":{},
+			"text":"### Logic\n\n**Work**: Generates applies and caches color palette. Controls viewer theme toggling.",
+			"type":"text",
+			"x":1000,
+			"y":-820,
+			"width":440,
+			"height":119
+		},
+		{
+			"id":"1ae6fa286a80276c",
+			"styleAttributes":{},
+			"text":"### Interface",
+			"type":"text",
+			"x":1000,
+			"y":-900,
+			"width":440,
+			"height":60
+		},
+		{
+			"id":"05070749b6678ecb",
+			"styleAttributes":{
+				"textAlign":null
+			},
+			"text":"### Central Type Machine",
+			"type":"text",
+			"x":1920,
+			"y":-460,
+			"width":320,
+			"height":60
+		},
+		{
+			"id":"ad03bace3d526a2d",
+			"styleAttributes":{},
+			"text":"### All Available Options and Main Class Augmentations",
+			"type":"text",
+			"x":1920,
+			"y":580,
+			"width":320,
+			"height":100
+		},
+		{
+			"id":"6f2874961565b1a9",
+			"styleAttributes":{},
+			"text":"### Received Options and Augmentations",
+			"type":"text",
+			"x":160,
+			"y":708,
+			"width":440,
+			"height":65
+		},
+		{
+			"id":"22232f8a6f091b5e",
+			"styleAttributes":{},
+			"text":"### Coordinator\n\n- Start/dispose hooks\n- DI container",
+			"type":"text",
+			"x":265,
+			"y":-525,
+			"width":230,
+			"height":130
+		},
+		{"file":"https://github.com/hesprs/json-canvas-viewer/raw/main/assets/logo.svg","id":"62c0bf430454e577","type":"file","x":2360,"y":-960,"width":400,"height":400},
+		{"id":"5a670d40836205ec","type":"link","url":"https://jsoncanvas.org","x":2360,"y":-380,"width":1020,"height":710},
+		{
+			"id":"1e4c16e7d7eaf055",
+			"styleAttributes":{},
+			"text":"## Learn More\n\n- [Deadly simple chimp usage](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-chimpanzee-version)\n- [Full setup](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-full-version)\n- [Vite plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-vite)\n- [Webpack loader and plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#-webpack)\n- [Use as a Vue component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)\n- [Use as a React component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)\n- [Prerendering](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#prerendering)\n- [Optional modules](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules)\n- [Extend the viewer](https://github.com/hesprs/json-canvas-viewer/wiki/5-%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB-Develop-a-Module)",
+			"type":"text",
+			"x":2820,
+			"y":-960,
+			"width":560,
+			"height":400
+		}
+	]
 }

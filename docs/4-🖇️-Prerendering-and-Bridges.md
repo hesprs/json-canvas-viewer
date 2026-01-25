@@ -17,7 +17,7 @@ You can use the returned string as the `innerHTML` of your container element. To
 - in `React`: `dangerouslySetInnerHTML`
 - in `Vue`: `v-html`
 
-**Disclaimer: for customizability, `json-canvas-viewer` does not sanitize the output, but it is basically safe provided**:
+**Disclaimer: for customizability, the viewer instance itself does not sanitize the output, but it is basically safe provided**:
 
 - if you are using the chimp version, the default `parser` output is sanitized by `DOMPurify`.
 - if you are using the full version, since you directly import the canvas file, the file is under your control, so there's no risk of XSS. Alternatively, you can include a sanitizer in your build-time parser.
@@ -26,22 +26,22 @@ During client-side code execution, pre-rendered HTML will be replaced with the a
 
 ## Vue Component
 
-A Vue3 wrapper (`JSONCanvasViewerVue`) is ready to use in the full version of JSON Canvas Viewer. Note that:
+A Vue3 component (at `json-canvas-viewer/vue`) is ready to use in the full version of JSON Canvas Viewer. Note that:
 
 - This component comes with natural support of prerendering.
-- This component comes **unstyled**, you can assign class yourself.
+- This component comes **unstyled**, you can assign classes yourself.
+- This component toggles theme and reloads canvases reactively.
 - You need to wrap it with a `<Suspense></Suspense>`.
 
 Below is a minimal example:
 
 ```vue
 <script lang="ts" setup>
-import { JSONCanvasViewerVue } from 'json-canvas-viewer/bridges';
+import Viewer from 'json-canvas-viewer/vue';
 import { Minimap, MistouchPreventer, Controls } from 'json-canvas-viewer/modules';
 import canvas from 'path/to/your.canvas';
 const options = {
-	lazyLoading: true,
-	canvas,
+	loading: 'lazy',
 	minimapCollapsed: true,
 };
 const modules = [Minimap, MistouchPreventer, Controls];
@@ -49,45 +49,44 @@ const modules = [Minimap, MistouchPreventer, Controls];
 
 <template>
 	<Suspense>
-		<JSONCanvasViewerVue class="viewer" :modules :options />
+		<Viewer :modules :options :canvas />
 	</Suspense>
 	<!-- ... your other components -->
 </template>
-
-<style scoped>
-/* sample styles */
-.viewer {
-	width: 100%;
-	aspect-ratio: 16 / 9;
-	border-radius: 12px;
-	overflow: hidden;
-}
-
-@media (max-width: 768px) {
-	.viewer {
-		aspect-ratio: 1 / 1;
-	}
-}
-</style>
 ```
 
 The component has props of:
 
 ```ts
-{
-    options: <JSON Canvas Viewer Options>;
+interface Props {
+    options?: <JSON Canvas Viewer Options>;
     modules?: <JSON Canvas Viewer Module>[];
+    theme?: 'light' | 'dark';
+    canvas?: JSONCanvas;
+    attachmentDir?: string;
     isPrerendering?: boolean;
 }
 ```
 
-- `modules`: The optional modules to load, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#modules).
-- `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options). **Note that the `container` field is omitted**.
+- `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options).
+  - **Note that the `container`, `theme`, `canvas` and `attachmentDir` fields inside it are omitted**.
+- `modules`: The optional modules to load, the same requirements as documented in [Construction Details - Modules](2-🏗️-Construction-Details.md#modules).
+- `theme`, `canvas`, `attachmentDir`: same requirements as documented in [Construction Details - Options](2-🏗️-Construction-Details.md#options).
 - `isPrerendering`: Whether to run in prerendering mode. If not defined, it will be inferred from the existence of `window`, which is reliable enough that in most cases you don't need to specify this property.
+
+This component exposes:
+
+```TypeScript
+interface Exposure {
+    viewer: JSONCanvasViewer;
+}
+```
+
+- `viewer`: the viewer instance.
 
 ## React Component
 
-We've also crafted a React component (`JSONCanvasViewerReact`) that wraps around the viewer. It can be found the the full version of the viewer at `json-canvas-viewer/bridges`. Note that:
+We've also crafted a React component (`json-canvas-viewer/react`) that wraps around the viewer. It can be found the the full version of the viewer at `json-canvas-viewer/bridges`. Note that:
 
 - Unlike the Vue component, you need to manually decide when to prerender. We recommend placing this component into a **server component** to perform prerendering, likely your main page.
 - This component comes **unstyled**, you can assign class yourself.
@@ -96,25 +95,38 @@ Below is a minimal example (in your server component):
 
 ```tsx
 // app/page.tsx
-import { renderToString, JSONCanvasViewerReact } from 'json-canvas-viewer/bridges';
+import { renderToString } from 'json-canvas-viewer/bridges';
+import Viewer from 'json-canvas-viewer/react';
+import { Minimap, MistouchPreventer, Controls } from 'json-canvas-viewer/modules';
+import canvas from 'path/to/your.canvas';
+const options = {
+	loading: 'lazy',
+	minimapCollapsed: true,
+};
+const modules = [Minimap, MistouchPreventer, Controls];
 
 export default async function Page() {
-	const html = await renderToString({
-		/* ... */
-	});
+	const html = await renderToString({ canvas });
 
 	return (
 		<main>
 			{/* ... your other components */}
-			<JSONCanvasViewerReact prerenderedContent={html} />
+			<Viewer
+				prerenderedContent={html}
+				modules={modules}
+				options={options}
+				canvas={canvas}
+			/>
 		</main>
 	);
 }
 ```
 
-It accepts six props:
+It accepts none props:
 
-- `prerenderedContent`: the content to be prerendered, you almost always need to pass in the result of `renderToString`. Setting this prop does not have impact on client-side execution.
-- `modules`: The optional modules to load, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#modules).
-- `options`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options). **Note that the `container` field is omitted**.
-- `className`, `style`, `id`: the same as setting `className`, `style`, and `id` to a normal HTML element.
+- `prerenderedContent?`: the content to be prerendered, you almost always need to pass in the result of `renderToString`. Setting this prop does not have impact on client-side execution.
+- `modules?`: The optional modules to load, the same requirements as documented in [Construction Details - Modules](2-🏗️-Construction-Details.md#modules).
+- `options?`: The options object passed to the viewer, the same requirements as documented in [Construction Details](2-🏗️-Construction-Details.md#options).
+  - **Note that the `container`, `theme`, `canvas` and `attachmentDir` fields inside it are omitted**.
+- `theme?`, `canvas?`, `attachmentDir?`: same requirements as documented in [Construction Details - Options](2-🏗️-Construction-Details.md#options).
+- `className?`, `style?`, `id?`: the same as setting `className`, `style`, and `id` to a normal JSX element.

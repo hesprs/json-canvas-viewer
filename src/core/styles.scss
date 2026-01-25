@@ -12,19 +12,50 @@
 	align-items: center;
 }
 
+.border-shadow-bg {
+	background: var(--background-secondary);
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow);
+}
+
+.collapse-button {
+	border-radius: 8px;
+	transition:
+		transform 200ms,
+		background-color 200ms;
+	&:hover {
+		background-color: var(--border);
+	}
+}
+
+button {
+	cursor: pointer;
+	font-size: 18px;
+	height: 32px;
+	border: none;
+	transition: var(--containerTransition);
+	text-align: center;
+	width: 32px;
+	padding: 5px 0px;
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+}
+
 .container {
 	--contentTransition: color 200ms, opacity 200ms, text-shadow 200ms, fill 200ms;
 	--containerTransition:
 		background 200ms, opacity 200ms, box-shadow 200ms, border 200ms, filter 200ms,
 		backdrop-filter 200ms;
-	color: #fff;
-	fill: #fff;
-	stroke: #fff;
+	color: var(--text);
+	fill: var(--text);
+	stroke: var(--text);
+	background-color: var(--background);
 	position: relative;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	background-color: #141414;
 	&.numb,
 	&.numb * {
 		pointer-events: none !important;
@@ -39,31 +70,11 @@
 
 .overlays {
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 10000px;
-	height: 10000px;
 	transform-origin: top left;
 	will-change: transform;
 }
 
-.parsed-content-wrapper {
-	font-family: sans-serif;
-	box-sizing: border-box;
-	max-width: 100%;
-	max-height: 100%;
-	padding: 10px 6px;
-	pointer-events: none;
-	overflow: hidden;
-	scrollbar-gutter: stable both-edges;
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	@supports not (scrollbar-gutter: stable both-edges) {
-		padding: 10px;
-	}
-}
-
+// #region Overlays
 .overlay-container {
 	position: absolute;
 	box-sizing: border-box;
@@ -72,64 +83,94 @@
 	user-select: none;
 	contain: strict;
 	content-visibility: auto;
-	&:hover {
-		box-shadow: 0px 2px 12px rgb(0, 0, 0, 0.5);
-	}
+	box-shadow: var(--shadow);
+	background-color: var(--overlay-card);
 	transition: var(--containerTransition);
 	.overlay-border {
 		box-sizing: border-box;
 		pointer-events: none;
 		position: absolute;
+		color: var(--overlay-border);
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		border-width: 2px;
+		border-width: 1px;
 		border-style: solid;
 		border-radius: 12px;
 		transition: var(--containerTransition);
 	}
+	&.active {
+		user-select: auto;
+		pointer-events: auto;
+		.overlay-border {
+			border: 4px solid var(--overlay-active);
+		}
+	}
+}
+
+.overlay-container {
 	img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 		pointer-events: none;
 	}
-	&.active .overlay-border {
-		border: 6px solid var(--active-color);
+	&.active img {
+		pointer-events: auto;
 	}
+}
+
+.overlay-container {
 	&.markdown-content {
 		@extend .flex-center;
 		position: absolute;
 		padding: 0 7px;
-		&.active .parsed-content-wrapper {
-			overflow: auto;
-			user-select: text;
-			pointer-events: auto;
-		}
 		&.rtl {
 			direction: rtl;
 			text-align: right;
 		}
 	}
-}
-
-.link-iframe,
-.audio {
-	@extend .full;
-	border: none;
-	background: transparent;
-}
-
-.click-layer {
-	@extend .full;
-	background: transparent;
-	pointer-events: auto;
-	.active & {
+	.parsed-content-wrapper {
+		font-family: sans-serif;
+		box-sizing: border-box;
+		max-width: 100%;
+		max-height: 100%;
+		padding: 10px 6px;
 		pointer-events: none;
+		overflow: hidden;
+		scrollbar-gutter: stable both-edges;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		@supports not (scrollbar-gutter: stable both-edges) {
+			padding: 10px;
+		}
+	}
+	&.active .parsed-content-wrapper {
+		overflow: auto;
 	}
 }
 
+.overlay-container {
+	.link-iframe,
+	.audio {
+		@extend .full;
+		border: none;
+		background: transparent;
+	}
+	.click-layer {
+		@extend .full;
+		background: transparent;
+		pointer-events: auto;
+	}
+	&.active .click-layer {
+		pointer-events: none;
+	}
+}
+// #endregion =====================================================================
+
+// #region HTML Fundamentals
 ::-webkit-scrollbar {
 	width: 4px;
 }
@@ -276,3 +317,4 @@ table {
 		font-weight: bold;
 	}
 }
+// #endregion =====================================================================

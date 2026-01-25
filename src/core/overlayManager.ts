@@ -1,10 +1,10 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
+import type { MarkdownParser } from '$/declarations';
 import InteractionHandler from '$/interactionHandler';
+import StyleManager, { type Color } from '$/styleManager';
 import utilities, { destroyError } from '$/utilities';
-
-import type { MarkdownParser } from './declarations';
 
 type Options = {
 	markdownParser?: MarkdownParser;
@@ -16,7 +16,7 @@ export default class OverlayManager extends BaseModule<Options> {
 	private selectedId: string | null = null;
 	private eventListeners: Record<string, Array<EventListener | null>> = {};
 	private DM: DataManager;
-	private IH: () => InteractionHandler;
+	private SM: StyleManager;
 	private parse: MarkdownParser;
 
 	private get overlaysLayer() {
@@ -33,42 +33,62 @@ export default class OverlayManager extends BaseModule<Options> {
 		super(...args);
 		this.parse = this.options.markdownParser || ((markdown: string) => markdown);
 		this.DM = this.container.get(DataManager);
-		this.IH = this.container.get(InteractionHandler, { lazy: true });
+		this.SM = this.container.get(StyleManager);
 		const controller = this.container.get(Controller);
 		controller.hooks.onRefresh.subscribe(this.updateOverlays);
+		this.SM.onChangeTheme.subscribe(this.themeChanged);
 
 		this._overlaysLayer = document.createElement('div');
 		this._overlaysLayer.className = 'overlays';
+		this._overlaysLayer.id = 'overlays';
 		this.DM.data.container.appendChild(this.overlaysLayer);
 
 		this.onStart(this.start);
+		this.onRestart(this.restart);
 		this.onDispose(this.dispose);
 	}
 
 	private start = () => {
-		this.IH().onClick.subscribe(this.select);
+		this.container.get(InteractionHandler).onClick.subscribe(this.select);
+		this.renderOverlays();
+	};
+
+	private restart = () => {
+		this.clearOverlays();
+		this.renderOverlays();
+	};
+
+	private renderOverlays = () => {
 		const createOverlay = async (node: JSONCanvasNode) => {
 			switch (node.type) {
 				case 'text': {
-					await this.updateOverlay(node, node.text, 'text');
+					await this.createOverlay(node, node.text, 'text');
 					break;
 				}
 				case 'file': {
 					if (node.file.match(/\.md$/i)) await this.loadMarkdownForNode(node);
 					else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
-						await this.updateOverlay(node, node.file, 'image');
+						await this.createOverlay(node, node.file, 'image');
 					else if (node.file.match(/\.(mp3|wav)$/i))
-						await this.updateOverlay(node, node.file, 'audio');
+						await this.createOverlay(node, node.file, 'audio');
 					break;
 				}
 				case 'link': {
-					await this.updateOverlay(node, node.url, 'link');
+					await this.createOverlay(node, node.url, 'link');
 					break;
 				}
 			}
 		};
-		Object.values(this.DM.data.canvasMap).forEach(async (node) => {
-			if (node.type === 'node') await createOverlay(node.ref);
+		Object.values(this.DM.data.nodeMap).forEach(async (node) => {
+			await createOverlay(node.ref);
+		});
+	};
+
+	private themeChanged = () => {
+		Object.values(this.overlays).forEach((overlay) => {
+			const node = this.DM.data.nodeMap[overlay.id].ref;
+			const color = this.SM.getColor(node.color);
+			this.setOverlayColor(overlay, color);
 		});
 	};
 
@@ -84,7 +104,7 @@ export default class OverlayManager extends BaseModule<Options> {
 	};
 
 	private loadMarkdownForNode = async (node: JSONCanvasFileNode) => {
-		await this.updateOverlay(node, 'Loading...', 'text');
+		await this.createOverlay(node, 'Loading...', 'text');
 		let parsedContent: string;
 		try {
 			const response = await fetch(node.file);
@@ -96,7 +116,7 @@ export default class OverlayManager extends BaseModule<Options> {
 			console.error('[JSONCanvasViewer] Failed to load markdown:', err);
 			parsedContent = 'Failed to load content.';
 		}
-		await this.updateOverlay(node, parsedContent, 'text');
+		this.updateOverlay(node, { content: parsedContent });
 	};
 
 	private updateOverlays = () => {
@@ -104,7 +124,7 @@ export default class OverlayManager extends BaseModule<Options> {
 		this.overlaysLayer.style.transform = `translate(${data.offsetX}px, ${data.offsetY}px) scale(${data.scale})`;
 	};
 
-	private async updateOverlay(node: JSONCanvasNode, content: string, type: string) {
+	private async createOverlay(node: JSONCanvasNode, content: string, type: string) {
 		let element = this.overlays[node.id];
 		if (!element) {
 			element = await this.constructOverlay(node, content, type);
@@ -114,20 +134,31 @@ export default class OverlayManager extends BaseModule<Options> {
 			element.style.top = `${node.y}px`;
 			element.style.width = `${node.width}px`;
 			element.style.height = `${node.height}px`;
-		} else if (type === 'text') {
-			const parsedContentContainer =
-				element.getElementsByClassName('parsed-content-wrapper')[0];
-			parsedContentContainer.innerHTML = content;
+		}
+	}
+
+	private updateOverlay(
+		node: JSONCanvasNode,
+		toUpdate: {
+			content?: string;
+			color?: Color;
+		},
+	) {
+		const element = this.overlays[node.id];
+		if (toUpdate.content) {
+			const content = element.getElementsByClassName('parsed-content-wrapper')[0];
+			if (content) content.innerHTML = toUpdate.content;
+		}
+		if (toUpdate.color) {
+			this.setOverlayColor(element, toUpdate.color);
 		}
 	}
 
 	private async constructOverlay(node: JSONCanvasNode, content: string, type: string) {
-		const color = utilities.getColor(node.color);
 		const overlay = document.createElement('div');
 		overlay.classList.add('overlay-container');
 		overlay.id = node.id;
-		overlay.style.backgroundColor = color.background;
-		overlay.style.setProperty('--active-color', color.active);
+		this.setOverlayColor(overlay, this.SM.getColor(node.color));
 		switch (type) {
 			case 'text': {
 				overlay.classList.add('markdown-content');
@@ -171,7 +202,6 @@ export default class OverlayManager extends BaseModule<Options> {
 		}
 		const overlayBorder = document.createElement('div');
 		overlayBorder.className = 'overlay-border';
-		overlayBorder.style.borderColor = color.border;
 		overlay.appendChild(overlayBorder);
 		const onStart = () => {
 			if (node.id === this.selectedId) this.hooks.onInteractionStart();
@@ -187,22 +217,32 @@ export default class OverlayManager extends BaseModule<Options> {
 		return overlay;
 	}
 
-	private dispose = () => {
-		while (this.overlaysLayer.firstElementChild) {
-			const child = this.overlaysLayer.firstElementChild;
-			if (this.eventListeners[child.id]) {
-				const onStart = this.eventListeners[child.id][0];
-				const onEnd = this.eventListeners[child.id][1];
+	private setOverlayColor = (overlay: HTMLDivElement, color: Color) => {
+		Object.entries(color).forEach(([key, value]) => {
+			overlay.style.setProperty(`--overlay-${key}`, value);
+		});
+	};
+
+	private clearOverlays = () => {
+		Object.entries(this.overlays).forEach(([id, overlay]) => {
+			if (this.eventListeners[id]) {
+				const onStart = this.eventListeners[id][0];
+				const onEnd = this.eventListeners[id][1];
 				if (!onStart || !onEnd) throw destroyError;
-				child.removeEventListener('pointerenter', onStart);
-				child.removeEventListener('pointerleave', onEnd);
-				child.removeEventListener('touchstart', onStart);
-				child.removeEventListener('touchend', onEnd);
-				this.eventListeners[child.id][0] = null;
-				this.eventListeners[child.id][1] = null;
+				overlay.removeEventListener('pointerenter', onStart);
+				overlay.removeEventListener('pointerleave', onEnd);
+				overlay.removeEventListener('touchstart', onStart);
+				overlay.removeEventListener('touchend', onEnd);
+				this.eventListeners[id][0] = null;
+				this.eventListeners[id][1] = null;
 			}
-			child.remove();
-		}
+			overlay.remove();
+			delete this.overlays[id];
+		});
+	};
+
+	private dispose = () => {
+		this.clearOverlays();
 		this.overlaysLayer.remove();
 		this._overlaysLayer = null;
 	};

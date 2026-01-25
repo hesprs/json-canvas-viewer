@@ -1,19 +1,28 @@
-import type { GeneralModuleCtor } from '$/baseModule';
+import type { Augmentation, GeneralModuleCtor } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
-import type { ModuleInputCtor, UserOptions } from '$/declarations';
+import type {
+	ModuleInputCtor,
+	UserOptions,
+	UserAugmentation,
+	GeneralFunction,
+	ModuleInput,
+} from '$/declarations';
 import InteractionHandler from '$/interactionHandler';
 import OverlayManager from '$/overlayManager';
 import Renderer from '$/renderer';
+import StyleManager from '$/styleManager';
 import utilities from '$/utilities';
 import { Container } from '@needle-di/core';
 
-export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
-	private options: UserOptions<M>;
+class JSONCanvasViewer<M extends ModuleInputCtor> {
 	private allModules: ModuleInputCtor;
 	private IO: IntersectionObserver | null = null;
-	private onStart = utilities.makeHook();
 	private onDispose = utilities.makeHook(true);
+	private onStart = utilities.makeHook();
+	private onRestart = utilities.makeHook();
+	private started = false;
+	options: UserOptions<M>;
 	container: Container;
 
 	constructor(options: UserOptions<M>, modules?: M) {
@@ -23,35 +32,41 @@ export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 			this.container.bind({
 				provide: Class,
 				useFactory: () =>
-					new Class(this.container, this.options, this.onStart, this.onDispose),
+					new Class(
+						this.container,
+						this.options,
+						this.onStart,
+						this.onDispose,
+						this.onRestart,
+						this.augment,
+					),
 			});
 		};
 		this.allModules = [
 			DataManager,
+			StyleManager,
 			Controller,
 			OverlayManager,
 			InteractionHandler,
 			Renderer,
 			...(modules || []),
 		];
-
 		this.allModules.forEach(bind);
-		if (this.options.lazyLoading) {
+		this.allModules.forEach((Module) => {
+			this.container.get(Module);
+		});
+
+		const loading = this.options.loading || 'normal';
+		if (loading === 'normal') this.load();
+		else if (loading === 'lazy') {
 			this.IO = new IntersectionObserver(this.onVisibilityCheck, {
 				root: null,
 				rootMargin: '50px',
 				threshold: 0,
 			});
 			this.IO.observe(this.options.container);
-		} else this.load();
+		}
 	}
-
-	private load = () => {
-		this.allModules.forEach((Module) => {
-			this.container.get(Module);
-		});
-		this.onStart();
-	};
 
 	private onVisibilityCheck = (entries: Array<IntersectionObserverEntry>) => {
 		entries.forEach((entry) => {
@@ -64,6 +79,22 @@ export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 		});
 	};
 
+	declare private _augmentSlot: GeneralFunction;
+	private augment = (aug: Augmentation) => {
+		Object.entries(aug).forEach(([key, value]) => {
+			this[key as '_augmentSlot'] = value;
+		});
+	};
+
+	load = (options?: { canvas?: JSONCanvas; attachmentDir?: string }) => {
+		if (options) Object.assign(this.options, options);
+		if (this.started) this.onRestart();
+		else {
+			this.onStart();
+			this.started = true;
+		}
+	};
+
 	dispose = () => {
 		this.IO?.disconnect();
 		this.IO = null;
@@ -73,3 +104,12 @@ export default class JSONCanvasViewer<M extends ModuleInputCtor = []> {
 		this.container.unbindAll();
 	};
 }
+
+type JSONCanvasViewerType = new <M extends ModuleInputCtor = []>(
+	...args: ConstructorParameters<typeof JSONCanvasViewer<M>>
+) => JSONCanvasViewer<M> & UserAugmentation<M>;
+
+export type JSONCanvasViewerInterface<M extends ModuleInput = []> = JSONCanvasViewer<[]> &
+	UserAugmentation<M>;
+
+export default JSONCanvasViewer as unknown as JSONCanvasViewerType;

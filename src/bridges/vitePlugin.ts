@@ -18,7 +18,7 @@ export default function (parser?: MarkdownParser) {
 					map: null,
 				};
 			} catch (e) {
-				console.error(`[json-canvas] Failed to parse: ${id}`);
+				console.error(`[json-canvas-vite-plugin] Failed to parse: ${id}`);
 				throw e;
 			}
 		},

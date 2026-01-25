@@ -1,65 +1,110 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
-import type { Coordinates, NodeBounds } from '$/declarations';
+import type { Box, Coordinates, NodeBounds } from '$/declarations';
 import style from '$/styles.scss?inline';
 import utilities from '$/utilities';
 
-const GRID_CELL_SIZE = 800;
 const INITIAL_VIEWPORT_PADDING = 100;
+const NODE_LABEL_MARGIN = 40;
+const EDGE_BOX_HEURISTICS_BASE_MARGIN = 10;
 
 type Options = {
 	noShadow?: boolean;
-	canvas: JSONCanvas;
+	canvas?: JSONCanvas;
 	attachmentDir?: string;
 	extraCSS?: string;
 };
 
-export interface MapNodeItem {
-	type: 'node';
+type Augmentation = {
+	zoom: DataManager['zoom'];
+	zoomToScale: DataManager['zoomToScale'];
+	pan: DataManager['pan'];
+	panToCoords: DataManager['panToCoords'];
+	resetView: DataManager['resetView'];
+	shiftFullscreen: DataManager['shiftFullscreen'];
+};
+
+export interface NodeItem {
 	ref: JSONCanvasNode;
+	box: Box;
 	fileName?: string;
 }
 
-export interface MapEdgeItem {
-	type: 'edge';
+export interface EdgeItem {
 	ref: JSONCanvasEdge;
+	box: Box;
 	controlPoints?: Array<number>;
 }
 
-type MapItem = MapEdgeItem | MapNodeItem;
+type NodeMap = Record<string, NodeItem>;
+type EdgeMap = Record<string, EdgeItem>;
 
-type CanvasMap = Record<string, MapItem>;
-
-export default class DataManager extends BaseModule<Options> {
-	private spatialGrid: Record<string, Array<JSONCanvasNode>> | null = null;
+export default class DataManager extends BaseModule<Options, Augmentation> {
 	onToggleFullscreen = utilities.makeHook<[boolean]>();
 
 	data: {
 		canvasData: Required<JSONCanvas>;
-		canvasMap: CanvasMap;
+		nodeMap: NodeMap;
+		edgeMap: EdgeMap;
 		canvasBaseDir: string;
 		nodeBounds: NodeBounds;
 		offsetX: number;
 		offsetY: number;
 		scale: number;
 		container: HTMLDivElement;
+	} = {
+		canvasData: {
+			nodes: [],
+			edges: [],
+		},
+		nodeMap: {},
+		edgeMap: {},
+		canvasBaseDir: './',
+		nodeBounds: {
+			maxX: 0,
+			maxY: 0,
+			minX: 0,
+			minY: 0,
+			width: 0,
+			height: 0,
+			centerX: 0,
+			centerY: 0,
+		},
+		offsetX: 0,
+		offsetY: 0,
+		scale: 1,
+		container: document.createElement('div'),
 	};
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		const parentContainer = this.options.container;
-		while (parentContainer.firstElementChild) parentContainer.firstElementChild.remove();
-		parentContainer.innerHTML = '';
+		const viewerContainer = this.options.container;
+		while (viewerContainer.firstElementChild) viewerContainer.firstElementChild.remove();
+		viewerContainer.innerHTML = '';
 
 		const noShadow = this.options.noShadow || false;
 		const realContainer = noShadow
-			? parentContainer
-			: parentContainer.attachShadow({ mode: 'open' });
+			? viewerContainer
+			: viewerContainer.attachShadow({ mode: 'open' });
 
 		utilities.applyStyles(realContainer, style + this.options.extraCSS);
 
-		const HTMLContainer = document.createElement('div');
-		HTMLContainer.classList.add('container');
-		realContainer.appendChild(HTMLContainer);
+		this.data.container.classList.add('container');
+		realContainer.appendChild(this.data.container);
+
+		this.augment({
+			zoom: this.zoom,
+			zoomToScale: this.zoomToScale,
+			pan: this.pan,
+			panToCoords: this.panToCoords,
+			resetView: this.resetView,
+			shiftFullscreen: this.shiftFullscreen,
+		});
+		this.onStart(this.start);
+		this.onRestart(this.start);
+		this.onDispose(this.dispose);
+	}
+
+	private start = () => {
 		const canvasData = Object.assign(
 			{
 				nodes: [],
@@ -68,43 +113,39 @@ export default class DataManager extends BaseModule<Options> {
 			this.options.canvas,
 		);
 
-		this.data = {
+		Object.assign(this.data, {
 			canvasData: canvasData,
-			canvasMap: {},
+			nodeMap: {},
+			edgeMap: {},
 			canvasBaseDir: this.processBaseDir(this.options.attachmentDir),
 			nodeBounds: this.calculateNodeBounds(canvasData),
 			offsetX: 0,
 			offsetY: 0,
 			scale: 1,
-			container: HTMLContainer,
-		};
+		});
 
 		this.data.canvasData.nodes.forEach((node) => {
-			this.data.canvasMap[node.id] = {
-				type: 'node',
+			const item: NodeItem = {
 				ref: node,
+				box: this.getNodeBox(node),
 			};
-			const target = this.data.canvasMap[node.id] as MapNodeItem;
-			const ref = target.ref;
-			if (ref.type === 'file') {
-				const path = ref.file.split('/');
+			this.data.nodeMap[node.id] = item;
+			if (node.type === 'file') {
+				const path = node.file.split('/');
 				const fileName = path.pop() || '';
-				target.fileName = fileName;
-				if (!ref.file.startsWith('http://') && !ref.file.startsWith('https://'))
-					ref.file = this.data.canvasBaseDir + fileName;
+				item.fileName = fileName;
+				if (!node.file.startsWith('http://') && !node.file.startsWith('https://'))
+					node.file = this.data.canvasBaseDir + fileName;
 			}
 		});
 		this.data.canvasData.edges.forEach((edge) => {
-			this.data.canvasMap[edge.id] = {
-				type: 'edge',
+			this.data.edgeMap[edge.id] = {
 				ref: edge,
+				box: this.getEdgeBox(edge),
 			};
 		});
-
-		this.buildSpatialGrid();
 		this.resetView();
-		this.onDispose(this.dispose);
-	}
+	};
 
 	private processBaseDir = (baseDir: string | undefined) => {
 		if (!baseDir) return './';
@@ -113,43 +154,41 @@ export default class DataManager extends BaseModule<Options> {
 		return `${baseDir}/`;
 	};
 
-	findNodeAt = (screenCoords: Coordinates) => {
-		const { x, y } = this.C2W(this.C2C({ x: screenCoords.x, y: screenCoords.y }));
-		let candidates: Array<JSONCanvasNode> = [];
-		if (!this.spatialGrid) candidates = this.data.canvasData.nodes;
-		else {
-			const col = Math.floor(x / GRID_CELL_SIZE);
-			const row = Math.floor(y / GRID_CELL_SIZE);
-			const key = `${col},${row}`;
-			candidates = this.spatialGrid[key] || [];
-		}
-		for (const node of candidates) {
-			if (
-				x < node.x ||
-				x > node.x + node.width ||
-				y < node.y ||
-				y > node.y + node.height ||
-				this.judgeInteract(node) === 'non-interactive'
-			)
-				continue;
-			return node;
-		}
-		return null;
+	private getNodeBox = (node: JSONCanvasNode) => {
+		return {
+			left: node.x,
+			top: node.y - NODE_LABEL_MARGIN,
+			right: node.width + node.x,
+			bottom: node.y + node.height,
+		};
 	};
 
-	// how should the app handle node interactions
-	private judgeInteract = (node: JSONCanvasNode | null) => {
-		switch (node?.type) {
-			case 'text':
-			case 'link':
-				return 'select';
-			case 'file': {
-				if (node.file.match(/\.(md|wav|mp3)$/i)) return 'select';
-				else return 'non-interactive';
-			}
-			default:
-				return 'non-interactive';
-		}
+	private getEdgeBox = (edge: JSONCanvasEdge) => {
+		const nodes = this.data.nodeMap;
+		const from = nodes[edge.fromNode].ref;
+		const to = nodes[edge.toNode].ref;
+		const fromAnchor = utilities.getAnchorCoord(from, edge.fromSide);
+		const toAnchor = utilities.getAnchorCoord(to, edge.toSide);
+		const strictBox = {
+			left: Math.min(fromAnchor.x, toAnchor.x),
+			top: Math.min(fromAnchor.y, toAnchor.y),
+			right: Math.max(fromAnchor.x, toAnchor.x),
+			bottom: Math.max(fromAnchor.y, toAnchor.y),
+		};
+		// edge size heuristics
+		const width = strictBox.right - strictBox.left;
+		const height = strictBox.bottom - strictBox.top;
+		const _min = Math.min(width, height);
+		const min = _min === 0 ? 1 : _min;
+		const max = Math.max(width, height);
+		const edgeFactor = Math.log2(max / min);
+		const margin = edgeFactor * EDGE_BOX_HEURISTICS_BASE_MARGIN;
+		return {
+			left: strictBox.left - margin,
+			top: strictBox.top - margin,
+			right: strictBox.right + margin,
+			bottom: strictBox.bottom + margin,
+		};
 	};
 
 	private calculateNodeBounds(canvasData: Required<JSONCanvas>) {
@@ -168,25 +207,6 @@ export default class DataManager extends BaseModule<Options> {
 		const centerX = minX + width / 2;
 		const centerY = minY + height / 2;
 		return { minX, minY, maxX, maxY, width, height, centerX, centerY };
-	}
-
-	private buildSpatialGrid() {
-		const canvasData = this.data.canvasData;
-		if (canvasData.nodes.length < 50) return;
-		this.spatialGrid = {};
-		for (const node of canvasData.nodes) {
-			const minCol = Math.floor(node.x / GRID_CELL_SIZE);
-			const maxCol = Math.floor((node.x + node.width) / GRID_CELL_SIZE);
-			const minRow = Math.floor(node.y / GRID_CELL_SIZE);
-			const maxRow = Math.floor((node.y + node.height) / GRID_CELL_SIZE);
-			for (let col = minCol; col <= maxCol; col++) {
-				for (let row = minRow; row <= maxRow; row++) {
-					const key = `${col},${row}`;
-					if (!this.spatialGrid[key]) this.spatialGrid[key] = [];
-					this.spatialGrid[key].push(node);
-				}
-			}
-		}
 	}
 
 	zoom = (factor: number, origin: Coordinates) => {
@@ -210,11 +230,11 @@ export default class DataManager extends BaseModule<Options> {
 		this.data.offsetX = x;
 		this.data.offsetY = y;
 	};
-	shiftFullscreen = async (option: string = 'toggle') => {
-		if (!document.fullscreenElement && (option === 'toggle' || option === 'enter')) {
+	shiftFullscreen = async (option?: 'enter' | 'exit') => {
+		if (!document.fullscreenElement && (!option || option === 'enter')) {
 			await this.data.container.requestFullscreen();
 			this.onToggleFullscreen(true);
-		} else if (document.fullscreenElement && (option === 'toggle' || option === 'exit')) {
+		} else if (document.fullscreenElement && (!option || option === 'exit')) {
 			await document.exitFullscreen();
 			this.onToggleFullscreen(false);
 		}
@@ -247,11 +267,6 @@ export default class DataManager extends BaseModule<Options> {
 	private C2C = ({ x: containerX, y: containerY }: Coordinates) => ({
 		x: containerX - this.data.offsetX,
 		y: containerY - this.data.offsetY,
-	});
-	// Canvas to World
-	private C2W = ({ x: canvasX, y: canvasY }: Coordinates) => ({
-		x: canvasX / this.data.scale,
-		y: canvasY / this.data.scale,
 	});
 
 	middleViewer = () => {

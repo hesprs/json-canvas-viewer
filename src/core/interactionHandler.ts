@@ -67,16 +67,26 @@ export default class InteractionHandler extends BaseModule<Options> {
 	};
 
 	private onTrueClick = (e: StdEvents['trueClick']) => {
-		const detail = e.detail;
-		function isUIControl(target: HTMLElement | null) {
-			if (!target) return false;
-			return (
-				target.closest('.controls') || target.closest('button') || target.closest('input')
-			);
+		const element = e.detail.target as HTMLElement | null;
+		if (this.isUIControl(element)) return;
+		const node = this.findNodeId(element);
+		this.onClick(node);
+	};
+
+	private isUIControl = (target: HTMLElement | null) => {
+		if (!target) return false;
+		return target.closest('.controls') || target.closest('button') || target.closest('input');
+	};
+
+	private findNodeId = (element: HTMLElement | null) => {
+		if (!element) return null;
+		let ele = element;
+		while (!ele.id || ele.id === '') {
+			if (!ele.parentElement) break;
+			ele = ele.parentElement;
 		}
-		if (isUIControl(e.detail.target as HTMLElement | null)) return;
-		const node = this.DM.findNodeAt({ x: detail.x, y: detail.y });
-		this.onClick(node ? node.id : null);
+		if (ele.id === 'overlays' || !ele.id || ele.id === '') return null;
+		return ele.id;
 	};
 
 	private dispose = () => {

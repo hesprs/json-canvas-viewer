@@ -51,12 +51,12 @@
 			"import": "./dist/bridges.js",
 			"require": "./dist/bridges.cjs"
 		},
-        "./vue": {
+		"./vue": {
 			"types": "./dist/types/bridges/vueComponent.d.ts",
 			"import": "./dist/vue.js",
 			"require": "./dist/vue.cjs"
 		},
-        "./react": {
+		"./react": {
 			"types": "./dist/types/bridges/reactComponent.d.ts",
 			"import": "./dist/react.js",
 			"require": "./dist/react.cjs"

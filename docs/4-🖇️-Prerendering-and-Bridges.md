@@ -111,12 +111,7 @@ export default async function Page() {
 	return (
 		<main>
 			{/* ... your other components */}
-			<Viewer
-				prerenderedContent={html}
-				modules={modules}
-				options={options}
-				canvas={canvas}
-			/>
+			<Viewer prerenderedContent={html} modules={modules} options={options} canvas={canvas} />
 		</main>
 	);
 }

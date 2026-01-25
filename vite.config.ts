@@ -31,8 +31,8 @@ const fullConfig = defineConfig({
 				modules: resolve(__dirname, 'src/modules.ts'),
 				dev: resolve(__dirname, 'src/dev.ts'),
 				bridges: resolve(__dirname, 'src/bridges.ts'),
-                react: resolve(__dirname, 'src/bridges/reactComponent.tsx'),
-                vue: resolve(__dirname, 'src/bridges/vueComponent.vue'),
+				react: resolve(__dirname, 'src/bridges/reactComponent.tsx'),
+				vue: resolve(__dirname, 'src/bridges/vueComponent.vue'),
 			},
 			name: 'JSONCanvasViewer',
 			formats: ['es', 'cjs'],
@@ -53,7 +53,14 @@ const webpackLoaderConfig = defineConfig({
 		emptyOutDir: false,
 		minify: false,
 		rollupOptions: {
-			external: ['@needle-di/core', 'pointeract', 'vue', 'react', '@ahmedsemih/color-fns', 'schema-utils'],
+			external: [
+				'@needle-di/core',
+				'pointeract',
+				'vue',
+				'react',
+				'@ahmedsemih/color-fns',
+				'schema-utils',
+			],
 		},
 		lib: {
 			entry: {

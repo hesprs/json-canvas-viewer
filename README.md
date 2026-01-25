@@ -32,8 +32,6 @@
 
 <img align="center" src="./assets/preview.png" alt="preview image with light and dark theme">
 
-<br>
-
 <p align="center">
     <a href="https://hesprs.github.io/json-canvas-viewer">
         <strong>Demo</strong>
@@ -101,7 +99,7 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 
 ## 🚀 Manual Trial in 5 Seconds
 
-The HTML snippet uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/test/demo.canvas).
+The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/test/demo.canvas).
 
 ```HTML
 <!DOCTYPE html>

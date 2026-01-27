@@ -7,7 +7,7 @@ import canvas from './demo.canvas';
 const options = {
 	container: document.body,
 	canvas,
-	theme: 'dark',
+	// theme: 'dark',
 	// canvas: await fetchCanvas('Example Canvas/introduction.canvas'),
 	loading: 'lazy',
 	preventMistouchAtStart: false,

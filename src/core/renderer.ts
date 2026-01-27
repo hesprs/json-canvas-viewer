@@ -9,7 +9,7 @@ const ARROW_LENGTH = 12;
 const ARROW_WIDTH = 4;
 const NODE_RADIUS = 12;
 const CSS_ZOOM_REDRAW_INTERVAL = 500;
-const NODE_BORDER_WIDTH = 1;
+const NODE_BORDER_WIDTH = 2;
 const DOT_RADIUS = 1; // Dot radius in CSS pixels
 const DOT_BASE_GAP = 10; // Base gap between dots in CSS pixels
 

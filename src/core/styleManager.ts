@@ -1,5 +1,6 @@
 import { BaseModule, type BaseArgs } from '$/baseModule';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
 import utilities from '$/utilities';
 import { parseHex, toHslString, type HslColor, rgbToHsl } from '@ahmedsemih/color-fns';
 
@@ -11,13 +12,13 @@ export type Color = {
 	card: string;
 };
 
-type Options = {
+interface Options extends BaseOptions {
 	theme?: 'dark' | 'light';
-};
+}
 
-type Augmentation = {
+interface Augmentation {
 	changeTheme: StyleManager['changeTheme'];
-};
+}
 
 const definedColors = {
 	light: {

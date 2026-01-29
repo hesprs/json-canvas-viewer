@@ -1,17 +1,18 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
 import utilities, { destroyError } from '$/utilities';
 
 import style from './styles.scss?inline';
 
-type Options = {
+interface Options extends BaseOptions {
 	controlsCollapsed?: boolean;
-};
+}
 
-type Augmentation = {
+interface Augmentation {
 	toggleControlsCollapse: Controls['toggleCollapse'];
-};
+}
 
 const resetIcon =
 	'<svg viewBox="-6 -6 30 30" stroke-width=".08"><path d="m14.955 7.986.116.01a1 1 0 0 1 .85 1.13 8 8 0 0 1-13.374 4.728l-.84.84c-.63.63-1.707.184-1.707-.707V10h3.987c.89 0 1.337 1.077.707 1.707l-.731.731a6 6 0 0 0 8.347-.264 6 6 0 0 0 1.63-3.33 1 1 0 0 1 1.131-.848zM11.514.813a8 8 0 0 1 1.942 1.336l.837-.837c.63-.63 1.707-.184 1.707.707V6h-3.981c-.89 0-1.337-1.077-.707-1.707l.728-.729a6 6 0 0 0-9.98 3.591 1 1 0 1 1-1.98-.281A8 8 0 0 1 11.514.813Z" /></svg>';

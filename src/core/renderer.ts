@@ -1,7 +1,7 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager, { type EdgeItem, type NodeItem } from '$/dataManager';
-import type { Box } from '$/declarations';
+import type { BaseOptions, Box } from '$/declarations';
 import StyleManager from '$/styleManager';
 import utilities, { destroyError } from '$/utilities';
 
@@ -15,9 +15,9 @@ const DOT_BASE_GAP = 10; // Base gap between dots in CSS pixels
 
 const NODE_BORDER_HALF_WIDTH = NODE_BORDER_WIDTH / 2;
 
-type Options = {
+interface Options extends BaseOptions {
 	zoomInOptimization?: boolean;
-};
+}
 
 export default class Renderer extends BaseModule<Options> {
 	private _canvas: HTMLCanvasElement | null;

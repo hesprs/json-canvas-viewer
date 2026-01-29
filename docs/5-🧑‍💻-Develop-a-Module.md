@@ -13,7 +13,7 @@ Development of modules on the infrastructure of `json-canvas-viewer` requires an
 - `InteractionHandler`: handles user interactions
 - `DataManager`: manages the canvas data and viewer states
 - `OverlayManager`: manages interactive canvas elements
-- `styleManager`: manages and applies colors and styles across the viewer
+- `StyleManager`: manages and applies colors and styles across the viewer
 
 The full version of JSON Canvas Viewer offers an export entry at `json-canvas-viewer/dev`, which includes all the internal modules used for DI, some general module types, utilities and the base module.
 
@@ -50,12 +50,12 @@ Hence, we provide types `GeneralModule` and `GeneralModuleCtor` for this purpose
 
 ## Define Options
 
-To ensure the correctness of option types, you need to pass a type parameter to the `BaseModule` class, for example:
+To ensure the correctness of option types, you need to pass a type parameter to the `BaseModule` class that embodies your custom options. The option type must extend `BaseOptions`, for example:
 
 ```TypeScript
-import { BaseModule, type BaseArgs } from "json-canvas-viewer";
+import { BaseModule, type BaseArgs, type BaseOptions } from "json-canvas-viewer/dev";
 
-type Options = {
+interface Options extends BaseOptions {
     useAsync?: boolean;
     useCache?: boolean;
 }
@@ -74,9 +74,9 @@ Then you can see type completions when the user uses the module, or in `this.opt
 You can inject methods and properties to the main instance, so that users don't need to use the DI container to access them. To ensure they are properly typed, you need to pass another type parameter to the base module:
 
 ```TypeScript
-import { BaseModule, type BaseArgs } from "json-canvas-viewer";
+import { BaseModule, type BaseArgs } from "json-canvas-viewer/dev";
 
-type Augmentation = {
+interface Augmentation {
     log: MyModule['log'];
 }
 
@@ -110,7 +110,7 @@ StyleManager
 Then you can access services in your module with `needle-di`. E.g., when you want to use `DataManager`:
 
 ```TypeScript
-import { BaseModule, BaseArgs, DataManager } from "json-canvas-viewer/dev";
+import { BaseModule, type BaseArgs, DataManager } from "json-canvas-viewer/dev";
 
 class MyModule extends BaseModule {
     private dataManager: DataManager;
@@ -128,15 +128,15 @@ The package also provides a `canvasUtils` export, which provides some useful fun
 The following example shows the code of module `DebugPanel`:
 
 ```TypeScript
-import { type BaseArgs, BaseModule, DataManager, Controller, canvasUtils } from 'json-canvas-viewer/dev';
+import { type BaseArgs, type BaseOptions, BaseModule, DataManager, Controller, canvasUtils } from 'json-canvas-viewer/dev';
 import style from './styles.scss?inline'; // access the styles as a string if you are using Vite
 
 // for demonstration only, we create a useless option
-type Options = {
+interface Options extends BaseOptions {
     report?: boolean;
 };
 
-type Augmentation = {
+interface Augmentation {
     updateDebugPanel: DebugPanel['update'];
 }
 

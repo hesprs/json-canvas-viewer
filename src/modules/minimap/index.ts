@@ -1,19 +1,19 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
+import StyleManager from '$/styleManager';
 import utilities, { destroyError } from '$/utilities';
-
-import StyleManager from '@/core/styleManager';
 
 import style from './styles.scss?inline';
 
-type Options = {
+interface Options extends BaseOptions {
 	minimapCollapsed?: boolean;
-};
+}
 
-type Augmentation = {
+interface Augmentation {
 	toggleMinimapCollapse: Minimap['toggleCollapse'];
-};
+}
 
 const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';

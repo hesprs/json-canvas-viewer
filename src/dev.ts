@@ -1,5 +1,10 @@
-export type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
-export { type BaseArgs, BaseModule } from '$/baseModule';
+export {
+	type GeneralModule,
+	type GeneralModuleCtor,
+	type BaseArgs,
+	BaseModule,
+} from '$/baseModule';
+export type { BaseOptions } from '$/declarations';
 export { default as Controller } from '$/controller';
 export { default as DataManager } from '$/dataManager';
 export { default as InteractionHandler } from '$/interactionHandler';

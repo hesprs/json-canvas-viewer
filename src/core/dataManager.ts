@@ -1,5 +1,5 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
-import type { Box, Coordinates, NodeBounds } from '$/declarations';
+import type { BaseOptions, Box, Coordinates, NodeBounds } from '$/declarations';
 import style from '$/styles.scss?inline';
 import utilities from '$/utilities';
 
@@ -7,21 +7,21 @@ const INITIAL_VIEWPORT_PADDING = 100;
 const NODE_LABEL_MARGIN = 40;
 const EDGE_BOX_HEURISTICS_BASE_MARGIN = 10;
 
-type Options = {
+interface Options extends BaseOptions {
 	noShadow?: boolean;
 	canvas?: JSONCanvas;
 	attachmentDir?: string;
 	extraCSS?: string;
-};
+}
 
-type Augmentation = {
+interface Augmentation {
 	zoom: DataManager['zoom'];
 	zoomToScale: DataManager['zoomToScale'];
 	pan: DataManager['pan'];
 	panToCoords: DataManager['panToCoords'];
 	resetView: DataManager['resetView'];
 	shiftFullscreen: DataManager['shiftFullscreen'];
-};
+}
 
 export interface NodeItem {
 	ref: JSONCanvasNode;

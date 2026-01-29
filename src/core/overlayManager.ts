@@ -1,14 +1,14 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
-import type { MarkdownParser } from '$/declarations';
+import type { BaseOptions, MarkdownParser } from '$/declarations';
 import InteractionHandler from '$/interactionHandler';
 import StyleManager, { type Color } from '$/styleManager';
 import utilities, { destroyError } from '$/utilities';
 
-type Options = {
+interface Options extends BaseOptions {
 	markdownParser?: MarkdownParser;
-};
+}
 
 export default class OverlayManager extends BaseModule<Options> {
 	private _overlaysLayer: HTMLDivElement | null = document.createElement('div');

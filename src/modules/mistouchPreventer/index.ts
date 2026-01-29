@@ -1,18 +1,19 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
 import utilities, { destroyError } from '$/utilities';
 
 import style from './styles.scss?inline';
 
-type Options = {
+interface Options extends BaseOptions {
 	preventMistouchAtStart?: boolean;
 	mistouchPreventerBannerText?: string;
-};
+}
 
-type Augmentation = {
+interface Augmentation {
 	startMistouchPrevention: MistouchPreventer['startPrevention'];
 	endMistouchPrevention: MistouchPreventer['endPrevention'];
-};
+}
 
 export default class MistouchPreventer extends BaseModule<Options, Augmentation> {
 	private _preventionContainer: HTMLDivElement | null = null;

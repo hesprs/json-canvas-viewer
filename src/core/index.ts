@@ -1,4 +1,4 @@
-import type { Augmentation, GeneralModuleCtor } from '$/baseModule';
+import type { BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
 import type {
@@ -7,6 +7,7 @@ import type {
 	UserAugmentation,
 	GeneralFunction,
 	ModuleInput,
+	GeneralObject,
 } from '$/declarations';
 import InteractionHandler from '$/interactionHandler';
 import OverlayManager from '$/overlayManager';
@@ -28,7 +29,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	constructor(options: UserOptions<M>, modules?: M) {
 		this.container = new Container();
 		this.options = options;
-		const bind = (Class: GeneralModuleCtor) => {
+		const bind = (Class: typeof BaseModule) => {
 			this.container.bind({
 				provide: Class,
 				useFactory: () =>
@@ -80,7 +81,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	};
 
 	declare private _augmentSlot: GeneralFunction;
-	private augment = (aug: Augmentation) => {
+	private augment = (aug: GeneralObject) => {
 		Object.entries(aug).forEach(([key, value]) => {
 			this[key as '_augmentSlot'] = value;
 		});

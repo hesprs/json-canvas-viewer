@@ -1,13 +1,14 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
 import StyleManager from '$/styleManager';
 import utilities from '$/utilities';
 
-type Augmentation = {
+interface Augmentation {
 	refresh: Controller['refresh'];
-};
+}
 
-export default class Controller extends BaseModule<{}, Augmentation> {
+export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 	private animationId: null | number = null;
 	private resizeAnimationId: null | number = null;
 	private DM: DataManager;

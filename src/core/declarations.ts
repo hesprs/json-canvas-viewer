@@ -108,20 +108,20 @@ export type ModuleInputCtor = Array<GeneralModuleCtor>;
 type ModuleInputInstance = Array<GeneralModule>;
 export type ModuleInput = ModuleInputCtor | ModuleInputInstance;
 
-export type Instances<T extends ModuleInput> = T extends ModuleInputCtor
+type Instances<T extends ModuleInput> = T extends ModuleInputCtor
 	? InstanceType<T[number]>
 	: T[number];
 
-export type DefaultOptions = {
+export interface BaseOptions {
 	container: HTMLElement;
 	loading?: 'normal' | 'lazy' | 'none';
-};
+}
 
 export type MarkdownParser = (markdown: string) => string | Promise<string>;
 
 export type Options<T extends ModuleInput> = UnionToIntersection<Instances<T>['options']>;
 export type Augmentation<T extends ModuleInput> = UnionToIntersection<
-	Instances<T>['_providedMethods']
+	Instances<T>['_Augmentation']
 >;
 
 type InternalModules = [

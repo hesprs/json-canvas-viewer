@@ -1,5 +1,6 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
 import DataManager from '$/dataManager';
+import type { BaseOptions } from '$/declarations';
 import OverlayManager from '$/overlayManager';
 import utilities from '$/utilities';
 import {
@@ -14,11 +15,11 @@ import {
 	WheelPanZoom,
 } from 'pointeract';
 
-type Options = {
+interface Options extends BaseOptions {
 	pointeract?: PointeractOptions<
 		Ctors<[Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom]>
 	>;
-};
+}
 
 export default class InteractionHandler extends BaseModule<Options> {
 	private pointeract: Pointeract<

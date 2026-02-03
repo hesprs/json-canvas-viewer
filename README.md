@@ -79,7 +79,7 @@ JSON Canvas Viewer currently can work seamlessly with the following techstacks /
 
 Your time is expensive, do not spend it on reading the lengthy docs of a niche library. Nowadays coding agents are smart enough to handle the viewer well.
 
-Copy and paste the following prompt to OpenCode, ClaudeCode, Cursor or even a chat bot, let it handle everything for you:
+Copy and paste the following prompt to OpenCode, ClaudeCode, Cursor or even a chat bot, replace the placeholder to your task, let it handle everything for you:
 
 ```markdown
 I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) interactively in a browser. Read its documentations, figure out wether to use `chimp` version or `full` version, and help me with my requirements.

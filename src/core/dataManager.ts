@@ -1,5 +1,5 @@
 import { type BaseArgs, BaseModule } from '$/baseModule';
-import type { BaseOptions, Box, Coordinates, NodeBounds } from '$/declarations';
+import type { BaseOptions, Box, NodeBounds } from '$/declarations';
 import style from '$/styles.scss?inline';
 import utilities from '$/utilities';
 
@@ -15,10 +15,6 @@ interface Options extends BaseOptions {
 }
 
 interface Augmentation {
-	zoom: DataManager['zoom'];
-	zoomToScale: DataManager['zoomToScale'];
-	pan: DataManager['pan'];
-	panToCoords: DataManager['panToCoords'];
 	resetView: DataManager['resetView'];
 	shiftFullscreen: DataManager['shiftFullscreen'];
 }
@@ -92,10 +88,6 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		realContainer.appendChild(this.data.container);
 
 		this.augment({
-			zoom: this.zoom,
-			zoomToScale: this.zoomToScale,
-			pan: this.pan,
-			panToCoords: this.panToCoords,
 			resetView: this.resetView,
 			shiftFullscreen: this.shiftFullscreen,
 		});
@@ -157,7 +149,8 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 	private getNodeBox = (node: JSONCanvasNode) => {
 		return {
 			left: node.x,
-			top: node.y - NODE_LABEL_MARGIN,
+			top:
+				node.type === 'file' || node.type === 'group' ? node.y - NODE_LABEL_MARGIN : node.y,
 			right: node.width + node.x,
 			bottom: node.y + node.height,
 		};
@@ -208,28 +201,6 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		const centerY = minY + height / 2;
 		return { minX, minY, maxX, maxY, width, height, centerX, centerY };
 	}
-
-	zoom = (factor: number, origin: Coordinates) => {
-		const newScale = this.data.scale * factor;
-		this.zoomToScale(newScale, origin);
-	};
-	zoomToScale = (newScale: number, origin: Coordinates) => {
-		const validNewScale = Math.max(Math.min(newScale, 20), 0.05);
-		const scale = this.data.scale;
-		if (validNewScale === scale) return;
-		const canvasCoords = this.C2C(origin);
-		this.data.offsetX = origin.x - (canvasCoords.x * validNewScale) / scale;
-		this.data.offsetY = origin.y - (canvasCoords.y * validNewScale) / scale;
-		this.data.scale = validNewScale;
-	};
-	pan = ({ x, y }: Coordinates) => {
-		this.data.offsetX = this.data.offsetX + x;
-		this.data.offsetY = this.data.offsetY + y;
-	};
-	panToCoords = ({ x, y }: Coordinates) => {
-		this.data.offsetX = x;
-		this.data.offsetY = y;
-	};
 	shiftFullscreen = async (option?: 'enter' | 'exit') => {
 		if (!document.fullscreenElement && (!option || option === 'enter')) {
 			await this.data.container.requestFullscreen();
@@ -262,12 +233,6 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		this.data.offsetY = initialView.offsetY;
 		this.data.scale = initialView.scale;
 	};
-
-	// Container to Canvas
-	private C2C = ({ x: containerX, y: containerY }: Coordinates) => ({
-		x: containerX - this.data.offsetX,
-		y: containerY - this.data.offsetY,
-	});
 
 	middleViewer = () => {
 		const container = this.data.container;

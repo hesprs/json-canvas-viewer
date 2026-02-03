@@ -1,5 +1,5 @@
 // oxlint-disable typescript/no-explicit-any
-import type { BaseOptions, Empty, GeneralObject } from '$/declarations';
+import type { BaseOptions, GeneralObject } from '$/declarations';
 import type utilities from '$/utilities';
 import type { Container } from '@needle-di/core';
 
@@ -10,7 +10,7 @@ export type BaseArgs = [Container, GeneralObject, Hook, Hook, Hook, (aug: Genera
 export type GeneralModule = BaseModule<any, any>;
 export type GeneralModuleCtor = typeof BaseModule<any, any>;
 
-export class BaseModule<O extends BaseOptions = BaseOptions, A extends Empty = Empty> {
+export class BaseModule<O extends BaseOptions = BaseOptions, A extends {} = {}> {
 	declare private static readonly _BaseModuleBrand: unique symbol; // Nominal marker
 	declare _Augmentation: A;
 	onStart: Hook['subscribe'];

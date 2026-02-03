@@ -1,6 +1,6 @@
 {
 	"name": "json-canvas-viewer",
-	"version": "3.4.1",
+	"version": "3.4.2",
 	"description": "An extensible web-based viewer for JSON Canvas, easy to embed into websites.",
 	"keywords": [
 		"front-end",
@@ -75,7 +75,7 @@
 	"dependencies": {
 		"@ahmedsemih/color-fns": "^1.3.0",
 		"@needle-di/core": "^1.1.0",
-		"pointeract": "^1.0.1"
+		"pointeract": "^1.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^25.0.10",

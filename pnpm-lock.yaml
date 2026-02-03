@@ -15,8 +15,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       pointeract:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.1.0
+        version: 1.1.0
     devDependencies:
       '@types/node':
         specifier: ^25.0.10
@@ -1045,8 +1045,8 @@ packages:
     resolution: {integrity: sha512-B7+VDyb8Tl6oMJT9oSO2CW8XC/T4UcJGrwOVoNGwOQsQYhlpfajmrMj5xeejqaASq3V/EqThyOeATEOMuSEXiA==}
     engines: {node: '>=12'}
 
-  pointeract@1.0.1:
-    resolution: {integrity: sha512-KM5Xvt7W8M4H7ef9mMLmQSprmzympp4L79Yce4MvEzxT06uBxJpZf+wuKTpMcHiiQ1E2zoPydDLLd4n4XgOJrQ==}
+  pointeract@1.1.0:
+    resolution: {integrity: sha512-GhZQYxZirDMGpOEDEKAXlaLOLvX1CfkRPIbLGKsvItZmrYN7C8qKJokG/NinTXnoFVRYQh578Kv0zx167y9Mgg==}
 
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
@@ -2087,7 +2087,7 @@ snapshots:
     dependencies:
       queue-lit: 1.5.2
 
-  pointeract@1.0.1: {}
+  pointeract@1.1.0: {}
 
   postcss@8.5.6:
     dependencies:

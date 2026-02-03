@@ -5,7 +5,6 @@ import type {
 	ModuleInputCtor,
 	UserOptions,
 	UserAugmentation,
-	GeneralFunction,
 	ModuleInput,
 	GeneralObject,
 } from '$/declarations';
@@ -80,7 +79,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 		});
 	};
 
-	declare private _augmentSlot: GeneralFunction;
+	declare private _augmentSlot: unknown;
 	private augment = (aug: GeneralObject) => {
 		Object.entries(aug).forEach(([key, value]) => {
 			this[key as '_augmentSlot'] = value;
@@ -110,7 +109,7 @@ type JSONCanvasViewerType = new <M extends ModuleInputCtor = []>(
 	...args: ConstructorParameters<typeof JSONCanvasViewer<M>>
 ) => JSONCanvasViewer<M> & UserAugmentation<M>;
 
-export type JSONCanvasViewerInterface<M extends ModuleInput = []> = JSONCanvasViewer<[]> &
+export type JSONCanvasViewerInterface<M extends ModuleInput = []> = JSONCanvasViewer<never> &
 	UserAugmentation<M>;
 
-export default JSONCanvasViewer as unknown as JSONCanvasViewerType;
+export default JSONCanvasViewer as JSONCanvasViewerType;

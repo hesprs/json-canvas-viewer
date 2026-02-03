@@ -2,6 +2,7 @@ import { type BaseArgs, BaseModule } from '$/baseModule';
 import Controller from '$/controller';
 import DataManager from '$/dataManager';
 import type { BaseOptions } from '$/declarations';
+import InteractionHandler from '$/interactionHandler';
 import utilities, { destroyError } from '$/utilities';
 
 import style from './styles.scss?inline';
@@ -36,6 +37,7 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 	private _zoomInBtn: HTMLButtonElement | null = null;
 	private _resetViewBtn: HTMLButtonElement | null = null;
 	private DM: DataManager;
+	private IH: InteractionHandler;
 	private collapsed: boolean;
 
 	private get controlsPanel() {
@@ -71,6 +73,7 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 		super(...args);
 		this.collapsed = this.options.controlsCollapsed ?? false;
 		this.DM = this.container.get(DataManager);
+		this.IH = this.container.get(InteractionHandler);
 		this.DM.onToggleFullscreen.subscribe(this.updateFullscreenBtn);
 		this.container.get(Controller).hooks.onRefresh.subscribe(this.updateSlider);
 
@@ -131,10 +134,13 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 		this.controlsPanel.classList.toggle('collapsed', this.collapsed);
 		if (!this.collapsed) this.updateSlider();
 	};
-	private zoomIn = () => this.DM.zoom(1.1, this.DM.middleViewer());
-	private zoomOut = () => this.DM.zoom(1 / 1.1, this.DM.middleViewer());
+	private zoomIn = () => this.IH.zoom(1.3, this.DM.middleViewer());
+	private zoomOut = () => this.IH.zoom(1 / 1.3, this.DM.middleViewer());
 	private slide = () =>
-		this.DM.zoomToScale(1.1 ** Number(this.zoomSlider.value), this.DM.middleViewer());
+		this.IH.trueZoom(
+			1.1 ** Number(this.zoomSlider.value) / this.DM.data.scale,
+			this.DM.middleViewer(),
+		);
 
 	private updateFullscreenBtn = (enter: boolean) => {
 		if (enter) this.toggleFullscreenBtn.innerHTML = exitFullscreenIcon;

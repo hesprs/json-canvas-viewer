@@ -97,8 +97,6 @@ export type Box = {
 
 export type GeneralArguments = Array<any>;
 export type GeneralObject = Record<Indexable, any>;
-export type GeneralFunction = (...args: GeneralArguments) => any;
-export type Empty = {};
 export type Indexable = string | number | symbol;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
 	? I
@@ -119,10 +117,12 @@ export interface BaseOptions {
 
 export type MarkdownParser = (markdown: string) => string | Promise<string>;
 
-export type Options<T extends ModuleInput> = UnionToIntersection<Instances<T>['options']>;
-export type Augmentation<T extends ModuleInput> = UnionToIntersection<
-	Instances<T>['_Augmentation']
->;
+type Orchestratable<
+	T extends ModuleInput,
+	K extends 'options' | '_Augmentation',
+> = UnionToIntersection<Instances<T>[K]>;
+export type Options<T extends ModuleInput = []> = Orchestratable<T, 'options'>;
+export type Augmentation<T extends ModuleInput = []> = Orchestratable<T, '_Augmentation'>;
 
 type InternalModules = [
 	DataManager,

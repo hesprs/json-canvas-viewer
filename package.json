@@ -1,6 +1,6 @@
 {
 	"name": "json-canvas-viewer",
-	"version": "3.4.2",
+	"version": "3.4.3",
 	"description": "An extensible web-based viewer for JSON Canvas, easy to embed into websites.",
 	"keywords": [
 		"front-end",
@@ -27,39 +27,35 @@
 	],
 	"type": "module",
 	"sideEffects": false,
-	"main": "dist/index.cjs",
+	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/types/index.d.ts",
+	"unpkg": "dist/index.js",
+	"jsdelivr": "dist/index.js",
 	"exports": {
 		".": {
 			"types": "./dist/types/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
+			"import": "./dist/index.js"
 		},
 		"./dev": {
 			"types": "./dist/types/dev.d.ts",
-			"import": "./dist/dev.js",
-			"require": "./dist/dev.cjs"
+			"import": "./dist/dev.js"
 		},
 		"./modules": {
 			"types": "./dist/types/modules.d.ts",
-			"import": "./dist/modules.js",
-			"require": "./dist/modules.cjs"
+			"import": "./dist/modules.js"
 		},
 		"./bridges": {
 			"types": "./dist/types/bridges.d.ts",
-			"import": "./dist/bridges.js",
-			"require": "./dist/bridges.cjs"
+			"import": "./dist/bridges.js"
 		},
 		"./vue": {
 			"types": "./dist/types/bridges/vueComponent.vue.d.ts",
-			"import": "./dist/vue.js",
-			"require": "./dist/vue.cjs"
+			"import": "./dist/vue.js"
 		},
 		"./react": {
 			"types": "./dist/types/bridges/reactComponent.d.ts",
-			"import": "./dist/react.js",
-			"require": "./dist/react.cjs"
+			"import": "./dist/react.js"
 		}
 	},
 	"publishConfig": {

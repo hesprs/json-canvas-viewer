@@ -35,8 +35,7 @@ const fullConfig = defineConfig({
 				vue: resolve(__dirname, 'src/bridges/vueComponent.vue'),
 			},
 			name: 'JSONCanvasViewer',
-			formats: ['es', 'cjs'],
-			fileName: (format, entryName) => `${entryName}.${format === 'cjs' ? 'cjs' : 'js'}`,
+			formats: ['es'],
 		},
 	},
 });
@@ -90,8 +89,7 @@ const chimpConfig = defineConfig({
 				chimp: resolve(__dirname, 'src/chimp.ts'),
 			},
 			name: 'JSONCanvasViewer',
-			formats: ['es', 'cjs'],
-			fileName: (format) => `chimp.${format === 'cjs' ? 'cjs' : 'js'}`,
+			formats: ['es'],
 		},
 	},
 });

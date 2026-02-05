@@ -27,7 +27,7 @@ Create an HTML file and download the package:
 </head>
 <body></body>
 <script type="module">
-    import { JSONCanvasViewer } from 'https://unpkg.com/json-canvas-viewer/dist/chimp.js';
+    import { JSONCanvasViewer } from 'https://unpkg.com/json-canvas-viewer';
 </script>
 </html>
 ```
@@ -39,7 +39,7 @@ Also prepare your `.canvas` file.
 The chimp version has everything prepared for you, including a lightweight and secure runtime markdown parser, a canvas loader and [four optional modules](3-🧩-Modules.md). You almost always need the parser and loader, but you can choose modules according to yourself.
 
 ```JavaScript
-import { JSONCanvasViewer, parser, loadCanvas, Minimap } from 'https://unpkg.com/json-canvas-viewer/dist/chimp.js';
+import { JSONCanvasViewer, parser, loadCanvas, Minimap } from 'https://unpkg.com/json-canvas-viewer';
 
 new JSONCanvasViewer(
 	{

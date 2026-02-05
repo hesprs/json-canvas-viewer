@@ -32,8 +32,6 @@ Create an HTML file and download the package:
 </html>
 ```
 
-When using CJS version, please use URL `https://unpkg.com/json-canvas-viewer/dist/chimp.cjs` to obtain the package.
-
 Also prepare your `.canvas` file.
 
 ## Instantiation

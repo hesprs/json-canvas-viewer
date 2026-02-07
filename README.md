@@ -119,10 +119,10 @@ The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also 
 </head>
 <body></body>
 <script type="module">
-import { JSONCanvasViewer, parser, loadCanvas } from 'https://unpkg.com/json-canvas-viewer';
+import { JSONCanvasViewer, parser, fetchCanvas } from 'https://unpkg.com/json-canvas-viewer';
 new JSONCanvasViewer({
-    container: document.body, // The element to attach the viewer to
-    canvas: loadCanvas('path/to/your.canvas'),  // remember to prepare your canvas
+    container: document.body,
+    canvas: await fetchCanvas('./test/demo.canvas'),
     markdownParser: parser,
 });
 </script>

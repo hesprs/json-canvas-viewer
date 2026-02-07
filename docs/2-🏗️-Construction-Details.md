@@ -26,7 +26,7 @@ An object that lets you customize the viewer. Its type grows as you use more mod
 `canvas`: the canvas object.
 
 - Default: an empty canvas will be used.
-- **You can obtain it from `loadCanvas` (in chimp version) or importing canvas file (in full version)**.
+- **You can obtain it from `fetchCanvas` (in chimp version) or importing canvas file (in full version)**.
 
 `attachmentDir`: the directory of attachments (images or other media files in the canvas).
 

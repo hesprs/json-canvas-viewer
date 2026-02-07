@@ -121,8 +121,8 @@ The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also 
 <script type="module">
 import { JSONCanvasViewer, parser, fetchCanvas } from 'https://unpkg.com/json-canvas-viewer';
 new JSONCanvasViewer({
-    container: document.body,
-    canvas: await fetchCanvas('./test/demo.canvas'),
+    container: document.body, // The element to attach the viewer to
+    canvas: await fetchCanvas('path/to/your.canvas'), // remember to prepare your canvas
     markdownParser: parser,
 });
 </script>

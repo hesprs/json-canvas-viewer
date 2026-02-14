@@ -23,7 +23,7 @@
 		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
 	},
 	"files": [
-		"dist"
+		"./dist"
 	],
 	"type": "module",
 	"sideEffects": false,

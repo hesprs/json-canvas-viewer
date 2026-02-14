@@ -75,29 +75,9 @@ JSON Canvas Viewer currently can work seamlessly with the following techstacks /
 
 🙌 Contributions are welcomed!
 
-## 🦾 It's the Age of Agents
+## 🚀 Quick Start
 
-Your time is expensive, do not spend it on reading the lengthy docs of a niche library. Nowadays coding agents are smart enough to handle the viewer well.
-
-Copy and paste the following prompt to OpenCode, ClaudeCode, Cursor or even a chat bot, replace the placeholder to your task, let it handle everything for you:
-
-```markdown
-I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) interactively in a browser. Read its documentations, figure out wether to use `chimp` version or `full` version, and help me with my requirements.
-
-**Documentations**:
-
-[Readme](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/README.md)
-[Quick Start](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
-[Construction Details](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/2-%F0%9F%8F%97%EF%B8%8F-Construction-Details.md)
-[Modules](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/3-%F0%9F%A7%A9-Modules.md)
-[Prerendering, Vue, and React Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges.md)
-
-**Requirements**:
-
-<!-- your requirements here -->
-```
-
-## 🚀 Manual Trial in 5 Seconds
+### For Humans
 
 The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/test/demo.canvas).
 
@@ -131,9 +111,29 @@ new JSONCanvasViewer({
 
 For full elaboration about the instantiation and APIs, please refer to [the documentation](https://github.com/hesprs/json-canvas-viewer/wiki).
 
+### 🦾 It's the Age of Agents
+
+Copy and paste the following prompt to OpenCode, ClaudeCode, Cursor or even a chat bot, replace the placeholder to your task, let it handle everything for you:
+
+```markdown
+I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) interactively in a browser. Read its documentations, figure out wether to use `chimp` version or `full` version, and help me with my requirements.
+
+**Documentation**:
+
+[Readme](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/README.md)
+[Quick Start](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
+[Construction Details](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/2-%F0%9F%8F%97%EF%B8%8F-Construction-Details.md)
+[Modules](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/3-%F0%9F%A7%A9-Modules.md)
+[Prerendering, Vue, and React Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges.md)
+
+**Requirements**:
+
+<!-- your requirements here -->
+```
+
 ## 🤝 Get Involved
 
-This project welcomes anyone that have ideas to improve it.
+This project welcomes anyone that has ideas to improve it.
 
 - [Open a pull request](https://github.com/hesprs/pointeract/compare) for a new module, documentation update, and so on.
 - [Open an issue](https://github.com/hesprs/pointeract/issues/new) if you find a bug.

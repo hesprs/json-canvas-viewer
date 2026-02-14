@@ -133,7 +133,7 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 
 ## 🤝 Get Involved
 
-This project welcomes anyone that have ideas to improve it.
+This project welcomes anyone that has ideas to improve it.
 
 - [Open a pull request](https://github.com/hesprs/pointeract/compare) for a new module, documentation update, and so on.
 - [Open an issue](https://github.com/hesprs/pointeract/issues/new) if you find a bug.

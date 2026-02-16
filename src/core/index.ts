@@ -9,7 +9,12 @@ import type { GeneralObject } from '$/types';
 import utilities from '$/utilities';
 import { Container } from '@needle-di/core';
 
-type InternalModules = [
+export interface BaseOptions {
+	container: HTMLElement;
+	loading?: 'normal' | 'lazy' | 'none';
+}
+
+const internalModules = [
 	DataManager,
 	StyleManager,
 	Controller,
@@ -17,6 +22,8 @@ type InternalModules = [
 	InteractionHandler,
 	Renderer,
 ];
+
+type InternalModules = typeof internalModules;
 
 export type AllOptions<M extends ModuleInput> = Options<M> & Options<InternalModules>;
 type AllAugmentation<M extends ModuleInput> = Augmentation<M> & Augmentation<InternalModules>;
@@ -48,15 +55,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 					),
 			});
 		};
-		this.allModules = [
-			DataManager,
-			StyleManager,
-			Controller,
-			OverlayManager,
-			InteractionHandler,
-			Renderer,
-			...(modules ?? []),
-		];
+		this.allModules = [...internalModules, ...(modules ?? [])];
 		this.allModules.forEach(bind);
 		this.allModules.forEach((Module) => {
 			this.container.get(Module);

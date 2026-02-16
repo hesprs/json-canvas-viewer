@@ -99,7 +99,6 @@ export type GeneralArray = ReadonlyArray<General>;
 export type GeneralObject = object;
 export type GeneralFunction = Function;
 export type GeneralConstructor = new (...args: General[]) => General;
-export type Indexable = string | number | symbol;
 // #endregion =====================================================================
 
 // #region Orchestration Machine
@@ -113,12 +112,11 @@ type GeneralModuleInput = Array<GeneralConstructor> | Array<GeneralObject>;
 
 export type ModuleInput<T extends GeneralConstructor> = Array<T> | Array<InstanceType<T>>;
 
-type Instances<M extends GeneralModuleInput, T extends M> =
+type Instances<T extends GeneralModuleInput> =
 	T extends Array<GeneralConstructor> ? InstanceType<T[number]> : T[number];
 
 export type Orchestratable<
-	M extends GeneralModuleInput,
-	T extends M,
-	K extends keyof Instances<M, T>,
-> = UnionToIntersection<Instances<M, T>[K]>;
+	T extends GeneralModuleInput,
+	K extends keyof Instances<T>,
+> = UnionToIntersection<Instances<T>[K]>;
 // #endregion ======================================================================

@@ -32,7 +32,7 @@ const fullConfig = defineConfig({
 				dev: resolve(__dirname, 'src/dev.ts'),
 				bridges: resolve(__dirname, 'src/bridges.ts'),
 				react: resolve(__dirname, 'src/bridges/reactComponent.tsx'),
-				vue: resolve(__dirname, 'src/bridges/vueComponent.vue'),
+				vue: resolve(__dirname, 'src/bridges/VueComponent.vue'),
 			},
 			name: 'JSONCanvasViewer',
 			formats: ['es'],

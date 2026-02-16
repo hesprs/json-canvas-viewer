@@ -1,8 +1,7 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import Controller from '$/controller';
-import DataManager from '$/dataManager';
-import type { BaseOptions } from '$/declarations';
-import StyleManager from '$/styleManager';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import Controller from '$/Controller';
+import DataManager from '$/DataManager';
+import StyleManager from '$/StyleManager';
 import utilities, { destroyError } from '$/utilities';
 
 import style from './styles.scss?inline';

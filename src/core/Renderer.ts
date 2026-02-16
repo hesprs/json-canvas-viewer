@@ -1,8 +1,8 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import Controller from '$/controller';
-import DataManager, { type EdgeItem, type NodeItem } from '$/dataManager';
-import type { BaseOptions, Box } from '$/declarations';
-import StyleManager from '$/styleManager';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import Controller from '$/Controller';
+import DataManager, { type EdgeItem, type NodeItem } from '$/DataManager';
+import StyleManager from '$/StyleManager';
+import type { Box } from '$/types';
 import utilities, { destroyError } from '$/utilities';
 
 const ARROW_LENGTH = 12;

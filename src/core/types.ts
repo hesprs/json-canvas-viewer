@@ -1,12 +1,4 @@
-// oxlint-disable typescript/no-explicit-any
-import type { GeneralModule, GeneralModuleCtor } from '$/baseModule';
-import type Controller from '$/controller';
-import type DataManager from '$/dataManager';
-import type InteractionHandler from '$/interactionHandler';
-import type OverlayManager from '$/overlayManager';
-import type Renderer from '$/renderer';
-import type StyleManager from '$/styleManager';
-
+// #region Global
 declare global {
 	interface JSONCanvasGroupNode extends JSONCanvasGenericNode {
 		type: 'group';
@@ -60,7 +52,9 @@ declare global {
 		export default content;
 	}
 }
+// #endregion =====================================================================
 
+// #region Informative Types
 interface JSONCanvasGenericNode {
 	id: string;
 	type: 'group' | 'file' | 'text' | 'link';
@@ -95,44 +89,36 @@ export type Box = {
 	left: number;
 };
 
-export type GeneralArguments = Array<any>;
-export type GeneralObject = Record<Indexable, any>;
+export type MarkdownParser = (markdown: string) => string | Promise<string>;
+// #endregion =====================================================================
+
+// #region General Types
+// oxlint-disable-next-line typescript/no-explicit-any
+export type General = any;
+export type GeneralArray = ReadonlyArray<General>;
+export type GeneralObject = object;
+export type GeneralFunction = Function;
+export type GeneralConstructor = new (...args: General[]) => General;
 export type Indexable = string | number | symbol;
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+// #endregion =====================================================================
+
+// #region Orchestration Machine
+type UnionToIntersection<U> = (U extends General ? (k: U) => void : never) extends (
+	k: infer I,
+) => void
 	? I
 	: never;
 
-export type ModuleInputCtor = Array<GeneralModuleCtor>;
-type ModuleInputInstance = Array<GeneralModule>;
-export type ModuleInput = ModuleInputCtor | ModuleInputInstance;
+type GeneralModuleInput = Array<GeneralConstructor> | Array<GeneralObject>;
 
-type Instances<T extends ModuleInput> = T extends ModuleInputCtor
-	? InstanceType<T[number]>
-	: T[number];
+export type ModuleInput<T extends GeneralConstructor> = Array<T> | Array<InstanceType<T>>;
 
-export interface BaseOptions {
-	container: HTMLElement;
-	loading?: 'normal' | 'lazy' | 'none';
-}
+type Instances<M extends GeneralModuleInput, T extends M> =
+	T extends Array<GeneralConstructor> ? InstanceType<T[number]> : T[number];
 
-export type MarkdownParser = (markdown: string) => string | Promise<string>;
-
-type Orchestratable<
-	T extends ModuleInput,
-	K extends 'options' | '_Augmentation',
-> = UnionToIntersection<Instances<T>[K]>;
-export type Options<T extends ModuleInput = []> = Orchestratable<T, 'options'>;
-export type Augmentation<T extends ModuleInput = []> = Orchestratable<T, '_Augmentation'>;
-
-type InternalModules = [
-	DataManager,
-	StyleManager,
-	Controller,
-	OverlayManager,
-	InteractionHandler,
-	Renderer,
-];
-
-export type UserOptions<M extends ModuleInput> = Options<M> & Options<InternalModules>;
-export type UserAugmentation<M extends ModuleInput> = Augmentation<M> &
-	Augmentation<InternalModules>;
+export type Orchestratable<
+	M extends GeneralModuleInput,
+	T extends M,
+	K extends keyof Instances<M, T>,
+> = UnionToIntersection<Instances<M, T>[K]>;
+// #endregion ======================================================================

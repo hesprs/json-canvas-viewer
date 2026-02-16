@@ -1,14 +1,14 @@
 <script lang="ts" generic="T extends ModuleInputCtor" setup>
 import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
-import JSONCanvasViewer, { type JSONCanvasViewerInterface } from '$';
-import type { ModuleInputCtor, UserOptions } from '$/declarations';
+import JSONCanvasViewer, { type AllOptions, type JSONCanvasViewerInterface } from '$';
 import renderToString from './renderToString';
+import type { ModuleInputCtor } from '$/BaseModule';
 
 type ComponentOptions<T extends ModuleInputCtor> = {
 	modules?: T;
 	canvas?: JSONCanvas;
 	attachmentDir?: string;
-	options?: Omit<UserOptions<T>, 'container' | 'theme' | 'canvas' | 'attachmentDir'>;
+	options?: Omit<AllOptions<T>, 'container' | 'theme' | 'canvas' | 'attachmentDir'>;
 	isPrerendering?: boolean;
 	theme?: 'dark' | 'light';
 };
@@ -47,7 +47,7 @@ onMounted(() => {
 			theme: props.theme,
 			canvas: props.canvas,
 			attachmentDir: props.attachmentDir,
-		}) as UserOptions<T>,
+		}) as AllOptions<T>,
 		props.modules,
 	);
 });

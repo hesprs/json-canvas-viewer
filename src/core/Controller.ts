@@ -1,7 +1,6 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import DataManager from '$/dataManager';
-import type { BaseOptions } from '$/declarations';
-import StyleManager from '$/styleManager';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import DataManager from '$/DataManager';
+import StyleManager from '$/StyleManager';
 import utilities from '$/utilities';
 
 interface Augmentation {

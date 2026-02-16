@@ -1,19 +1,25 @@
-import type { BaseModule } from '$/baseModule';
-import Controller from '$/controller';
-import DataManager from '$/dataManager';
-import type {
-	ModuleInputCtor,
-	UserOptions,
-	UserAugmentation,
-	ModuleInput,
-	GeneralObject,
-} from '$/declarations';
-import InteractionHandler from '$/interactionHandler';
-import OverlayManager from '$/overlayManager';
-import Renderer from '$/renderer';
-import StyleManager from '$/styleManager';
+import type { BaseModule, ModuleInputCtor, ModuleInput, Options, Augmentation } from '$/BaseModule';
+import Controller from '$/Controller';
+import DataManager from '$/DataManager';
+import InteractionHandler from '$/InteractionHandler';
+import OverlayManager from '$/OverlayManager';
+import Renderer from '$/Renderer';
+import StyleManager from '$/StyleManager';
+import type { GeneralObject } from '$/types';
 import utilities from '$/utilities';
 import { Container } from '@needle-di/core';
+
+type InternalModules = [
+	DataManager,
+	StyleManager,
+	Controller,
+	OverlayManager,
+	InteractionHandler,
+	Renderer,
+];
+
+export type AllOptions<M extends ModuleInput> = Options<M> & Options<InternalModules>;
+type AllAugmentation<M extends ModuleInput> = Augmentation<M> & Augmentation<InternalModules>;
 
 class JSONCanvasViewer<M extends ModuleInputCtor> {
 	private allModules: ModuleInputCtor;
@@ -22,10 +28,10 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	private onStart = utilities.makeHook();
 	private onRestart = utilities.makeHook();
 	private started = false;
-	options: UserOptions<M>;
+	options: AllOptions<M>;
 	container: Container;
 
-	constructor(options: UserOptions<M>, modules?: M) {
+	constructor(options: AllOptions<M>, modules?: M) {
 		this.container = new Container();
 		this.options = options;
 		const bind = (Class: typeof BaseModule) => {
@@ -107,9 +113,9 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 
 type JSONCanvasViewerType = new <M extends ModuleInputCtor = []>(
 	...args: ConstructorParameters<typeof JSONCanvasViewer<M>>
-) => JSONCanvasViewer<M> & UserAugmentation<M>;
+) => JSONCanvasViewer<M> & AllAugmentation<M>;
 
 export type JSONCanvasViewerInterface<M extends ModuleInput = []> = JSONCanvasViewer<never> &
-	UserAugmentation<M>;
+	AllAugmentation<M>;
 
 export default JSONCanvasViewer as JSONCanvasViewerType;

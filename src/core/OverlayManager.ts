@@ -1,9 +1,9 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import Controller from '$/controller';
-import DataManager from '$/dataManager';
-import type { BaseOptions, MarkdownParser } from '$/declarations';
-import InteractionHandler from '$/interactionHandler';
-import StyleManager, { type Color } from '$/styleManager';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import Controller from '$/Controller';
+import DataManager from '$/DataManager';
+import InteractionHandler from '$/InteractionHandler';
+import StyleManager, { type Color } from '$/StyleManager';
+import type { MarkdownParser } from '$/types';
 import utilities, { destroyError } from '$/utilities';
 
 interface Options extends BaseOptions {

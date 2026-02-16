@@ -1,7 +1,7 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import DataManager from '$/dataManager';
-import type { BaseOptions, Coordinates } from '$/declarations';
-import OverlayManager from '$/overlayManager';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import DataManager from '$/DataManager';
+import OverlayManager from '$/OverlayManager';
+import type { Coordinates } from '$/types';
 import utilities from '$/utilities';
 import {
 	Click,

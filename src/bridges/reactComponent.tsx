@@ -1,5 +1,5 @@
-import JSONCanvasViewer, { type JSONCanvasViewerInterface } from '$';
-import type { ModuleInputCtor, UserOptions } from '$/declarations';
+import JSONCanvasViewer, { type AllOptions, type JSONCanvasViewerInterface } from '$';
+import type { ModuleInputCtor } from '$/BaseModule';
 import { useEffect, useRef } from 'react';
 
 export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
@@ -14,7 +14,7 @@ export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
 	attachmentDir,
 }: {
 	modules?: T;
-	options?: Omit<UserOptions<T>, 'container' | 'theme' | 'canvas' | 'attachmentDir'>;
+	options?: Omit<AllOptions<T>, 'container' | 'theme' | 'canvas' | 'attachmentDir'>;
 	prerenderedContent?: string;
 	className?: string;
 	style?: React.CSSProperties;
@@ -34,7 +34,7 @@ export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({
 				canvas,
 				attachmentDir,
 				theme,
-			}) as UserOptions<T>,
+			}) as AllOptions<T>,
 			modules,
 		);
 		instanceRef.current = instance;

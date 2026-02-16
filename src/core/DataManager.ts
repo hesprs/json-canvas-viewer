@@ -1,6 +1,6 @@
-import { type BaseArgs, BaseModule } from '$/baseModule';
-import type { BaseOptions, Box, NodeBounds } from '$/declarations';
+import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
 import style from '$/styles.scss?inline';
+import type { Box, NodeBounds } from '$/types';
 import utilities from '$/utilities';
 
 const INITIAL_VIEWPORT_PADDING = 100;

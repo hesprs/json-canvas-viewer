@@ -1,7 +1,7 @@
-import type { MarkdownParser } from '$/declarations';
+import type { MarkdownParser } from '$/types';
 import type { Compiler } from 'webpack';
 
-export default class JsonCanvasWebpackPlugin {
+export default class JSONCanvasWebpackPlugin {
 	parser: MarkdownParser;
 
 	constructor(parser: MarkdownParser) {

@@ -44,7 +44,7 @@ This setup gives you available properties:
 
 ## Accessing Module Types
 
-Although all modules extent `BaseModule`, you may encounter troubles when trying to use its type to denote the generic type of modules.
+Although all modules extend `BaseModule`, you may encounter troubles when trying to use its type to denote the generic type of modules.
 
 Hence, we provide types `GeneralModule` and `GeneralModuleCtor` for this purpose. You can import them from `json-canvas-viewer/dev`.
 

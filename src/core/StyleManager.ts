@@ -1,6 +1,5 @@
-import { BaseModule, type BaseArgs } from '$/baseModule';
-import DataManager from '$/dataManager';
-import type { BaseOptions } from '$/declarations';
+import { BaseModule, type BaseArgs, type BaseOptions } from '$/BaseModule';
+import DataManager from '$/DataManager';
 import utilities from '$/utilities';
 import { parseHex, toHslString, type HslColor, rgbToHsl } from '@ahmedsemih/color-fns';
 

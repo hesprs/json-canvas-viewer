@@ -1,4 +1,4 @@
-import type { GeneralArguments } from '$/declarations';
+import type { GeneralArray } from '$/types';
 
 export default {
 	round,
@@ -75,7 +75,7 @@ function round(roundedNum: number, digits: number) {
 	return Math.round(roundedNum * factor) / factor;
 }
 
-function makeHook<Args extends GeneralArguments = []>(reverse: boolean = false) {
+function makeHook<Args extends GeneralArray = []>(reverse: boolean = false) {
 	type MatchingFunc = (...args: Args) => unknown;
 	type Hook = {
 		(...args: Args): void;

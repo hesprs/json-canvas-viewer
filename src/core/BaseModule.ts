@@ -1,24 +1,19 @@
-// oxlint-disable typescript/no-explicit-any
-import type { GeneralObject, ModuleInput as MI, Orchestratable } from '$/types';
+import type { BaseOptions } from '$';
+import type { General, GeneralObject, ModuleInput as MI, Orchestratable } from '$/types';
 import type utilities from '$/utilities';
 import type { Container } from '@needle-di/core';
 
 type Hook = ReturnType<typeof utilities.makeHook>;
 
-export type GeneralModuleCtor = typeof BaseModule<any, any>;
-export type GeneralModule = BaseModule<any, any>;
+export type GeneralModuleCtor = typeof BaseModule<General, General>;
+export type GeneralModule = BaseModule<General, General>;
 
 export type ModuleInputCtor = Array<GeneralModuleCtor>;
 export type ModuleInput = MI<GeneralModuleCtor>;
-export type Options<M extends ModuleInput> = Orchestratable<ModuleInput, M, 'options'>;
-export type Augmentation<M extends ModuleInput> = Orchestratable<ModuleInput, M, '_Augmentation'>;
+export type Options<M extends ModuleInput> = Orchestratable<M, 'options'>;
+export type Augmentation<M extends ModuleInput> = Orchestratable<M, '_Augmentation'>;
 
-export interface BaseOptions {
-	container: HTMLElement;
-	loading?: 'normal' | 'lazy' | 'none';
-}
-
-export type BaseArgs = ConstructorParameters<typeof BaseModule<any, any>>;
+export type BaseArgs = ConstructorParameters<GeneralModuleCtor>;
 
 export class BaseModule<O extends BaseOptions = BaseOptions, A extends GeneralObject = {}> {
 	declare private static readonly _BaseModuleBrand: unique symbol; // Nominal marker

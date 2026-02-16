@@ -1,4 +1,5 @@
-import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import type { BaseOptions } from '$';
+import { type BaseArgs, BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import OverlayManager from '$/OverlayManager';
 import type { Coordinates } from '$/types';

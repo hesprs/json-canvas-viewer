@@ -1,4 +1,5 @@
-import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import type { BaseOptions } from '$';
+import { type BaseArgs, BaseModule } from '$/BaseModule';
 import style from '$/styles.scss?inline';
 import type { Box, NodeBounds } from '$/types';
 import utilities from '$/utilities';

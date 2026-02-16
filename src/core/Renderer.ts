@@ -1,4 +1,5 @@
-import { type BaseArgs, BaseModule, type BaseOptions } from '$/BaseModule';
+import type { BaseOptions } from '$';
+import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager, { type EdgeItem, type NodeItem } from '$/DataManager';
 import StyleManager from '$/StyleManager';

@@ -3,8 +3,8 @@ export {
 	type GeneralModuleCtor,
 	type BaseArgs,
 	BaseModule,
-	type BaseOptions,
 } from '$/BaseModule';
+export type { BaseOptions } from '$';
 export { default as Controller } from '$/Controller';
 export { default as DataManager } from '$/DataManager';
 export { default as InteractionHandler } from '$/InteractionHandler';

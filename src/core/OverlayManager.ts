@@ -1,10 +1,10 @@
 import type { BaseOptions } from '$';
+import type { MarkdownParser } from '$/types';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
 import StyleManager, { type Color } from '$/StyleManager';
-import type { MarkdownParser } from '$/types';
 import utilities, { destroyError } from '$/utilities';
 
 interface Options extends BaseOptions {

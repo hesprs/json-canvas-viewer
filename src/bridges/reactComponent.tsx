@@ -1,5 +1,5 @@
-import JSONCanvasViewer, { type AllOptions, type JSONCanvasViewerInterface } from '$';
 import type { ModuleInputCtor } from '$/BaseModule';
+import JSONCanvasViewer, { type AllOptions, type JSONCanvasViewerInterface } from '$';
 import { useEffect, useRef } from 'react';
 
 export default function JSONCanvasViewerReact<T extends ModuleInputCtor>({

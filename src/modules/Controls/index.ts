@@ -4,7 +4,6 @@ import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
 import utilities, { destroyError } from '$/utilities';
-
 import style from './styles.scss?inline';
 
 interface Options extends BaseOptions {

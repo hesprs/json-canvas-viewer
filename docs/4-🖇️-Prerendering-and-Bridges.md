@@ -41,18 +41,18 @@ import Viewer from 'json-canvas-viewer/vue';
 import { Minimap, MistouchPreventer, Controls } from 'json-canvas-viewer/modules';
 import canvas from 'path/to/your.canvas';
 const options = {
-	loading: 'lazy',
-	minimapCollapsed: true,
+  loading: 'lazy',
+  minimapCollapsed: true,
 };
 const modules = [Minimap, MistouchPreventer, Controls];
 const isPrerendering = import.meta.env.SSR; // if you are using Vite
 </script>
 
 <template>
-	<Suspense>
-		<Viewer :modules :options :canvas :isPrerendering />
-	</Suspense>
-	<!-- ... your other components -->
+  <Suspense>
+    <Viewer :modules :options :canvas :isPrerendering />
+  </Suspense>
+  <!-- ... your other components -->
 </template>
 ```
 
@@ -101,20 +101,20 @@ import Viewer from 'json-canvas-viewer/react';
 import { Minimap, MistouchPreventer, Controls } from 'json-canvas-viewer/modules';
 import canvas from 'path/to/your.canvas';
 const options = {
-	loading: 'lazy',
-	minimapCollapsed: true,
+  loading: 'lazy',
+  minimapCollapsed: true,
 };
 const modules = [Minimap, MistouchPreventer, Controls];
 
 export default async function Page() {
-	const html = await renderToString({ canvas });
+  const html = await renderToString({ canvas });
 
-	return (
-		<main>
-			{/* ... your other components */}
-			<Viewer prerenderedContent={html} modules={modules} options={options} canvas={canvas} />
-		</main>
-	);
+  return (
+    <main>
+      {/* ... your other components */}
+      <Viewer prerenderedContent={html} modules={modules} options={options} canvas={canvas} />
+    </main>
+  );
 }
 ```
 

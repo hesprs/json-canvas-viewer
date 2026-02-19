@@ -1,9 +1,7 @@
-import { resolve } from 'node:path';
-
 import vue from '@vitejs/plugin-vue';
 import { marked } from 'marked';
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-
 import jsonCanvasTransform from './src/bridges/vitePlugin';
 
 const isBuilding = process.env.BUILD; // 'full' | 'chimp' | 'webpack_loader'

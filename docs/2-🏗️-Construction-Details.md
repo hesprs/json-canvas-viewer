@@ -73,18 +73,18 @@ An array of modules to load, currently available modules are documented in [Modu
 
 ```ts
 interface JSONCanvasViewer {
-	container: HTMLElement;
-	options: JSONCanvasViewerOptions;
-	changeTheme(theme?: 'dark' | 'light'): void;
-	dispose(): void;
-	load(options?: { canvas?: JSONCanvas; attachmentDir?: string }): void;
-	pan(delta: { x: number; y: number }): void;
-	panToCoords(coords: { x: number; y: number }): void;
-	refresh(): void;
-	resetView(): void;
-	shiftFullscreen(option?: 'enter' | 'exit'): void;
-	zoom(factor: number): void;
-	zoomToScale(scale: number): void;
+  container: HTMLElement;
+  options: JSONCanvasViewerOptions;
+  changeTheme(theme?: 'dark' | 'light'): void;
+  dispose(): void;
+  load(options?: { canvas?: JSONCanvas; attachmentDir?: string }): void;
+  pan(delta: { x: number; y: number }): void;
+  panToCoords(coords: { x: number; y: number }): void;
+  refresh(): void;
+  resetView(): void;
+  shiftFullscreen(option?: 'enter' | 'exit'): void;
+  zoom(factor: number): void;
+  zoomToScale(scale: number): void;
 }
 ```
 

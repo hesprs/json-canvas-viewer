@@ -5,21 +5,24 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"experimentalSortImports": {
+		"newlinesBetween": false,
 		"groups": [
-			["side-effect"],
-			["builtin"],
-			["external", "external-type"],
-			["internal", "internal-type"],
-			["parent", "parent-type"],
-			["sibling", "sibling-type"],
-			["index", "index-type"]
+			"type-import",
+			["value-builtin", "value-external"],
+			"type-internal",
+			"value-internal",
+			["type-parent", "type-sibling", "type-index"],
+			["value-parent", "value-sibling", "value-index"],
+			"unknown"
 		]
 	},
+	"embeddedLanguageFormatting": "auto",
 	"overrides": [
 		{
 			"files": ["*.md", "*.yaml", "*.yml"],
 			"options": {
-				"tabWidth": 2
+				"tabWidth": 2,
+				"useTabs": false
 			}
 		}
 	]

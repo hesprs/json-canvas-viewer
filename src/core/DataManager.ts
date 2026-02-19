@@ -1,7 +1,7 @@
 import type { BaseOptions } from '$';
+import type { Box, NodeBounds } from '$/types';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import style from '$/styles.scss?inline';
-import type { Box, NodeBounds } from '$/types';
 import utilities from '$/utilities';
 
 const INITIAL_VIEWPORT_PADDING = 100;

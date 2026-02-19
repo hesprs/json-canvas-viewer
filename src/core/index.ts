@@ -1,4 +1,10 @@
-import type { ModuleInputCtor, ModuleInput, Options, Augmentation, GeneralModuleCtor } from '$/BaseModule';
+import type {
+	ModuleInputCtor,
+	ModuleInput,
+	Options,
+	Augmentation,
+	GeneralModuleCtor,
+} from '$/BaseModule';
 import type { GeneralObject } from '$/types';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';

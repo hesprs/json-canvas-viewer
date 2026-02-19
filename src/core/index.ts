@@ -1,4 +1,4 @@
-import type { BaseModule, ModuleInputCtor, ModuleInput, Options, Augmentation } from '$/BaseModule';
+import type { ModuleInputCtor, ModuleInput, Options, Augmentation, GeneralModuleCtor } from '$/BaseModule';
 import type { GeneralObject } from '$/types';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
@@ -41,7 +41,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	constructor(options: AllOptions<M>, modules?: M) {
 		this.container = new Container();
 		this.options = options;
-		const bind = (Class: typeof BaseModule) => {
+		const bind = (Class: GeneralModuleCtor) => {
 			this.container.bind({
 				provide: Class,
 				useFactory: () =>

@@ -1,11 +1,11 @@
 import type { BaseModule, ModuleInputCtor, ModuleInput, Options, Augmentation } from '$/BaseModule';
+import type { GeneralObject } from '$/types';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
 import OverlayManager from '$/OverlayManager';
 import Renderer from '$/Renderer';
 import StyleManager from '$/StyleManager';
-import type { GeneralObject } from '$/types';
 import utilities from '$/utilities';
 import { Container } from '@needle-di/core';
 

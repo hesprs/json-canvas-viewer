@@ -1,7 +1,5 @@
 import { JSONCanvasViewer, type Options } from '@';
-
 import { Controls, Minimap, MistouchPreventer } from '@/modules';
-
 import canvas from './demo.canvas';
 
 const options = {

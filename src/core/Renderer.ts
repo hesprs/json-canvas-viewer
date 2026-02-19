@@ -1,9 +1,9 @@
 import type { BaseOptions } from '$';
+import type { Box } from '$/types';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager, { type EdgeItem, type NodeItem } from '$/DataManager';
 import StyleManager from '$/StyleManager';
-import type { Box } from '$/types';
 import utilities, { destroyError } from '$/utilities';
 
 const ARROW_LENGTH = 12;

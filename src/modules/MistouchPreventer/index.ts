@@ -2,7 +2,6 @@ import type { BaseOptions } from '$';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import utilities, { destroyError } from '$/utilities';
-
 import style from './styles.scss?inline';
 
 interface Options extends BaseOptions {

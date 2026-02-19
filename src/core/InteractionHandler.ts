@@ -1,8 +1,8 @@
 import type { BaseOptions } from '$';
+import type { Coordinates } from '$/types';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import OverlayManager from '$/OverlayManager';
-import type { Coordinates } from '$/types';
 import utilities from '$/utilities';
 import {
 	Click,

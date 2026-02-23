@@ -32,7 +32,7 @@
 
 <p align="center">
     <a href="https://github.com/hesprs/synthkernel">
-        <img src="https://github.com/hesprs/synthkernel/raw/refs/heads/main/assets/powered-by-synthkernel.svg" width="200px"></img>
+        <img src="https://github.com/hesprs/synthkernel/raw/refs/heads/main/assets/powered-by-synthkernel.svg" width="200px" alt="powered by SynthKernel"></img>
     </a>
 </p>
 

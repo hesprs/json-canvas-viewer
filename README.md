@@ -30,6 +30,12 @@
     <img src="https://img.shields.io/badge/%F0%9F%96%90%EF%B8%8F%20Made%20by-Humans-333333?labelColor=25C260" alt="Made by Humans">
 </p>
 
+<p align="center">
+    <a href="https://github.com/hesprs/synthkernel">
+        <img src="https://github.com/hesprs/synthkernel/raw/refs/heads/main/assets/powered-by-synthkernel.svg" width="200px"></img>
+    </a>
+</p>
+
 <img align="center" src="./assets/preview.png" alt="preview image with light and dark theme">
 
 <p align="center">

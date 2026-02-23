@@ -90,11 +90,9 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 		});
 	};
 
-	declare private _augmentSlot: unknown;
 	private augment = (aug: GeneralObject) => {
-		Object.entries(aug).forEach(([key, value]) => {
-			this[key as '_augmentSlot'] = value;
-		});
+		const descriptors = Object.getOwnPropertyDescriptors(aug);
+		Object.defineProperties(this, descriptors);
 	};
 
 	load = (options?: { canvas?: JSONCanvas; attachmentDir?: string }) => {

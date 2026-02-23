@@ -108,12 +108,14 @@ type UnionToIntersection<U> = (U extends General ? (k: U) => void : never) exten
 	? I
 	: never;
 
-type GeneralModuleInput = Array<GeneralConstructor> | Array<GeneralObject>;
+type GeneralModuleInput = ReadonlyArray<GeneralConstructor> | ReadonlyArray<GeneralObject>;
 
-export type ModuleInput<T extends GeneralConstructor> = Array<T> | Array<InstanceType<T>>;
+export type ModuleInput<T extends GeneralConstructor> =
+	| ReadonlyArray<T>
+	| ReadonlyArray<InstanceType<T>>;
 
 type Instances<T extends GeneralModuleInput> =
-	T extends Array<GeneralConstructor> ? InstanceType<T[number]> : T[number];
+	T extends ReadonlyArray<GeneralConstructor> ? InstanceType<T[number]> : T[number];
 
 export type Orchestratable<
 	T extends GeneralModuleInput,

@@ -1,0 +1,29 @@
+.JSON-Canvas-Viewer {
+	&.JCV-numb,
+	&.JCV-numb * {
+		pointer-events: none !important;
+	}
+
+	.JCV-prevention-container {
+		overflow: visible;
+		transition:
+			background 200ms,
+			opacity 200ms,
+			box-shadow 200ms,
+			border 200ms,
+			filter 200ms,
+			backdrop-filter 200ms;
+		&.JCV-hidden {
+			pointer-events: none;
+			opacity: 0;
+		}
+		.JCV-prevention-banner {
+			border-radius: 12px;
+			padding: 12px;
+			margin: 12px;
+			font-size: calc(14px + 0.3vw);
+			line-height: calc(17px + 0.3vw);
+			text-align: center;
+		}
+	}
+}

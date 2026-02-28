@@ -1,0 +1,6 @@
+.canvas-viewer {
+	height: calc(100vh - 6rem);
+	width: calc(100vw - 6rem);
+	border-radius: 24px;
+	overflow: hidden;
+}

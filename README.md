@@ -11,8 +11,8 @@
     <a href="https://www.npmjs.com/package/json-canvas-viewer">
         <img src="https://img.shields.io/npm/v/json-canvas-viewer?logo=npm&labelColor=red&logoColor=white&color=333333" alt="npm">
     </a>
-    <a href="https://bundlephobia.com/package/json-canvas-viewer">
-        <img src="https://img.shields.io/bundlejs/size/json-canvas-viewer?format=minzip&style=flat&logo=webpack&logoColor=white&label=Minzipped%20Size&labelColor=orange&color=333333" alt="Gzipped + Minified Size">
+    <a href="https://bundlejs.com/?q=json-canvas-viewer%40latest&treeshake=%5B%7B+JSONCanvasViewer+%7D%5D">
+        <img src="https://img.shields.io/bundlejs/size/json-canvas-viewer?format=minzip&style=flat&logo=webpack&logoColor=white&label=Minzipped%20Size&labelColor=orange&color=333333&exports=JSONCanvasViewer" alt="Gzipped + Minified Size">
     </a>
     <a href="https://github.com/hesprs/json-canvas-viewer/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/hesprs/json-canvas-viewer/ci.yml?style=flat&logo=github&logoColor=white&label=CI&labelColor=d4ab00&color=333333" alt="ci">
@@ -72,12 +72,12 @@
 
 JSON Canvas Viewer currently can work seamlessly with the following techstacks / technologies (including but not limited to):
 
-- ✅ Vanilla JS/TS: natural support
-- ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#prerendering)
+- ✅ Vanilla JS/TS: [natural support](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vanilla-jsts)
+- ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering)
 - ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vite)
-- ✅ Webpack: [Webpack Loader & Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#webpack)
-- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#vue-component)
-- ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges#react-component)
+- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vue)
+- ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#react)
+- ✅ Preact: [Preact Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#preact)
 
 🙌 Contributions are welcomed!
 
@@ -142,8 +142,8 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 This project welcomes anyone that has ideas to improve it.
 
 - [Open a pull request](https://github.com/hesprs/pointeract/compare) for a new module, documentation update, and so on.
-- [Open an issue](https://github.com/hesprs/pointeract/issues/new) if you find a bug.
-- [Start a new thread in Discussions](https://github.com/hesprs/pointeract/discussions/new) if you have feature requests or questions, please avoid posting them in Issues.
+- [Open an issue](https://github.com/hesprs/pointeract/issues/new) if you find a bug or have a feature request.
+- [Start a new thread in Discussions](https://github.com/hesprs/pointeract/discussions/new) if you have feature requests or questions to discuss.
 - [Report a vulnerability](https://github.com/hesprs/pointeract/security/advisories/new) if you find one, please do not disclose it publicly.
 
 ## 📝 Copyright & License

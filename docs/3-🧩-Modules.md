@@ -17,7 +17,7 @@ Displays a minimap of current canvas at the bottom right corner.
 **Import**:
 
 ```TypeScript
-import { Minimap } from 'json-canvas-viewer/modules';
+import { Minimap } from 'json-canvas-viewer';
 ```
 
 **New Option**:
@@ -37,7 +37,7 @@ Displays current scale and coordinates at the bottom left corner.
 **Import**:
 
 ```TypeScript
-import { DebugPanel } from 'json-canvas-viewer/modules';
+import { DebugPanel } from 'json-canvas-viewer';
 ```
 
 ## Controls
@@ -47,7 +47,7 @@ Displays zoom-in/out and fullscreen controls at the top right corner.
 **Import**:
 
 ```TypeScript
-import { Controls } from 'json-canvas-viewer/modules';
+import { Controls } from 'json-canvas-viewer';
 ```
 
 **New Option**:
@@ -67,7 +67,7 @@ If you put the canvas inside a scrollable element, the default behavior is to pa
 Import:
 
 ```TypeScript
-import { MistouchPreventer } from 'json-canvas-viewer/modules';
+import { MistouchPreventer } from 'json-canvas-viewer';
 ```
 
 **New Options**:

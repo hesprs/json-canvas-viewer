@@ -1,0 +1,37 @@
+{
+	"name": "shared",
+    "version": "0.0.1", 
+	"private": true,
+	"files": [
+		"./index.ts",
+		"./module-type.ts",
+		"./build.ts",
+		"./demo.canvas"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"main": "./index.d.ts",
+	"module": "./index.d.ts",
+	"types": "./index.d.ts",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"import": "./index.d.ts"
+		},
+		"./build": {
+			"types": "./build.ts",
+			"import": "./build.ts"
+		},
+		"./module-type": {
+			"types": "./module-type.d.ts",
+			"import": "./module-type.d.ts"
+		},
+		"./demo.canvas": {
+			"import": "./demo.canvas"
+		}
+	},
+	"scripts": {
+		"lint": "oxlint --type-aware --fix && oxfmt",
+		"check": "tsc && oxfmt --check && oxlint --type-aware"
+	}
+}

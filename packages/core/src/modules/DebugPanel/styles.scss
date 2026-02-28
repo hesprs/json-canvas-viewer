@@ -1,0 +1,11 @@
+.JSON-Canvas-Viewer > .JCV-debug-panel {
+	position: absolute;
+	bottom: 12px;
+	left: 12px;
+	border-radius: 12px;
+	padding: 12px;
+	color: var(--text);
+	font-size: calc(14px + 0.3vw);
+	line-height: calc(17px + 0.3vw);
+	pointer-events: none;
+}

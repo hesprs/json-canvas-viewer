@@ -87,7 +87,7 @@ JSON Canvas Viewer currently can work seamlessly with the following techstacks /
 
 ### For Humans
 
-The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/test/demo.canvas).
+The HTML snippet below uses the `chimp` version of JSON Canvas Viewer. You also need to prepare a canvas file, if you don't have one, you can download one at [here](https://github.com/hesprs/json-canvas-viewer/blob/main/packages/shared/demo.canvas).
 
 ```HTML
 <!DOCTYPE html>

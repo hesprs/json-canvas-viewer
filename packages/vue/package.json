@@ -9,7 +9,7 @@
 		"obsidian-md",
 		"typescript",
 		"vue",
-		"vue-component"
+		"vue-components"
 	],
 	"homepage": "https://github.com/hesprs/json-canvas-viewer",
 	"bugs": {

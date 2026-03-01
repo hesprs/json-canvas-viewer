@@ -8,7 +8,7 @@
 		"json-canvas",
 		"obsidian-md",
 		"react",
-		"react-component",
+		"react-components",
 		"typescript"
 	],
 	"homepage": "https://github.com/hesprs/json-canvas-viewer",

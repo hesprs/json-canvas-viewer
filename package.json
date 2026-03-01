@@ -6,18 +6,18 @@
 		"build": "turbo run build",
 		"check": "turbo run check",
 		"dev": "turbo run dev",
-        "check:docs": "oxfmt docs --check"
+		"check:docs": "oxfmt --check docs README.md"
 	},
 	"devDependencies": {
-		"@types/node": "^25.3.0",
-		"oxfmt": "^0.33.0",
-		"oxlint": "^1.49.0",
-		"oxlint-tsgolint": "^0.14.1",
+		"@types/node": "^25.3.3",
+		"oxfmt": "^0.35.0",
+		"oxlint": "^1.50.0",
+		"oxlint-tsgolint": "^0.15.0",
 		"terser": "^5.46.0",
-		"turbo": "^2.8.10",
+		"turbo": "^2.8.12",
 		"typescript": "^5.9.3",
 		"unplugin-dts-bundle-generator": "^3.3.0",
-		"vite": "7.3.1",
+		"vite": "^7.3.1",
 		"vite-plugin-dts": "^4.5.4"
 	},
 	"engines": {

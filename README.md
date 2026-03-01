@@ -68,16 +68,18 @@
   - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
   - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
 
-## 🧩 Integration with Existing Paradigms
+## 🧩 Integration
+
+This is the monorepo for JSON Canvas Viewer, which contains a the core viewer and a set of adaptors for popular paradigms.
 
 JSON Canvas Viewer currently can work seamlessly with the following techstacks / technologies (including but not limited to):
 
-- ✅ Vanilla JS/TS: [natural support](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vanilla-jsts)
-- ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering)
-- ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vite)
-- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vue)
-- ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#react)
-- ✅ Preact: [Preact Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#preact)
+- ✅ Vanilla JS/TS: [natural support](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vanilla-jsts) - `json-canvas-viewer`
+- ✅ Prerendering: [`renderToString`](https://github.com/hesprs/json-canvas-viewer/wiki/4-%F0%9F%96%87%EF%B8%8F-Prerendering) - `json-canvas-viewer`
+- ✅ Vite: [Vite Plugin](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vite) - `vite-plugin-json-canvas`
+- ✅ Vue: [Vue Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#vue) - `@json-canvas-viewer/vue`
+- ✅ React: [React Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#react) - `@json-canvas-viewer/react`
+- ✅ Preact: [Preact Component](https://github.com/hesprs/json-canvas-viewer/wiki/1-%F0%9F%9A%80-Quick-Start#preact) - `@json-canvas-viewer/preact`
 
 🙌 Contributions are welcomed!
 
@@ -127,10 +129,10 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 **Documentation**:
 
 [Readme](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/README.md)
-[Quick Start](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
+[Quick Start and React/Preact/Vue/Vite Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
 [Construction Details](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/2-%F0%9F%8F%97%EF%B8%8F-Construction-Details.md)
 [Modules](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/3-%F0%9F%A7%A9-Modules.md)
-[Prerendering, Vue, and React Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering-and-Bridges.md)
+[Prerendering](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering.md)
 
 **Requirements**:
 

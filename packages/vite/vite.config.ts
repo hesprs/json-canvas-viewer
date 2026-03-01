@@ -12,7 +12,7 @@ export default defineConfig({
 				exportReferencedTypes: false,
 			},
 			libraries: {
-				inlinedLibraries: ['shared/module-type'],
+				inlinedLibraries: ['@repo/shared/module-type'],
 			},
 		}),
 	],

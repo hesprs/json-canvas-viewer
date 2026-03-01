@@ -1,6 +1,6 @@
 import type { BaseOptions } from '$';
 import type { Box, NodeBounds } from '$/types';
-import type { JSONCanvas, JSONCanvasEdge, JSONCanvasNode } from 'shared';
+import type { JSONCanvas, JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import style from '$/styles.scss?inline';
 import utilities, { type Hook } from '$/utilities';

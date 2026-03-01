@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Viewer from '@/Viewer.vue';
-import canvas from 'shared/demo.canvas';
+import canvas from '@repo/shared/demo.canvas';
 </script>
 
 <template>

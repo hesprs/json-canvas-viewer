@@ -41,7 +41,7 @@
 		"marked": "^17.0.3"
 	},
 	"devDependencies": {
-		"shared": "workspace:*"
+		"@repo/shared": "workspace:*"
 	},
 	"peerDependencies": {
 		"vite": "^7.3.1"

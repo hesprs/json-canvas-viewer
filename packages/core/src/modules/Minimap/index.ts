@@ -1,5 +1,5 @@
 import type { BaseOptions } from '$';
-import type { JSONCanvasEdge, JSONCanvasNode } from 'shared';
+import type { JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';

@@ -1,4 +1,4 @@
-import { createP } from 'shared/build';
+import { createP } from '@repo/shared/build';
 import dts from 'unplugin-dts-bundle-generator/vite';
 import { defineConfig } from 'vite';
 import canvas from 'vite-plugin-json-canvas';
@@ -30,7 +30,7 @@ const fullConfig = defineConfig({
 				exportReferencedTypes: false,
 			},
 			libraries: {
-				inlinedLibraries: ['shared'],
+				inlinedLibraries: ['@repo/shared'],
 			},
 		}),
 	],

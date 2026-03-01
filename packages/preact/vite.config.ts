@@ -1,5 +1,5 @@
 import preact from '@preact/preset-vite';
-import { createP } from 'shared/build';
+import { createP } from '@repo/shared/build';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import canvas from 'vite-plugin-json-canvas';

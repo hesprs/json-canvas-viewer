@@ -6,7 +6,7 @@ import type {
 	GeneralModuleCtor,
 } from '$/BaseModule';
 import type { GeneralObject } from '$/types';
-import type { JSONCanvas } from 'shared';
+import type { JSONCanvas } from '@repo/shared';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';

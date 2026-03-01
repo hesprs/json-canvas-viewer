@@ -1,4 +1,4 @@
-import canvas from 'shared/demo.canvas';
+import canvas from '@repo/shared/demo.canvas';
 import Viewer from '@/Viewer';
 
 export default function () {

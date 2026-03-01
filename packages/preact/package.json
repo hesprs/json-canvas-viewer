@@ -8,7 +8,7 @@
 		"json-canvas",
 		"obsidian-md",
 		"preact",
-		"preact-component",
+		"preact-components",
 		"typescript"
 	],
 	"homepage": "https://github.com/hesprs/json-canvas-viewer",

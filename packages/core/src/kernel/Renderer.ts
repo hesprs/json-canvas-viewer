@@ -1,6 +1,6 @@
 import type { BaseOptions } from '$';
 import type { Box } from '$/types';
-import type { JSONCanvasGroupNode, JSONCanvasNode } from 'shared';
+import type { JSONCanvasGroupNode, JSONCanvasNode } from '@repo/shared';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager, { type EdgeItem, type NodeItem } from '$/DataManager';

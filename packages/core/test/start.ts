@@ -1,5 +1,5 @@
 import { JSONCanvasViewer, type Options, Controls, Minimap, MistouchPreventer } from '@';
-import canvas from 'shared/demo.canvas';
+import canvas from '@repo/shared/demo.canvas';
 
 const options = {
 	container: document.body,

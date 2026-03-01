@@ -1,4 +1,4 @@
-import type { JSONCanvas, JSONCanvasFileNode, JSONCanvasNode, Parser } from 'shared';
+import type { JSONCanvas, JSONCanvasFileNode, JSONCanvasNode, Parser } from '@repo/shared';
 
 export default async function (options: {
 	canvas: JSONCanvas;

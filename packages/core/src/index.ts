@@ -23,7 +23,7 @@ export { default as Minimap } from '@/modules/Minimap';
 export { default as MistouchPreventer } from '@/modules/MistouchPreventer';
 export { default as canvasUtils, type Hook } from '$/utilities';
 export { parser, fetchCanvas } from '@/chimp';
-export type * from 'shared';
+export type * from '@repo/shared';
 
 // must import env.d.ts, otherwise dts bundler will throw at '*.scss?inline'
 import './env.d.ts';

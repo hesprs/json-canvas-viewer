@@ -53,7 +53,7 @@
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.10.3",
-		"shared": "workspace:*",
+		"@repo/shared": "workspace:*",
 		"vite-plugin-json-canvas": "workspace:*"
 	},
 	"peerDependencies": {

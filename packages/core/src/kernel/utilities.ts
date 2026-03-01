@@ -1,5 +1,5 @@
 import type { GeneralArray } from '$/types';
-import type { JSONCanvasNode } from 'shared';
+import type { JSONCanvasNode } from '@repo/shared';
 
 export default {
 	round,

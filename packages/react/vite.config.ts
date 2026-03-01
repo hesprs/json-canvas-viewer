@@ -1,5 +1,5 @@
+import { createP } from '@repo/shared/build';
 import react from '@vitejs/plugin-react';
-import { createP } from 'shared/build';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import canvas from 'vite-plugin-json-canvas';

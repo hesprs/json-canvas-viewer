@@ -56,8 +56,8 @@
 		"pointeract": "^1.1.1"
 	},
 	"devDependencies": {
+		"@repo/shared": "workspace:*",
 		"sass": "^1.97.3",
-		"shared": "workspace:*",
 		"vite-plugin-json-canvas": "workspace:*"
 	},
 	"packageManager": "pnpm@10.24.0"

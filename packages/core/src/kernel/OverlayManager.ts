@@ -5,7 +5,7 @@ import type {
 	JSONCanvasNode,
 	JSONCanvasTextNode,
 	Parser,
-} from 'shared';
+} from '@repo/shared';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';

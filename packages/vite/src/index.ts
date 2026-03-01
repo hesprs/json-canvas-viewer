@@ -1,6 +1,6 @@
+import { type JSONCanvas, type Parser } from '@repo/shared';
 import { marked } from 'marked';
-import { type JSONCanvas, type Parser } from 'shared';
-import 'shared/module-type';
+import '@repo/shared/module-type';
 
 export default function (parser: Parser = marked) {
 	return {

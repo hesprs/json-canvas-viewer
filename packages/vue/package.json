@@ -52,8 +52,8 @@
 		"json-canvas-viewer": "workspace:*"
 	},
 	"devDependencies": {
+		"@repo/shared": "workspace:*",
 		"@vitejs/plugin-vue": "^6.0.4",
-		"shared": "workspace:*",
 		"vite": "^7.3.1",
 		"vite-plugin-json-canvas": "workspace:*"
 	},

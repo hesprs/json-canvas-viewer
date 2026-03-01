@@ -3,7 +3,7 @@ export { default as DebugPanel } from '@/modules/DebugPanel';
 export { default as Minimap } from '@/modules/Minimap';
 export { default as MistouchPreventer } from '@/modules/MistouchPreventer';
 export { default as JSONCanvasViewer } from '$';
-import type { JSONCanvas } from 'shared';
+import type { JSONCanvas } from '@repo/shared';
 import purify from 'dompurify';
 import { marked } from 'marked';
 

@@ -1,0 +1,49 @@
+{
+	"name": "vite-plugin-json-canvas",
+	"version": "1.0.0",
+	"description": "Vite plugin for loading and parsing JSON Canvas (.canvas) files.",
+	"keywords": [
+		"json-canvas",
+		"vite",
+		"vite-plugin"
+	],
+	"homepage": "https://github.com/hesprs/json-canvas-viewer",
+	"bugs": {
+		"url": "https://github.com/hesprs/json-canvas-viewer/issues"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Hēsperus",
+		"email": "hesprs@outlook.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hesprs/json-canvas-viewer.git"
+	},
+	"files": [
+		"./dist"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"lint": "oxlint --type-aware --fix && oxfmt",
+		"build": "vite build",
+		"check": "tsc && oxfmt --check && oxlint --type-aware"
+	},
+	"dependencies": {
+		"marked": "^17.0.3"
+	},
+	"devDependencies": {
+		"shared": "workspace:*"
+	},
+	"peerDependencies": {
+		"vite": "^7.3.1"
+	}
+}

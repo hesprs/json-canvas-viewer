@@ -7,18 +7,15 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
+		"strictNullChecks": true,
+		"resolveJsonModule": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
 		"noEmit": true,
 		"jsx": "preserve",
 		"verbatimModuleSyntax": true,
 		"allowImportingTsExtensions": true,
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
-		"paths": {
-			"@/*": ["./src/*"],
-			"@": ["./src"],
-			"$/*": ["./src/core/*"],
-			"$": ["./src/core"]
-		}
-	},
-	"include": ["src/**/*", "test/**/*", "vite.config.ts"],
-	"exclude": ["./node_modules", "./dist"]
+		"outDir": "dist"
+	}
 }

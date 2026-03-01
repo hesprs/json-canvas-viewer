@@ -1,0 +1,27 @@
+.JSON-Canvas-Viewer > .JCV-controls {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: flex;
+	align-items: center;
+	transition: transform 200ms;
+	border-radius: 8px;
+	gap: 10px;
+	&.JCV-collapsed {
+		transform: translateX(calc(100% - 30px));
+	}
+	.JCV-controls-content {
+		display: flex;
+		gap: 1px;
+		align-items: center;
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--border);
+		box-shadow: var(--shadow);
+		outline: 1px solid var(--border);
+	}
+	.JCV-zoom-slider {
+		width: 100px;
+		margin: 0 10px;
+	}
+}

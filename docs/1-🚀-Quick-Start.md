@@ -2,11 +2,11 @@ We provide you two versions of JSON Canvas Viewer - `chimp` version and `full` v
 
 ## 🐒 Chimpanzee Version
 
-This version is specially built for fast trials and environments that do not have bundlers or package managers. It has everything integrated into one file, enabling you to use within seconds. However, it's **not recommended** for production use since it does not support deep customization or tree-shaking.
+This version is specially built for fast trials and environments that do not have bundlers or package managers. It has everything bundled into one file, enabling you to use within seconds. However, it's **not recommended** for production use since it does not support deep customization or tree-shaking.
 
-### Setup
+The chimp version has everything prepared for you, including a lightweight and secure runtime markdown parser, a canvas loader and [four optional modules](3-🧩-Modules.md). You almost always need the parser and loader, but you can choose modules according to yourself.
 
-Create an HTML file and download the package:
+Create an HTML file and paste the following lines:
 
 ```HTML
 <!DOCTYPE html>
@@ -27,115 +27,79 @@ Create an HTML file and download the package:
 </head>
 <body></body>
 <script type="module">
-    import { JSONCanvasViewer } from 'https://unpkg.com/json-canvas-viewer';
+    import { JSONCanvasViewer, parser, fetchCanvas, Minimap } from 'https://unpkg.com/json-canvas-viewer';
+
+    new JSONCanvasViewer(
+	    {
+		    container: document.body, // The element to attach the viewer to
+		    canvas: await fetchCanvas('path/to/your.canvas'), // remember to prepare your canvas
+            markdownParser: parser,
+	    },
+	    [Minimap], // The modules to load
+    );
 </script>
 </html>
-```
-
-Also prepare your `.canvas` file.
-
-## Instantiation
-
-The chimp version has everything prepared for you, including a lightweight and secure runtime markdown parser, a canvas loader and [four optional modules](3-🧩-Modules.md). You almost always need the parser and loader, but you can choose modules according to yourself.
-
-```JavaScript
-import { JSONCanvasViewer, parser, fetchCanvas, Minimap } from 'https://unpkg.com/json-canvas-viewer';
-
-new JSONCanvasViewer(
-	{
-		container: document.body, // The element to attach the viewer to
-		canvas: await fetchCanvas('path/to/your.canvas'),
-        markdownParser: parser,
-	},
-	[Minimap], // The modules to load
-);
 ```
 
 You can now start your dev server and a interactive canvas should be right in the body.
 
 ## 📦 Full Version
 
-You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and prerendering / Vite / Webpack / React / Vue bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
+You should always choose this version for serious uses. It provides the viewer itself, all modules, development kit, and prerendering / Vite / React / Preact / Vue bridges. Also, you can enjoy modern tooling, full customizability and resource efficiency.
 
 ### Setup
 
-You firstly need a markdown-to-HTML parser, which is of the type below:
+The packages to install depends on your project, see the following checklist:
+
+- Uses vanilla JS: `json-canvas-viewer`
+- Uses React: `@json-canvas-viewer/react`
+- Uses Vue: `@json-canvas-viewer/vue`
+- Uses Preact: `@json-canvas-viewer/preact`
+- Uses Vite as bundler: `vite-plugin-json-canvas`
+
+### Vite
+
+Vite is supported to enable build-time canvas parsing, which can significantly improve the performance of canvas rendering and reduce the bundle size. With the plugin, you can directly import a canvas file by `import yourCanvas from 'path/to/your.canvas';`.
 
 ```TypeScript
-type MarkdownParser = (markdown: string) => string | Promise<string>;
-```
-
-For demonstration only, we'll use [Marked](https://github.com/markedjs/marked). **Note that `marked` will be a development dependency, when configured correctly, markdown parsing will happen only at build time.**
-
-Then we recommend using your favourite package manager to install the package.
-
-```sh
-# npm
-npm add json-canvas-viewer
-npm add marked -D
-
-# pnpm
-pnpm add json-canvas-viewer
-pnpm add marked -D
-
-# yarn
-yarn add json-canvas-viewer
-yarn add marked -D
-```
-
-You also need to configure your bundler to support seamless canvas resolution. Currently, we support Vite and Webpack 5+.
-
-#### Vite
-
-```TypeScript
-// vite.config.ts
+// vite.config.ts or vite.config.js
 import { defineConfig } from 'vite';
-import { jsonCanvasVitePlugin } from 'json-canvas-viewer/bridges';
-import  { marked } from 'marked';
+import canvas from 'vite-plugin-json-canvas';
 
 export default defineConfig({
-    // ... your other config
-    plugins: [
-        jsonCanvasVitePlugin(marked),
-        // ... your other plugins
-    ]
-})
+	plugins: [canvas()],
+});
 ```
 
-The argument is any markdown parser, when empty, build-time parsing is disabled.
+The plugin accepts any markdown parser that inputs and outputs a string. You can set it to `(md) => md` to disable parsing.
 
-#### Webpack
+### Non-Vite
+
+Even if without Vite, if your bundler supports JSON import, you can change the extension of your canvas file to `.json` and import it as a JSON file, then use client-side parsing with the `parser` option.
+
+If JSON import is also impossible, you can use the `fetchCanvas()` function to fetch the canvas file and parse it.
 
 ```TypeScript
-// webpack.config.ts
-import webpack from 'webpack';
-import { JSONCanvasWebpackPlugin } from 'json-canvas-viewer/bridges';
-import  { marked } from 'marked';
+import { JSONCanvasViewer, Minimap, fetchCanvas, parser } from 'json-canvas-viewer';
 
-const config: webpack.Configuration = {
-    // ... your other config
-    plugins: [
-        // ... your other plugins
-        new JSONCanvasWebpackPlugin(marked),
-    ],
-};
+import canvas from 'path/to/your-canvas.json'; // if JSON import is supported
+const canvas = await fetchCanvas('path/to/your-canvas.json'); // if JSON import is not supported
 
-export default config;
+new JSONCanvasViewer({
+	container: document.body, // The element to attach the viewer to
+	canvas,
+    parser,
+});
 ```
 
-The setups above gives you:
+For convenience, later this document will use the Vite way in examples, adapt accordingly.
 
-- bundler resolution of `.canvas` file as modules
-- build-time parsing of `.canvas` files (less client-side overhead)
-- ease for later framework integration and prerendering
-
-### Instantiation
+### Vanilla JS/TS
 
 Instantiate the viewer:
 
 ```TypeScript
-import { JSONCanvasViewer } from 'json-canvas-viewer';
-import { Minimap } from 'json-canvas-viewer/modules';
+import { JSONCanvasViewer, Minimap } from 'json-canvas-viewer';
 import canvasData from 'path/to/your.canvas';
 
 new JSONCanvasViewer(
@@ -148,6 +112,56 @@ new JSONCanvasViewer(
 ```
 
 And the viewer should be right there, you can instantiate the viewer multiple times to render multiple canvases.
+
+### React
+
+The `@json-canvas-viewer/react` package exports a `JSONCanvasViewerComponent` component that wraps around the viewer. It additionally re-exports everything exported from the `json-canvas-viewer` package, so you don't need to install the `json-canvas-viewer` package.
+
+```tsx
+import { JSONCanvasViewerComponent } from '@json-canvas-viewer/react';
+import canvas from 'path/to/your.canvas';
+
+export function App() {
+  return <JSONCanvasViewerComponent canvas={canvas} />;
+}
+```
+
+The component exposes the viewer instance via component reference in the `viewer` field.
+
+### Preact
+
+We've also crafted a Preact component (`@json-canvas-viewer/preact`) that wraps around the viewer. It also re-exports everything exported from the `json-canvas-viewer` package. Its usage is almost the same as React.
+
+```tsx
+import { JSONCanvasViewerComponent } from '@json-canvas-viewer/react';
+import canvas from 'path/to/your.canvas';
+
+export function App() {
+  return <JSONCanvasViewerComponent canvas={canvas} />;
+}
+```
+
+The component exposes the viewer instance via component reference in the `viewer` field.
+
+### Vue 3
+
+Except for the `JSONCanvasViewerComponent`, this package additionally re-exports everything from the `json-canvas-viewer`, so you do not need to install the core package separately.
+
+```vue
+<script setup>
+import { JSONCanvasViewerComponent } from '@json-canvas-viewer/vue';
+import canvas from 'path/to/your.canvas';
+</script>
+
+<template>
+  <Suspense>
+    <!-- Suspense is crucial -->
+    <JSONCanvasViewerComponent :canvas="canvas" />
+  </Suspense>
+</template>
+```
+
+The component exposes the viewer instance via component reference in the `viewer` field.
 
 ---
 

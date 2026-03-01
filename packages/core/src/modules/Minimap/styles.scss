@@ -1,0 +1,58 @@
+.JSON-Canvas-Viewer > .JCV-minimap-container {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	display: flex;
+	pointer-events: none;
+	transition: transform 200ms;
+	&.JCV-collapsed {
+		transform: translateX(calc(100% - 30px));
+	}
+	.JCV-toggle-minimap {
+		margin: auto 10px 0 0;
+		pointer-events: auto;
+	}
+
+	.JCV-minimap {
+		position: relative;
+		pointer-events: none;
+		width: 200px;
+		height: 150px;
+		overflow: hidden;
+		border-radius: 12px;
+		transform-origin: 0 0;
+		.JCV-minimap-canvas {
+			width: 100%;
+			height: 100%;
+		}
+		.JCV-viewport-rectangle {
+			position: absolute;
+			top: 0;
+			left: 0;
+			pointer-events: none;
+			border-radius: 6px;
+			box-sizing: border-box;
+			border: 2px dashed var(--text);
+		}
+	}
+
+	.JCV-container {
+		@container (max-width: 768px) {
+			.JCV-minimap {
+				transform: scale(0.6);
+			}
+			.JCV-toggle-minimap {
+				transform: translateY(-60px);
+				.collapsed & {
+					transform: translateY(-60px) rotate(180deg);
+				}
+			}
+			.JCV-minimap-container {
+				transform: translateY(60px) translateX(80px);
+				&.JCV-collapsed {
+					transform: translateY(60px) translateX(calc(100% - 32px));
+				}
+			}
+		}
+	}
+}

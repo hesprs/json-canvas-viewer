@@ -143,12 +143,12 @@ import canvas from 'path/to/your.canvas';
 import Viewer from '@json-canvas-viewer/react'; // or '@json-canvas-viewer/preact'
 
 export default function component() {
-	return (
-		<Viewer
-			canvas={canvas}
-			text={(/* you can receive arguments here */) => <p>this is a React/Preact component</p>} // you can pass any component here
-		></Viewer>
-	);
+  return (
+    <Viewer
+      canvas={canvas}
+      text={(/* you can receive arguments here */) => <p>this is a React/Preact component</p>} // you can pass any component here
+    ></Viewer>
+  );
 }
 ```
 
@@ -161,13 +161,17 @@ import Viewer from '@json-canvas-viewer/vue';
 </script>
 
 <template>
-	<Suspense>
-		<Viewer class="canvas-viewer" :canvas="canvas">
-			<template #text="{ /* you can receive arguments here */ }">
-				<p>This is a Vue component</p>
-			</template>
-		</Viewer>
-	</Suspense>
+  <Suspense>
+    <Viewer class="canvas-viewer" :canvas="canvas">
+      <template
+        #text="{
+          /* you can receive arguments here */
+        }"
+      >
+        <p>This is a Vue component</p>
+      </template>
+    </Viewer>
+  </Suspense>
 </template>
 ```
 

@@ -2,7 +2,7 @@ import type { JSONCanvas, JSONCanvasFileNode, JSONCanvasNode, Parser } from 'sha
 
 export default async function (options: {
 	canvas: JSONCanvas;
-    attachments?: Record<string, string>;
+	attachments?: Record<string, string>;
 	attachmentDir?: string;
 	parser?: Parser;
 }) {
@@ -13,8 +13,8 @@ export default async function (options: {
 	nodes.forEach((node) => {
 		if (node.type === 'file' && !node.file.startsWith('http')) {
 			const file = node.file.split('/');
-            const name = file.pop() ?? '';
-            if (options.attachments?.[name]) node.file = options.attachments[name];
+			const name = file.pop() ?? '';
+			if (options.attachments?.[name]) node.file = options.attachments[name];
 			else node.file = basePath + name;
 		}
 	});

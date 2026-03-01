@@ -14,13 +14,12 @@
         },
 		"check": {
             "cache": true,
-			"dependsOn": []
+			"dependsOn": ["^build"]
 		},
 		"dev": {
-            "dependsOn": [],
+            "dependsOn": ["^build"],
 			"cache": false,
 			"persistent": true
-		},
-        "test": {}
+		}
 	}
 }

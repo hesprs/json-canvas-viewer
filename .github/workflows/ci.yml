@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   ci:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       contents: read
 
@@ -34,8 +34,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run checks
-        run: pnpm check
+      - name: Check docs formatting
+        run: pnpm check:docs
 
-      - name: Run test build
-        run: pnpm build
+      - name: Run test build and checks
+        run: pnpm build check

@@ -67,7 +67,7 @@ const prerender = isPrerendering
 	? await renderToString({
 			canvas: props.canvas ?? {},
 			attachmentDir: props.attachmentDir,
-            attachments: props.attachments,
+			attachments: props.attachments,
 			...props.options,
 		})
 	: '';

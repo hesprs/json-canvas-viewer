@@ -1,6 +1,6 @@
 {
 	"name": "vite-plugin-json-canvas",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Vite plugin for loading and parsing JSON Canvas (.canvas) files.",
 	"keywords": [
 		"json-canvas",

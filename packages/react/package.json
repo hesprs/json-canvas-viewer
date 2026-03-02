@@ -1,6 +1,6 @@
 {
 	"name": "@json-canvas-viewer/react",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "An extensible web-based viewer for JSON Canvas in the form of a React component, easy to embed into websites.",
 	"keywords": [
 		"frontend",

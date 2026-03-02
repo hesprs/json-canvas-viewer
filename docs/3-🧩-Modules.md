@@ -8,7 +8,7 @@ About how to write your own module, please refer to [Develop a Module](5-🧑‍
 
 We have built some extended modules for you to use:
 
-(**For those who are using `chimp` version, you can import the following modules by changing `json-canvas-viewer/modules` to the URL of CDN**)
+(**For those who are using `chimp` version, you can import the following modules by changing `json-canvas-viewer` to the URL of CDN**)
 
 ## Minimap
 

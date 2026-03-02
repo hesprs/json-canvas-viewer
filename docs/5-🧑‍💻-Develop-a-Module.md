@@ -16,6 +16,8 @@ Development of modules on the infrastructure of `json-canvas-viewer` requires an
 - `OverlayManager`: manages interactive canvas elements
 - `StyleManager`: manages and applies colors and styles across the viewer
 
+Those libraries are included in an export `internal`.
+
 ## Base Module
 
 All functions are achieved by modules, and all modules extend `BaseModule`.
@@ -95,7 +97,7 @@ class MyModule extends BaseModule<{}, Augmentation> {
 
 ## Dependency Injection and Utilities
 
-You can use dependency injection to inject services into your module, all service providers are available in `json-canvas-viewer` (and all framework builds), they are:
+You can use dependency injection to inject services into your module, all service providers are available in export `internal` from `json-canvas-viewer` (and all framework builds), they are:
 
 ```TypeScript
 Controller,
@@ -109,7 +111,9 @@ StyleManager
 Then you can access services in your module with `needle-di`. E.g., when you want to use `DataManager`:
 
 ```TypeScript
-import { BaseModule, type BaseArgs, DataManager } from "json-canvas-viewer";
+import { BaseModule, type BaseArgs, internal } from "json-canvas-viewer";
+
+const { DataManager } = internal;
 
 class MyModule extends BaseModule {
     private dataManager: DataManager;
@@ -127,8 +131,10 @@ The package also provides a `canvasUtils` export, which provides some useful fun
 The following example shows the code of module `DebugPanel`:
 
 ```TypeScript
-import { type BaseArgs, type BaseOptions, BaseModule, DataManager, Controller, canvasUtils } from 'json-canvas-viewer';
+import { type BaseArgs, type BaseOptions, BaseModule, internal, canvasUtils } from 'json-canvas-viewer';
 import style from './styles.scss?inline'; // access the styles as a string if you are using Vite
+
+const { DataManager, Controller } = internal;
 
 // for demonstration only, we create a useless option
 interface Options extends BaseOptions {

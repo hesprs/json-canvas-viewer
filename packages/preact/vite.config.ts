@@ -30,7 +30,7 @@ export default defineConfig({
 		},
 		lib: {
 			entry: p('src/index.ts'),
-            fileName: 'index',
+			fileName: 'index',
 			formats: ['es'],
 		},
 	},

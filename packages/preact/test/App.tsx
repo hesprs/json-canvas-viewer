@@ -6,7 +6,7 @@ export default function () {
 		<Viewer
 			className="canvas-viewer"
 			canvas={canvas}
-			text={() => <p>this is a React component</p>}
+			text={() => <p>this is a Preact component</p>}
 		></Viewer>
 	);
 }

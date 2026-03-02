@@ -26,13 +26,7 @@ export default defineConfig({
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: [
-				'json-canvas-viewer',
-				'preact',
-				'preact/hooks',
-				'preact/compat',
-				'json-canvas-viewer/modules',
-			],
+			external: ['json-canvas-viewer', 'preact', 'preact/hooks', 'preact/compat'],
 		},
 		lib: {
 			entry: p('src/index.ts'),

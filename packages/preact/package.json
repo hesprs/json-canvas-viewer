@@ -1,6 +1,6 @@
 {
 	"name": "@json-canvas-viewer/preact",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "An extensible web-based viewer for JSON Canvas in the form of a Preact component, easy to embed into websites.",
 	"keywords": [
 		"frontend",

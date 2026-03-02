@@ -26,7 +26,7 @@ export default defineConfig({
 		minify: 'terser',
 		sourcemap: true,
 		rollupOptions: {
-			external: ['json-canvas-viewer', 'vue', 'json-canvas-viewer/modules'],
+			external: ['json-canvas-viewer', 'vue'],
 		},
 		lib: {
 			entry: p('src/index.ts'),

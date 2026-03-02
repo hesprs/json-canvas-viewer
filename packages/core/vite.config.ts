@@ -41,10 +41,13 @@ const fullConfig = defineConfig({
 		sourcemap: true,
 		rollupOptions: {
 			external: Object.keys(pkg.dependencies),
+			output: {
+				preserveModules: true,
+			},
 		},
 		lib: {
 			entry: p('src/index.ts'),
-			fileName: 'index',
+			fileName: '[name]',
 			formats: ['es'],
 		},
 	},

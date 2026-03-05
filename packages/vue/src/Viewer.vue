@@ -1,15 +1,5 @@
 <script lang="ts" generic="T extends ModuleInputCtor" setup>
 import {
-	onMounted,
-	onUnmounted,
-	useTemplateRef,
-	watch,
-	getCurrentInstance,
-	type ComponentInternalInstance,
-	createApp,
-	reactive,
-} from 'vue';
-import {
 	JSONCanvasViewer,
 	type Options,
 	type JSONCanvasViewerInterface,
@@ -21,6 +11,16 @@ import {
 	type JSONCanvasFileNode,
 	type JSONCanvas,
 } from 'json-canvas-viewer';
+import {
+	onMounted,
+	onUnmounted,
+	useTemplateRef,
+	watch,
+	getCurrentInstance,
+	type ComponentInternalInstance,
+	createApp,
+	reactive,
+} from 'vue';
 
 export type ModuleInputCtor = Array<GeneralModuleCtor>;
 

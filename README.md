@@ -39,7 +39,7 @@
 <img align="center" src="./assets/preview.png" alt="preview image with light and dark theme">
 
 <p align="center">
-    <a href="https://hesprs.github.io/json-canvas-viewer">
+    <a href="https://hesprs.github.io/projects/json-canvas-viewer">
         <strong>Demo</strong>
     </a> • 
     <a href="https://github.com/hesprs/json-canvas-viewer/wiki">
@@ -67,6 +67,8 @@
   - [`Controls`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#controls) displays zoom in/out and fullscreen buttons
   - [`MistouchPreventer`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#mistouch-preventer) prevents the canvas from intercepting page scroll.
   - [`DebugPanel`](https://github.com/hesprs/json-canvas-viewer/wiki/3-%F0%9F%A7%A9-Modules#debug-panel) displays scale and position data.
+
+You can explore a demo canvas [here](https://hesprs.github.io/projects/json-canvas-viewer).
 
 ## 🧩 Integration
 

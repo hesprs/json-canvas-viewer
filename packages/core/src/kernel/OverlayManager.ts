@@ -10,7 +10,7 @@ import { type BaseArgs, BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
-import StyleManager, { type Color } from '$/StyleManager';
+import StyleManager, { type WithBorderWidth as Color } from '$/StyleManager';
 import utilities, { destroyError, type Hook } from '$/utilities';
 
 interface Options extends BaseOptions {

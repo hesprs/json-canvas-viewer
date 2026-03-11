@@ -11,13 +11,17 @@ import {
 	parseRgb,
 } from '@ahmedsemih/color-fns';
 
-export type Color = {
+interface Color {
 	border: string;
 	background: string;
 	active: string;
 	text: string;
 	card: string;
-};
+}
+
+export interface WithBorderWidth extends Color {
+	'border-width': string;
+}
 
 type ColorOptions = {
 	[K in keyof (StyleManager['definedColors']['light'] &
@@ -82,10 +86,10 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 
 	private colorCache: {
 		dark: {
-			[key: string]: Color;
+			[key: string]: WithBorderWidth;
 		};
 		light: {
-			[key: string]: Color;
+			[key: string]: WithBorderWidth;
 		};
 	} = {
 		dark: {},
@@ -175,8 +179,12 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 				this.definedColors[theme][colorIndex as keyof typeof this.definedColors.dark],
 			);
 		else color = this.hslProcessor(rgbToHsl(parseHex(colorIndex)));
-		this.colorCache[theme][colorIndex] = color;
-		return color;
+		const withBorderWidth: WithBorderWidth = {
+			...color,
+			'border-width': colorIndex === '0' ? '1px' : '2px',
+		};
+		this.colorCache[theme][colorIndex] = withBorderWidth;
+		return withBorderWidth;
 	};
 
 	getNamedColor = (name: keyof typeof this.namedColors.light) =>

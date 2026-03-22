@@ -25,11 +25,11 @@ You can use the returned string as the `innerHTML` of your container element. To
 
 During client-side code execution, pre-rendered HTML will be replaced with the actual interactive viewer.
 
-### In Vue
+### Vue
 
 The Vue component naturally supports prerendering. To enable prerendering, you can set the `isPrerendering` prop to true.
 
-### In React
+### React / Preact
 
 Due to the lack of support of asynchronous rendering in React, you need to manually render the component to a string in a place that supports asynchronous rendering. The React/Preact component supports a `prerenderHtml` prop that accepts a string for prerendering.
 

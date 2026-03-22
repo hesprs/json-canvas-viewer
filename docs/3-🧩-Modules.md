@@ -1,6 +1,6 @@
 ## How Modules Work
 
-JSON Canvas Viewer is built in a modular way, its core is simply the composition of several internal modules. This unlocks unlimited extensibility and DX by loose coupling.
+JSON Canvas Viewer is aligned with the standards of [SynthKernel](https://github.com/hesprs/synthkernel). Its core is simply the composition of several internal modules. This unlocks unlimited extensibility and DX by loose coupling.
 
 By using advanced type generics and runtime logic. A module can register options to the main interface, augment new properties and methods to the main and use other modules via dependency injection.
 

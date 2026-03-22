@@ -23,7 +23,6 @@ interface Augmentation {
 	onNodeLosesActive: OverlayManager['onNodeLosesActive'];
 }
 
-// TODO: add more formats
 const fileRegex = {
 	markdown: /\.(md|mdx|markdown|txt)$/i,
 	image: /\.(png|jpg|jpeg|gif|svg|webp|avif|bmp|ico|heic|heif)$/i,

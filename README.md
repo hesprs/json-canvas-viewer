@@ -25,7 +25,10 @@
         <img src="https://img.shields.io/badge/Snyk%20Security-Monitored-333333?logo=snyk&style=flat&labelColor=8A2BE2&logoColor=white" alt="Snyk Security">
     </a>
     <a href="https://github.com/hesprs/json-canvas-viewer/wiki">
-        <img src="https://img.shields.io/badge/Documentation-Ready-333333?labelColor=5C73E7&logo=github&logoColor=white" alt="Documentation">
+        <img src="https://img.shields.io/badge/Documentation-Ready-333333?logo=snyk&style=flat&labelColor=8A2BE2&logoColor=white" alt="Context7">
+    </a>
+    <a href="https://context7.com/hesprs/json-canvas-viewer">
+        <img src="https://img.shields.io/badge/7%EF%B8%8F%E2%83%A3%20Context7-Available-333333?labelColor=059669" alt="Documentation">
     </a>
     <img src="https://img.shields.io/badge/%F0%9F%96%90%EF%B8%8F%20Made%20by-Humans-333333?labelColor=25C260" alt="Made by Humans">
 </p>
@@ -140,6 +143,14 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 
 <!-- your requirements here -->
 ```
+
+JSON Canvas Viewer is also available on [Context7](https://context7.com/). If you're using it, you can skip the above prompt and simply ask the agent:
+
+```markdown
+Query `json-canvas-viewer` on Context7.
+```
+
+Or don't care about this at all, the agents are smart enough to search on Context7 themselves.
 
 ## 🤝 Get Involved
 

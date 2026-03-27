@@ -10,21 +10,17 @@
 	],
 	"type": "module",
 	"sideEffects": false,
-	"main": "./index.d.ts",
-	"module": "./index.d.ts",
-	"types": "./index.d.ts",
+	"main": "./index.ts",
+	"module": "./index.ts",
+	"types": "./index.ts",
 	"exports": {
 		".": {
-			"types": "./index.d.ts",
-			"import": "./index.d.ts"
+			"types": "./index.ts",
+			"import": "./index.ts"
 		},
 		"./build": {
 			"types": "./build.ts",
 			"import": "./build.ts"
-		},
-		"./module-type": {
-			"types": "./module-type.d.ts",
-			"import": "./module-type.d.ts"
 		},
 		"./demo.canvas": {
 			"import": "./demo.canvas"

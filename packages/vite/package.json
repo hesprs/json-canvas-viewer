@@ -34,16 +34,16 @@
 	},
 	"scripts": {
 		"lint": "oxlint --type-aware --fix && oxfmt",
-		"build": "vite build",
+		"build": "tsdown",
 		"check": "tsc && oxfmt --check && oxlint --type-aware"
 	},
 	"dependencies": {
-		"marked": "^17.0.3"
+		"marked": "^17.0.5"
 	},
 	"devDependencies": {
 		"@repo/shared": "workspace:*"
 	},
 	"peerDependencies": {
-		"vite": "^7.3.1"
+		"vite": "^8.0.3"
 	}
 }

@@ -1,6 +1,6 @@
 import type { JSONCanvas, JSONCanvasFileNode, JSONCanvasNode, Parser } from '@repo/shared';
 
-export default async function (options: {
+export default async function renderToString(options: {
 	canvas: JSONCanvas;
 	attachments?: Record<string, string>;
 	attachmentDir?: string;

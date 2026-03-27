@@ -1,14 +1,16 @@
+// Build core package using Vite instead Tsdown since it needs to handle `.scss?inline`
+
 import { createP } from '@repo/shared/build';
-import dts from 'unplugin-dts-bundle-generator/vite';
+import dts from 'unplugin-dts/vite';
 import { defineConfig } from 'vite';
 import canvas from 'vite-plugin-json-canvas';
-import pkg from './package.json';
+import pkg from './package.json' with { type: 'json' };
 
-const isBuilding = process.env.BUILD === 'chimp' ? 'chimp' : 'full';
+const mode = process.env.MODE;
+const isBuilding = mode === 'chimp' || mode === 'full' ? mode : 'dev';
 const p = createP(import.meta.url);
 
 const baseConfig = defineConfig({
-	root: 'test',
 	resolve: {
 		alias: {
 			'@': p('src'),
@@ -17,20 +19,19 @@ const baseConfig = defineConfig({
 	},
 });
 
+const devConfig = defineConfig({
+	...baseConfig,
+	plugins: [canvas()],
+	root: p('test'),
+});
+
 const fullConfig = defineConfig({
 	...baseConfig,
 	plugins: [
 		canvas(),
 		dts({
-			fileName: 'index.d.ts',
-			output: {
-				inlineDeclareExternals: true,
-				inlineDeclareGlobals: true,
-				noBanner: true,
-				exportReferencedTypes: false,
-			},
-			libraries: {
-				inlinedLibraries: ['@repo/shared'],
+			bundleTypes: {
+				bundledPackages: ['@repo/shared'],
 			},
 		}),
 	],
@@ -68,4 +69,8 @@ const chimpConfig = defineConfig({
 	},
 });
 
-export default isBuilding === 'chimp' ? chimpConfig : fullConfig;
+export default isBuilding === 'chimp'
+	? chimpConfig
+	: isBuilding === 'full'
+		? fullConfig
+		: devConfig;

@@ -1,14 +1,21 @@
-import { type JSONCanvas, type Parser } from '@repo/shared';
+import type { JSONCanvas, Parser } from '@repo/shared';
 import { marked } from 'marked';
-import '@repo/shared/module-type';
 
-export default function (parser: Parser = marked) {
+declare global {
+	// @ts-expect-error
+	module '*.canvas' {
+		const content: JSONCanvas;
+		export default content;
+	}
+}
+
+export default function vitePluginJsonCanvas(parser: Parser = marked) {
 	return {
 		name: 'vite-plugin-json-canvas',
 		async transform(code: string, id: string) {
 			if (!id.endsWith('.canvas')) return null;
 			try {
-				const json = JSON.parse(code) as JSONCanvas;
+				const json: JSONCanvas = JSON.parse(code);
 				if (json.nodes)
 					await Promise.all(
 						json.nodes.map(async (node) => {

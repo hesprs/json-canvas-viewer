@@ -44,7 +44,7 @@
 	},
 	"scripts": {
 		"lint": "oxlint --type-aware --fix && oxfmt",
-		"build": "vite build",
+		"build": "tsdown",
 		"check": "tsc && oxfmt --check && oxlint --type-aware",
 		"dev": "vite"
 	},

@@ -35,5 +35,5 @@ export const internal = {
 	StyleManager,
 };
 
-// must import env.d.ts, otherwise dts bundler will throw at '*.scss?inline'
+// must import env.d.ts, otherwise tsdown will throw at '*.scss?inline'
 import './env.d.ts';

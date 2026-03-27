@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"skipLibCheck": false
 	},
-	"include": ["build.ts", "index.d.ts", "module-type.d.ts"]
+	"include": ["build.ts", "index.ts", "module-type.d.ts"]
 }

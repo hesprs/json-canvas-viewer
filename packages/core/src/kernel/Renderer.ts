@@ -29,7 +29,7 @@ export default class Renderer extends BaseModule<Options> {
 	private zoomInOptimize: {
 		lastDrawnScale: number;
 		lastDrawnViewport: Box;
-		timeout: NodeJS.Timeout | null;
+		timeout: number | null;
 		lastCallTime: number;
 	} = {
 		lastDrawnScale: 0,
@@ -87,7 +87,7 @@ export default class Renderer extends BaseModule<Options> {
 		) {
 			const timeSinceLast = now - this.zoomInOptimize.lastCallTime;
 			if (timeSinceLast < CSS_ZOOM_REDRAW_INTERVAL) {
-				this.zoomInOptimize.timeout = setTimeout(() => {
+				this.zoomInOptimize.timeout = window.setTimeout(() => {
 					this.trueRedraw(offsetX, offsetY, scale, currentViewport);
 					this.zoomInOptimize.lastCallTime = now;
 					this.zoomInOptimize.timeout = null;

@@ -1,7 +1,4 @@
 {
 	"extends": "../../tsconfig.json",
-	"compilerOptions": {
-		"skipLibCheck": false
-	},
 	"include": ["build.ts", "index.ts", "module-type.d.ts"]
 }

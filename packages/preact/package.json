@@ -52,7 +52,7 @@
 		"json-canvas-viewer": "workspace:*"
 	},
 	"devDependencies": {
-		"@preact/preset-vite": "^2.10.3",
+		"@preact/preset-vite": "^2.10.5",
 		"@repo/shared": "workspace:*",
 		"vite-plugin-json-canvas": "workspace:*"
 	},

@@ -19,7 +19,7 @@
 		"turbo": "^2.9.3",
 		"typescript": "^6.0.2",
 		"unplugin-dts": "1.0.0-beta.6",
-		"vite": "^8.0.3"
+		"vite": "^8.0.5"
 	},
 	"engines": {
 		"node": ">=18"

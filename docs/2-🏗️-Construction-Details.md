@@ -28,7 +28,7 @@ interface Options {
         [Key: 'text' | 'image' | 'audio' | 'video' | 'link' | 'markdown']: (
             container: HTMLDivElement,
 	        content: string,
-	        node: N,
+	        node: JSONCanvasNode,
 	        onBeforeUnmount: Hook,
 	        onActive: Hook,
 	        onLoseActive: Hook,
@@ -51,22 +51,29 @@ interface Colors {
     shadow?: string;
     border?: string;
 }
+
+type Hook<Args extends GeneralArray = []> = {
+  (...args: Args): void;
+  subs: Set<(...args: Args) => void>;
+  subscribe(callback: (...args: Args) => void): void;
+  unsubscribe(callback: (...args: Args) => void): void;
+};
 ```
 
 **`container` (required)**: the HTML element to attach the viewer to.
 
-- This option is not needed and non-existent in React/Preact/Vue components.
+- This option is not needed and non-existent in React / Vue / Preact components.
 
 **`canvas`**: the canvas object.
 
 - Default: an empty canvas will be used.
-- **You can obtain it from `fetchCanvas` (in chimp version) or importing canvas file (in full version)**.
-- This option is elevated to a **component property** in the React/Vue/Preact components and supports reactive updates.
+- **You can obtain it from `fetchCanvas` export or importing canvas file (Vite only)**.
+- This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
 **`theme`**: choose light or dark theme.
 
 - Default: `light`
-- This option is elevated to a **component property** in the React/Vue/Preact components and supports reactive updates.
+- This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
 **`attachments`**: remaps attachment file names with their true locations.
 
@@ -75,7 +82,7 @@ interface Colors {
 - This option is to make you able to assign the attachment URLs individually.
 - Keys are the file names + extensions (e.g., `photo.png`), values are the true file paths (e.g. `./photos/photo.png`).
 - If using relative path, the path is relative to the file where instantiation happens.
-- This option is elevated to a **component property** in the React/Vue/Preact components and supports reactive updates.
+- This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
 **`attachmentDir`**: the directory of attachments.
 
@@ -83,7 +90,7 @@ interface Colors {
 - This option lets you specify the directory where attachments are stored, so that you don't need to manually remap them with `attachments`.
 - If using relative path, the path is relative to the file where instantiation happens.
 - **Please put all your attachments in this directory, wherever they originally are**. You can still control individual attachments' paths using `attachments`.
-- This option is elevated to a **component property** in the React/Vue/Preact components and supports reactive updates.
+- This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
 **`noAttachmentRelocation`**: disables attachment relocation
 
@@ -94,8 +101,8 @@ interface Colors {
 **`markdownParser`**: the markdown parser.
 
 - Default: `(markdown: string) => markdown`
-- In full version, this is unnecessary since the canvas is already parsed during build time.
-- In chimp version, it is required, and the chimp version exports a ready-to-use `parser`.
+- This is unnecessary if you are using Vite + `vite-plugin-json-canvas`.
+- The package exports a `parser` that uses Marked internally, which can be used for this purpose.
 
 **`extraCSS`**: extra CSS string to be injected into the viewer.
 
@@ -108,7 +115,7 @@ interface Colors {
 - Default: `false`
 - By default, the viewer is rendered in the global DOM. CSS isolation is achieved scoping CSS within a CSS class `.JSON-Canvas-Viewer`.
 
-**`loading`**: how to lead the canvas.
+**`loading`**: how to load the canvas.
 
 - Default: `normal`
 - `none`: disables loading, you need to manually call `JSONCanvasViewer.load()`.
@@ -131,7 +138,7 @@ interface Colors {
 
 **`nodeComponents`**: render nodes with your own components.
 
-- If any of the fields is defined, the default node will not be rendered. Instead, you can render your own node.
+- If any of the fields is defined, the default node will not be rendered, your own component will be rendered instead.
 - Each field is a function that passes the container element, the content and the node to you.
 - The content is parsed HTML string for `text` nodes, file path for other nodes.
 - With this option, you can render any component inside JSON Canvas Viewer. This option is elevated into five component properties `text`, `image`, `file`, `link` and `markdown` in React and Preact components. In Vue, they are present as five named and scoped slots. **Note that in component builds, you won't see the `container` and `onBeforeUnmount` arguments since they are handled internally and automatically.**
@@ -205,13 +212,6 @@ interface JSONCanvasViewer {
   onNodeActive: Hook<[JSONCanvasNode]>;
   onNodeLosesActive: Hook<[JSONCanvasNode]>;
 }
-
-export type Hook<Args extends GeneralArray = []> = {
-  (...args: Args): void;
-  subs: Set<(...args: Args) => void>;
-  subscribe(callback: (...args: Args) => void): void;
-  unsubscribe(callback: (...args: Args) => void): void;
-};
 ```
 
 ### Properties

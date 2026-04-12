@@ -2,7 +2,7 @@ import type { BaseOptions } from '$';
 import type { Box, NodeBounds } from '$/types';
 import type { JSONCanvas, JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
 import { type BaseArgs, BaseModule } from '$/BaseModule';
-import style from '$/styles.scss?inline';
+import style from '$/styles.scss?inline' with { type: 'css' };
 import utilities, { type Hook } from '$/utilities';
 
 const INITIAL_VIEWPORT_PADDING = 100;

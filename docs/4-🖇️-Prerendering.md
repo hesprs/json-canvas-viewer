@@ -20,8 +20,8 @@ You can use the returned string as the `innerHTML` of your container element. To
 
 **Disclaimer: for customizability, the viewer instance itself does not sanitize the output, but it is basically safe provided**:
 
-- if you are using the chimp version, the default `parser` output is sanitized by `DOMPurify`.
-- if you are using the full version, since you directly import the canvas file, the file is under your control, so there's no risk of XSS. Alternatively, you can include a sanitizer in your build-time parser.
+- The export `parser`'s output is sanitized by `DOMPurify`.
+- if you are using the Vite + `vite-plugin-json-canvas`, since you directly import the canvas file, the file is under your control, so there's no risk of XSS. Alternatively, you can include a sanitizer in your build-time parser.
 
 During client-side code execution, pre-rendered HTML will be replaced with the actual interactive viewer.
 

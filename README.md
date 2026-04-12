@@ -134,7 +134,7 @@ I'm using `json-canvas-viewer`, a library to view JSON Canvas (from Obsidian) in
 **Documentation**:
 
 [Readme](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/README.md)
-[Quick Start and React/Preact/Vue/Vite Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
+[Quick Start and React / Vue / Preact/Vite Integration](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/1-%F0%9F%9A%80-Quick-Start.md)
 [Construction Details](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/2-%F0%9F%8F%97%EF%B8%8F-Construction-Details.md)
 [Modules](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/3-%F0%9F%A7%A9-Modules.md)
 [Prerendering](https://github.com/hesprs/json-canvas-viewer/raw/refs/heads/main/docs/4-%F0%9F%96%87%EF%B8%8F-Prerendering.md)

@@ -1528,6 +1528,9 @@ packages:
   hookable@6.1.1:
     resolution: {integrity: sha512-U9LYDy1CwhMCnprUfeAZWZGByVbhd54hwepegYTK7Pi5NvqEj63ifz5z+xukznehT7i6NIZRu89Ay1AZmRsLEQ==}
 
+  hookable@6.1.1:
+    resolution: {integrity: sha512-U9LYDy1CwhMCnprUfeAZWZGByVbhd54hwepegYTK7Pi5NvqEj63ifz5z+xukznehT7i6NIZRu89Ay1AZmRsLEQ==}
+
   immutable@5.1.5:
     resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
 
@@ -1892,6 +1895,34 @@ packages:
       unplugin-unused:
         optional: true
 
+  tsdown@0.21.8:
+    resolution: {integrity: sha512-rHDIER4JU5owYTWptvyDk6pwfA5lCft1P+11HLGeF0uj0CB7vopFvr/E8QOaRmegeyHIEsu4+03j7ysvdgBAVA==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
+    peerDependencies:
+      '@arethetypeswrong/core': ^0.18.1
+      '@tsdown/css': 0.21.8
+      '@tsdown/exe': 0.21.8
+      '@vitejs/devtools': '*'
+      publint: ^0.3.0
+      typescript: ^5.0.0 || ^6.0.0
+      unplugin-unused: ^0.5.0
+    peerDependenciesMeta:
+      '@arethetypeswrong/core':
+        optional: true
+      '@tsdown/css':
+        optional: true
+      '@tsdown/exe':
+        optional: true
+      '@vitejs/devtools':
+        optional: true
+      publint:
+        optional: true
+      typescript:
+        optional: true
+      unplugin-unused:
+        optional: true
+
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -1922,6 +1953,16 @@ packages:
 
   unrun@0.2.37:
     resolution: {integrity: sha512-AA7vDuYsgeSYVzJMm16UKA+aXFKhy7nFqW9z5l7q44K4ppFWZAMqYS58ePRZbugMLPH0fwwMzD5A8nP0avxwZQ==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
+    peerDependencies:
+      synckit: ^0.11.11
+    peerDependenciesMeta:
+      synckit:
+        optional: true
+
+  unrun@0.2.35:
+    resolution: {integrity: sha512-nDP7mA4Fu5owDarQtLiiN3lq7tJZHFEAVIchnwP8U3wMeEkLoUNT37Hva85H05Rdw8CArpGmtY+lBjpk9fruVQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -2802,6 +2843,23 @@ snapshots:
       - jiti
       - tsx
       - yaml
+    optional: true
+
+  '@tsdown/css@0.21.7(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(postcss@8.5.9)(sass@1.98.0)(tsdown@0.21.8)':
+    dependencies:
+      lightningcss: 1.32.0
+      postcss-load-config: 6.0.1(postcss@8.5.9)
+      rolldown: 1.0.0-rc.12(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
+      tsdown: 0.21.8(@tsdown/css@0.21.7)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
+    optionalDependencies:
+      postcss: 8.5.9
+      sass: 1.98.0
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - jiti
+      - tsx
+      - yaml
 
   '@turbo/darwin-64@2.9.6':
     optional: true
@@ -3089,6 +3147,8 @@ snapshots:
       resolve-pkg-maps: 1.0.0
 
   he@1.2.0: {}
+
+  hookable@6.1.1: {}
 
   hookable@6.1.1: {}
 
@@ -3474,6 +3534,34 @@ snapshots:
       - synckit
       - vue-tsc
 
+  tsdown@0.21.8(@tsdown/css@0.21.7)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2)):
+    dependencies:
+      ansis: 4.2.0
+      cac: 7.0.0
+      defu: 6.1.7
+      empathic: 2.0.0
+      hookable: 6.1.1
+      import-without-cache: 0.2.5
+      obug: 2.1.1
+      picomatch: 4.0.4
+      rolldown: 1.0.0-rc.15
+      rolldown-plugin-dts: 0.23.2(rolldown@1.0.0-rc.15)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
+      semver: 7.7.4
+      tinyexec: 1.1.1
+      tinyglobby: 0.2.16
+      tree-kill: 1.2.2
+      unconfig-core: 7.5.0
+      unrun: 0.2.35
+    optionalDependencies:
+      '@tsdown/css': 0.21.7(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(postcss@8.5.9)(sass@1.98.0)(tsdown@0.21.8)
+      typescript: 6.0.2
+    transitivePeerDependencies:
+      - '@ts-macro/tsc'
+      - '@typescript/native-preview'
+      - oxc-resolver
+      - synckit
+      - vue-tsc
+
   tslib@2.8.1:
     optional: true
 
@@ -3527,6 +3615,10 @@ snapshots:
   unrun@0.2.37:
     dependencies:
       rolldown: 1.0.0-rc.17
+
+  unrun@0.2.35:
+    dependencies:
+      rolldown: 1.0.0-rc.15
 
   update-browserslist-db@1.2.3(browserslist@4.28.1):
     dependencies:

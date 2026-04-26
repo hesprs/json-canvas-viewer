@@ -14,9 +14,9 @@ import {
 	type Events,
 	WheelPanZoom,
 	Lubricator,
-	panPreset as pan,
-	zoomPreset as zoom,
-	dragPreset as drag,
+	lubricatorPanPreset as pan,
+	lubricatorZoomPreset as zoom,
+	lubricatorDragPreset as drag,
 	type PointeractInterface,
 } from 'pointeract';
 

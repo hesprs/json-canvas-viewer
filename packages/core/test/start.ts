@@ -1,12 +1,13 @@
-import { JSONCanvasViewer, type Options, Controls, Minimap, MistouchPreventer } from '@';
+import type { Options } from '@';
+import { JSONCanvasViewer, Controls, Minimap, MistouchPreventer } from '@';
 import canvas from '@repo/shared/demo.canvas';
 
 const options = {
-	container: document.body,
 	canvas,
-	theme: 'dark',
+	container: document.body,
 	loading: 'lazy',
 	preventMistouchAtStart: false,
+	theme: 'dark',
 } satisfies Options<[Controls, Minimap, MistouchPreventer]>;
 
-const _viewer = new JSONCanvasViewer(options, [Controls, Minimap, MistouchPreventer]);
+new JSONCanvasViewer(options, [Controls, Minimap, MistouchPreventer]);

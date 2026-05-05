@@ -1,4 +1,7 @@
 import type { BaseOptions } from '$';
+import type { BaseArgs } from '$/BaseModule';
+import type { WithBorderWidth as Color } from '$/StyleManager';
+import type { Hook } from '$/utilities';
 import type {
 	JSONCanvasFileNode,
 	JSONCanvasLinkNode,
@@ -6,38 +9,38 @@ import type {
 	JSONCanvasTextNode,
 	Parser,
 } from '@repo/shared';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
-import StyleManager, { type WithBorderWidth as Color } from '$/StyleManager';
-import utilities, { destroyError, type Hook } from '$/utilities';
+import StyleManager from '$/StyleManager';
+import { destroyError, makeHook } from '$/utilities';
 
-interface Options extends BaseOptions {
+type Options = {
 	parser?: Parser;
 	nodeComponents?: Partial<ComponentDict>;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	onNodeActive: OverlayManager['onNodeActive'];
 	onNodeLosesActive: OverlayManager['onNodeLosesActive'];
-}
+};
 
 const fileRegex = {
-	markdown: /\.(md|mdx|markdown|txt)$/i,
-	image: /\.(png|jpg|jpeg|gif|svg|webp|avif|bmp|ico|heic|heif)$/i,
 	audio: /\.(mp3|wav|ogg|opus|aac|m4a|flac)$/i,
+	image: /\.(png|jpg|jpeg|gif|svg|webp|avif|bmp|ico|heic|heif)$/i,
+	markdown: /\.(md|mdx|markdown|txt)$/i,
 	video: /\.(mp4|webm|ogv|mov|m3u8|mpd)$/i,
 };
 
-type NodeComponentHook<N extends JSONCanvasNode> = (
-	container: HTMLDivElement,
-	content: string,
-	node: N,
-	onBeforeUnmount: Hook,
-	onActive: Hook,
-	onLoseActive: Hook,
-) => void | Promise<void>;
+type NodeComponentHook<N extends JSONCanvasNode> = (options: {
+	container: HTMLDivElement;
+	content: string;
+	node: N;
+	onBeforeUnmount: Hook;
+	onActive: Hook;
+	onLoseActive: Hook;
+}) => void | Promise<void>;
 
 type CreateOverlayArgs =
 	| [ComponentNodeMap['text'], string, 'text']
@@ -63,23 +66,38 @@ type ComponentDict = {
 const supportedTypes = ['markdown', 'image', 'audio', 'video'] as const;
 
 export default class OverlayManager extends BaseModule<Options, Augmentation> {
-	private _overlaysLayer: HTMLDivElement | null = document.createElement('div');
+	private _overlaysLayer: HTMLDivElement | undefined = document.createElement('div');
 	private overlays: Record<string, HTMLDivElement> = {}; // { id: node } the overlays in viewport
-	private selectedId: string | null = null;
+	private selectedId: string | undefined;
 	private aborted = false;
-	private eventListeners: Record<string, Array<EventListener | null>> = {};
-	private DM: DataManager;
-	private SM: StyleManager;
-	private parse: Parser;
-	private componentDict: ComponentDict = {
-		text: (container, content) => {
-			container.classList.add('JCV-markdown-content');
-			const parsedContentWrapper = document.createElement('div');
-			parsedContentWrapper.innerHTML = content;
-			parsedContentWrapper.classList.add('JCV-parsed-content-wrapper');
-			container.appendChild(parsedContentWrapper);
+	private eventListeners: Record<string, Array<EventListener | undefined>> = {};
+	private readonly DM: DataManager;
+	private readonly SM: StyleManager;
+	private readonly parse: Parser;
+	private readonly componentDict: ComponentDict = {
+		audio: ({ container, content }) => {
+			const audio = document.createElement('audio');
+			audio.className = 'JCV-audio';
+			audio.src = content;
+			audio.controls = true;
+			container.appendChild(audio);
 		},
-		markdown: async (container, content) => {
+		image: ({ container, content }) => {
+			const img = document.createElement('img');
+			img.className = 'JCV-img';
+			img.src = content;
+			img.loading = 'lazy';
+			container.appendChild(img);
+		},
+		link: ({ container, content }) => {
+			const iframe = document.createElement('iframe');
+			iframe.src = content;
+			iframe.sandbox = 'allow-scripts allow-same-origin';
+			iframe.className = 'JCV-link-iframe';
+			iframe.loading = 'lazy';
+			container.appendChild(iframe);
+		},
+		markdown: async ({ container, content }) => {
 			container.classList.add('JCV-markdown-content');
 			const parsedContentWrapper = document.createElement('div');
 			parsedContentWrapper.textContent = 'Loading...';
@@ -89,38 +107,22 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 			try {
 				const response = await fetch(content);
 				const result = await response.text();
-				const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-				if (frontmatterMatch) parsedContent = await this.parse(frontmatterMatch[2]);
-				else parsedContent = await this.parse(result);
-			} catch (err) {
-				console.error('[JSON Canvas Viewer] Failed to load markdown:', err);
+				const frontmatterMatch = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(result);
+				parsedContent = await this.parse(frontmatterMatch ? frontmatterMatch[2] : result);
+			} catch (error) {
+				console.error('[JSON Canvas Viewer] Failed to load markdown:', error);
 				parsedContent = 'Failed to load content.';
 			}
 			parsedContentWrapper.innerHTML = parsedContent;
 		},
-		link: (container, content) => {
-			const iframe = document.createElement('iframe');
-			iframe.src = content;
-			iframe.sandbox = 'allow-scripts allow-same-origin';
-			iframe.className = 'JCV-link-iframe';
-			iframe.loading = 'lazy';
-			container.appendChild(iframe);
+		text: ({ container, content }) => {
+			container.classList.add('JCV-markdown-content');
+			const parsedContentWrapper = document.createElement('div');
+			parsedContentWrapper.innerHTML = content;
+			parsedContentWrapper.classList.add('JCV-parsed-content-wrapper');
+			container.appendChild(parsedContentWrapper);
 		},
-		audio: (container, content) => {
-			const audio = document.createElement('audio');
-			audio.className = 'JCV-audio';
-			audio.src = content;
-			audio.controls = true;
-			container.appendChild(audio);
-		},
-		image: (container, content) => {
-			const img = document.createElement('img');
-			img.className = 'JCV-img';
-			img.src = content;
-			img.loading = 'lazy';
-			container.appendChild(img);
-		},
-		video: (container, content) => {
+		video: ({ container, content }) => {
 			const video = document.createElement('video');
 			video.className = 'JCV-video';
 			video.src = content;
@@ -134,14 +136,14 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		return this._overlaysLayer;
 	}
 
-	onInteractionStart = utilities.makeHook();
-	onInteractionEnd = utilities.makeHook();
-	onNodeActive = utilities.makeHook<[JSONCanvasNode]>();
-	onNodeLosesActive = utilities.makeHook<[JSONCanvasNode]>();
+	onInteractionStart = makeHook();
+	onInteractionEnd = makeHook();
+	onNodeActive = makeHook<[JSONCanvasNode]>();
+	onNodeLosesActive = makeHook<[JSONCanvasNode]>();
 
 	constructor(...args: BaseArgs) {
 		super(...args);
-		this.parse = this.options.parser || ((markdown: string) => markdown);
+		this.parse = this.options.parser ?? ((markdown: string) => markdown);
 		this.DM = this.container.get(DataManager);
 		this.SM = this.container.get(StyleManager);
 		const controller = this.container.get(Controller);
@@ -165,17 +167,17 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		this.onDispose(this.dispose);
 	}
 
-	private start = () => {
+	private readonly start = () => {
 		this.container.get(InteractionHandler).onClick.subscribe(this.select);
 		this.renderOverlays();
 	};
 
-	private restart = () => {
+	private readonly restart = () => {
 		this.clearOverlays();
 		this.renderOverlays();
 	};
 
-	private renderOverlays = () => {
+	private readonly renderOverlays = () => {
 		const overlayMatcher = async (node: JSONCanvasNode) => {
 			switch (node.type) {
 				case 'text': {
@@ -201,7 +203,7 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		});
 	};
 
-	private themeChanged = () => {
+	private readonly themeChanged = () => {
 		Object.values(this.overlays).forEach((overlay) => {
 			const node = this.DM.data.nodeMap[overlay.id].ref;
 			const color = this.SM.getColor(node.color);
@@ -209,10 +211,10 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		});
 	};
 
-	private select = (id: string | null) => {
+	private readonly select = (id?: string) => {
 		const previousId = this.selectedId;
-		const previous = !previousId ? null : this.overlays[previousId];
-		const current = !id ? null : this.overlays[id];
+		const previous = !previousId ? undefined : this.overlays[previousId];
+		const current = !id ? undefined : this.overlays[id];
 		if (previous && previousId) {
 			previous.classList.remove('JCV-active');
 			const nodeItem = this.DM.data.nodeMap[previousId];
@@ -229,12 +231,12 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		this.selectedId = id;
 	};
 
-	private updateOverlays = () => {
+	private readonly updateOverlays = () => {
 		const data = this.DM.data;
 		this.overlaysLayer.style.transform = `translate(${data.offsetX}px, ${data.offsetY}px) scale(${data.scale})`;
 	};
 
-	private createOverlay = (...args: CreateOverlayArgs) => {
+	private readonly createOverlay = (...args: CreateOverlayArgs) => {
 		if (this.aborted) return;
 		const node = args[0];
 		let element = this.overlays[node.id];
@@ -250,7 +252,7 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		}
 	};
 
-	private constructOverlay = (...args: CreateOverlayArgs) => {
+	private readonly constructOverlay = (...args: CreateOverlayArgs) => {
 		const node = args[0];
 		const overlay = document.createElement('div');
 		overlay.classList.add('JCV-overlay-container');
@@ -267,18 +269,18 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		overlay.appendChild(overlayBorder);
 		const nodeItem = this.DM.data.nodeMap[node.id];
 
-		nodeItem.onActive = utilities.makeHook();
-		nodeItem.onLoseActive = utilities.makeHook();
-		nodeItem.onBeforeUnmount = utilities.makeHook();
+		nodeItem.onActive = makeHook();
+		nodeItem.onLoseActive = makeHook();
+		nodeItem.onBeforeUnmount = makeHook();
 
-		void this.componentDict[args[2]](
-			contentWrapper,
-			args[1],
-			args[0] as never,
-			nodeItem.onBeforeUnmount,
-			nodeItem.onActive,
-			nodeItem.onLoseActive,
-		);
+		void this.componentDict[args[2]]({
+			container: contentWrapper,
+			content: args[1],
+			node: args[0] as never,
+			onActive: nodeItem.onActive,
+			onBeforeUnmount: nodeItem.onBeforeUnmount,
+			onLoseActive: nodeItem.onLoseActive,
+		});
 		const onStart = () => {
 			if (node.id === this.selectedId) this.onInteractionStart();
 		};
@@ -293,13 +295,13 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		return overlay;
 	};
 
-	private setOverlayColor = (overlay: HTMLDivElement, color: Color) => {
+	private readonly setOverlayColor = (overlay: HTMLDivElement, color: Color) => {
 		Object.entries(color).forEach(([key, value]) => {
 			overlay.style.setProperty(`--overlay-${key}`, value);
 		});
 	};
 
-	private clearOverlays = () => {
+	private readonly clearOverlays = () => {
 		Object.entries(this.overlays).forEach(([id, overlay]) => {
 			this.DM.data.nodeMap[id].onBeforeUnmount?.();
 			if (this.eventListeners[id]) {
@@ -310,18 +312,18 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 				overlay.removeEventListener('pointerleave', onEnd);
 				overlay.removeEventListener('touchstart', onStart);
 				overlay.removeEventListener('touchend', onEnd);
-				this.eventListeners[id][0] = null;
-				this.eventListeners[id][1] = null;
+				this.eventListeners[id][0] = undefined;
+				this.eventListeners[id][1] = undefined;
 			}
 			overlay.remove();
 			delete this.overlays[id];
 		});
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		this.aborted = true;
 		this.clearOverlays();
 		this.overlaysLayer.remove();
-		this._overlaysLayer = null;
+		this._overlaysLayer = undefined;
 	};
 }

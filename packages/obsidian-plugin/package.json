@@ -1,0 +1,15 @@
+{
+	"name": "canvas-export-svg",
+	"version": "0.0.1",
+	"private": true,
+	"description": "Obsidian plugin for exporting JSON Canvas (.canvas) files as SVG.",
+	"type": "module",
+	"scripts": {
+		"lint": "oxlint --type-aware --fix && oxfmt",
+		"build": "tsdown",
+		"check": "tsc && oxfmt --check && oxlint --type-aware"
+	},
+	"dependencies": {
+		"obsidian": "latest"
+	}
+}

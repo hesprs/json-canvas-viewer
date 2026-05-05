@@ -1,44 +1,43 @@
 import type { BaseOptions } from '$';
+import type { BaseArgs } from '$/BaseModule';
 import type { Coordinates } from '$/types';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import type { Options as PointeractOptions, Events, PointeractInterface } from 'pointeract';
+import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import OverlayManager from '$/OverlayManager';
-import utilities from '$/utilities';
+import { makeHook } from '$/utilities';
 import {
 	Click,
 	Drag,
 	MultitouchPanZoom,
 	Pointeract,
-	type Options as PointeractOptions,
 	PreventDefault,
-	type Events,
 	WheelPanZoom,
 	Lubricator,
 	lubricatorPanPreset as pan,
 	lubricatorZoomPreset as zoom,
 	lubricatorDragPreset as drag,
-	type PointeractInterface,
 } from 'pointeract';
 
 type LoadedModules = [Click, Drag, WheelPanZoom, PreventDefault, MultitouchPanZoom, Lubricator];
 
 type LoadedEvents = Events<LoadedModules>;
 
-interface Options extends BaseOptions {
+type Options = {
 	pointeract?: PointeractOptions<LoadedModules>;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	pan: InteractionHandler['pan'];
 	panToCoords: InteractionHandler['panToCoords'];
 	zoom: InteractionHandler['zoom'];
 	zoomToScale: InteractionHandler['zoomToScale'];
-}
+};
 
 export default class InteractionHandler extends BaseModule<Options, Augmentation> {
 	pointeract: PointeractInterface<LoadedModules>;
-	private DM: DataManager;
-	onClick = utilities.makeHook<[string | null]>();
+	private readonly DM: DataManager;
+	onClick = makeHook<[string | undefined]>();
 
 	constructor(...args: BaseArgs) {
 		super(...args);
@@ -46,7 +45,7 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 		const options = Object.assign(this.options.pointeract ?? {}, {
 			coordinateOutput: 'relative',
 			element: this.DM.data.container,
-			lubricator: { pan, zoom, drag },
+			lubricator: { drag, pan, zoom },
 		} satisfies PointeractOptions<LoadedModules>);
 		this.pointeract = new Pointeract(options, [
 			Click,
@@ -70,7 +69,7 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 		this.onDispose(this.dispose);
 	}
 
-	private start = () => {
+	private readonly start = () => {
 		this.pointeract
 			.on('pan', this.onPan)
 			.on('drag', this.onPan)
@@ -79,20 +78,20 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 			.start();
 	};
 
-	private startInteract = () => {
+	private readonly startInteract = () => {
 		this.pointeract.start();
 	};
-	private stopInteract = () => {
+	private readonly stopInteract = () => {
 		this.pointeract.stop();
 	};
 
-	private onPan = (event: LoadedEvents['pan']) => {
+	private readonly onPan = (event: LoadedEvents['pan']) => {
 		this.truePan({
 			x: event.deltaX,
 			y: event.deltaY,
 		});
 	};
-	private onZoom = (event: LoadedEvents['zoom']) => {
+	private readonly onZoom = (event: LoadedEvents['zoom']) => {
 		this.trueZoom(event.factor, event);
 	};
 
@@ -107,8 +106,8 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 		this.DM.data.scale = newScale;
 	};
 	truePan = ({ x, y }: Coordinates) => {
-		this.DM.data.offsetX = this.DM.data.offsetX + x;
-		this.DM.data.offsetY = this.DM.data.offsetY + y;
+		this.DM.data.offsetX += x;
+		this.DM.data.offsetY += y;
 	};
 
 	zoom = (_factor: number, origin: Coordinates) => {
@@ -129,33 +128,33 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 	};
 
 	// Container Coords to Canvas Coords relative to the top-left corner of the scaled canvas
-	private C2C = ({ x: containerX, y: containerY }: Coordinates) => ({
+	private readonly C2C = ({ x: containerX, y: containerY }: Coordinates) => ({
 		x: containerX - this.DM.data.offsetX,
 		y: containerY - this.DM.data.offsetY,
 	});
 
-	private onTrueClick = (e: LoadedEvents['trueClick']) => {
-		const element = e.target as HTMLElement | null;
+	private readonly onTrueClick = (e: LoadedEvents['trueClick']) => {
+		const element = e.target as HTMLElement | undefined;
 		if (this.isUIControl(element)) return;
 		const node = this.findNodeId(element);
 		this.onClick(node);
 	};
 
-	private isUIControl = (target: HTMLElement | null) => {
+	private readonly isUIControl = (target?: HTMLElement) => {
 		if (!target) return false;
 		return target.closest('.controls') || target.closest('button') || target.closest('input');
 	};
 
-	private findNodeId = (element: HTMLElement | null) => {
-		if (!element) return null;
+	private readonly findNodeId = (element?: HTMLElement) => {
+		if (!element) return;
 		let ele = element;
 		while (!ele.id || ele.id === '') {
 			if (!ele.parentElement) break;
 			ele = ele.parentElement;
 		}
-		if (ele.id === 'overlays' || !ele.id || ele.id === '') return null;
+		if (ele.id === 'overlays' || !ele.id || ele.id === '') return;
 		return ele.id;
 	};
 
-	private dispose = () => this.pointeract.dispose();
+	private readonly dispose = () => this.pointeract.dispose();
 }

@@ -95,7 +95,7 @@ class MyModule extends BaseModule<{}, Augmentation> {
 
 **You should always ensure that `this.augment()` is called in the constructor and implements 100% the same as the type parameter.**
 
-## Dependency Injection and Utilities
+## Dependency Injection
 
 You can use dependency injection to inject services into your module, all service providers are available in export `internal` from `json-canvas-viewer` (and all framework builds), they are:
 
@@ -124,15 +124,13 @@ class MyModule extends BaseModule {
 }
 ```
 
-The package also provides a `canvasUtils` export, which provides some useful functions.
-
 ## Full Example
 
 The following example shows the code of module `DebugPanel`:
 
 ```TypeScript
-import { type BaseArgs, type BaseOptions, BaseModule, internal, canvasUtils } from 'json-canvas-viewer';
-import style from './styles.scss?inline'; // access the styles as a string if you are using Vite
+import { type BaseArgs, type BaseOptions, BaseModule, internal } from 'json-canvas-viewer';
+import 'path/to/your/styles.css'; // access the styles
 
 const { DataManager, Controller } = internal;
 
@@ -146,7 +144,7 @@ interface Augmentation {
 }
 
 export default class DebugPanel extends BaseModule<Options, Augmentation> {
-	private _debugPanel: HTMLDivElement | null = null;
+	private _debugPanel: HTMLDivElement | undefined;
 	private DM: DataManager;
 
 	private get debugPanel() { // getter to handle nullable property
@@ -162,7 +160,6 @@ export default class DebugPanel extends BaseModule<Options, Augmentation> {
 		this._debugPanel = document.createElement('div');
 		this._debugPanel.className = 'debug-panel';
 		const HTMLContainer = this.DM.data.container;
-		canvasUtils.applyStyles(HTMLContainer, style); // access utilities
 		HTMLContainer.appendChild(this._debugPanel);
 
 		if (this.options.report) console.log('DebugPanel initialized.'); // access custom options
@@ -171,7 +168,10 @@ export default class DebugPanel extends BaseModule<Options, Augmentation> {
 	}
 
 	private update = () => {
-		const round = canvasUtils.round;
+		const round = (num: number, dp: number) => {
+            const factor = 10 ** digits;
+            return Math.round(roundedNum * factor) / factor;
+		};
 		const data = this.DM.data;
 		this.debugPanel.innerHTML = `<p>Scale: ${round(data.scale, 3)}</p><p>Offset: ${round(data.offsetX, 1)}, ${round(data.offsetY, 1)}</p>`;
 	};
@@ -179,7 +179,7 @@ export default class DebugPanel extends BaseModule<Options, Augmentation> {
     // clean up to prevent memory leaks
 	private dispose = () => {
 		this.debugPanel.remove();
-		this._debugPanel = null;
+		this._debugPanel = undefined;
 	};
 }
 ```

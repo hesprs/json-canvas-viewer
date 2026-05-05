@@ -1,49 +1,51 @@
 import type { BaseOptions } from '$';
+import type { BaseArgs } from '$/BaseModule';
 import type { Box, NodeBounds } from '$/types';
+import type { Hook } from '$/utilities';
 import type { JSONCanvas, JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import style from '$/styles.scss?inline';
-import utilities, { type Hook } from '$/utilities';
+import { applyStyles, getAnchorCoord, makeHook } from '$/utilities';
 
 const INITIAL_VIEWPORT_PADDING = 100;
 const NODE_LABEL_MARGIN = 40;
 const EDGE_BOX_HEURISTICS_BASE_MARGIN = 10;
 
-interface Options extends BaseOptions {
+type Options = {
 	shadowed?: boolean;
 	canvas?: JSONCanvas;
 	attachmentDir?: string;
 	extraCSS?: string;
 	attachments?: Record<string, string>;
 	noAttachmentRelocation?: boolean;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	resetView: DataManager['resetView'];
 	toggleFullscreen: DataManager['toggleFullscreen'];
 	onToggleFullscreen: DataManager['onToggleFullscreen'];
-}
+};
 
-export interface NodeItem {
+export type NodeItem = {
 	ref: JSONCanvasNode;
 	box: Box;
 	fileName?: string;
 	onBeforeUnmount?: Hook;
 	onActive?: Hook;
 	onLoseActive?: Hook;
-}
+};
 
-export interface EdgeItem {
+export type EdgeItem = {
 	ref: JSONCanvasEdge;
 	box: Box;
 	controlPoints?: Array<number>;
-}
+};
 
 type NodeMap = Record<string, NodeItem>;
 type EdgeMap = Record<string, EdgeItem>;
 
 export default class DataManager extends BaseModule<Options, Augmentation> {
-	onToggleFullscreen = utilities.makeHook<['enter' | 'exit']>();
+	onToggleFullscreen = makeHook<['enter' | 'exit']>();
 
 	data: {
 		canvasData: Required<JSONCanvas>;
@@ -56,27 +58,27 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		scale: number;
 		container: HTMLDivElement;
 	} = {
-		canvasData: {
-			nodes: [],
-			edges: [],
-		},
-		nodeMap: {},
-		edgeMap: {},
 		canvasBaseDir: './',
+		canvasData: {
+			edges: [],
+			nodes: [],
+		},
+		container: document.createElement('div'),
+		edgeMap: {},
 		nodeBounds: {
+			centerX: 0,
+			centerY: 0,
+			height: 0,
 			maxX: 0,
 			maxY: 0,
 			minX: 0,
 			minY: 0,
 			width: 0,
-			height: 0,
-			centerX: 0,
-			centerY: 0,
 		},
+		nodeMap: {},
 		offsetX: 0,
 		offsetY: 0,
 		scale: 1,
-		container: document.createElement('div'),
 	};
 
 	constructor(...args: BaseArgs) {
@@ -89,36 +91,34 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 			? viewerContainer.attachShadow({ mode: 'open' })
 			: viewerContainer;
 
-		utilities.applyStyles(realContainer, style + this.options.extraCSS);
+		applyStyles(realContainer, style + this.options.extraCSS);
 
 		this.data.container.classList.add('JSON-Canvas-Viewer');
 		realContainer.appendChild(this.data.container);
 
 		this.augment({
+			onToggleFullscreen: this.onToggleFullscreen,
 			resetView: this.resetView,
 			toggleFullscreen: this.toggleFullscreen,
-			onToggleFullscreen: this.onToggleFullscreen,
 		});
 		this.onStart(this.start);
 		this.onRestart(this.start);
 		this.onDispose(this.dispose);
 	}
 
-	private start = () => {
-		const canvasData = Object.assign(
-			{
-				nodes: [],
-				edges: [],
-			},
-			this.options.canvas,
-		);
+	private readonly start = () => {
+		const canvasData = {
+			edges: [],
+			nodes: [],
+			...this.options.canvas,
+		};
 
 		Object.assign(this.data, {
-			canvasData: canvasData,
-			nodeMap: {},
-			edgeMap: {},
 			canvasBaseDir: this.processBaseDir(this.options.attachmentDir),
+			canvasData,
+			edgeMap: {},
 			nodeBounds: this.calculateNodeBounds(canvasData),
+			nodeMap: {},
 			offsetX: 0,
 			offsetY: 0,
 			scale: 1,
@@ -126,12 +126,12 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 
 		this.data.canvasData.nodes.forEach((node) => {
 			const item: NodeItem = {
-				ref: node,
 				box: this.getNodeBox(node),
+				ref: node,
 			};
 			this.data.nodeMap[node.id] = item;
 
-			// re-process attachments
+			// Re-process attachments
 			if (node.type === 'file') {
 				const path = node.file.split('/');
 				const fileName = path.pop() ?? '';
@@ -146,43 +146,40 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		});
 		this.data.canvasData.edges.forEach((edge) => {
 			this.data.edgeMap[edge.id] = {
-				ref: edge,
 				box: this.getEdgeBox(edge),
+				ref: edge,
 			};
 		});
 		this.resetView();
 	};
 
-	private processBaseDir = (baseDir: string | undefined) => {
+	private readonly processBaseDir = (baseDir: string | undefined) => {
 		if (!baseDir) return './';
 		const lastChar = baseDir?.slice(-1);
 		if (lastChar === '/') return baseDir;
 		return `${baseDir}/`;
 	};
 
-	private getNodeBox = (node: JSONCanvasNode) => {
-		return {
-			left: node.x,
-			top:
-				node.type === 'file' || node.type === 'group' ? node.y - NODE_LABEL_MARGIN : node.y,
-			right: node.width + node.x,
-			bottom: node.y + node.height,
-		};
-	};
+	private readonly getNodeBox = (node: JSONCanvasNode) => ({
+		bottom: node.y + node.height,
+		left: node.x,
+		right: node.width + node.x,
+		top: node.type === 'file' || node.type === 'group' ? node.y - NODE_LABEL_MARGIN : node.y,
+	});
 
-	private getEdgeBox = (edge: JSONCanvasEdge) => {
+	private readonly getEdgeBox = (edge: JSONCanvasEdge) => {
 		const nodes = this.data.nodeMap;
 		const from = nodes[edge.fromNode].ref;
 		const to = nodes[edge.toNode].ref;
-		const fromAnchor = utilities.getAnchorCoord(from, edge.fromSide);
-		const toAnchor = utilities.getAnchorCoord(to, edge.toSide);
+		const fromAnchor = getAnchorCoord(from, edge.fromSide);
+		const toAnchor = getAnchorCoord(to, edge.toSide);
 		const strictBox = {
-			left: Math.min(fromAnchor.x, toAnchor.x),
-			top: Math.min(fromAnchor.y, toAnchor.y),
-			right: Math.max(fromAnchor.x, toAnchor.x),
 			bottom: Math.max(fromAnchor.y, toAnchor.y),
+			left: Math.min(fromAnchor.x, toAnchor.x),
+			right: Math.max(fromAnchor.x, toAnchor.x),
+			top: Math.min(fromAnchor.y, toAnchor.y),
 		};
-		// edge size heuristics
+		// Edge size heuristics
 		const width = strictBox.right - strictBox.left;
 		const height = strictBox.bottom - strictBox.top;
 		const _min = Math.min(width, height);
@@ -191,10 +188,10 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		const edgeFactor = Math.log2(max / min);
 		const margin = edgeFactor * EDGE_BOX_HEURISTICS_BASE_MARGIN;
 		return {
-			left: strictBox.left - margin,
-			top: strictBox.top - margin,
-			right: strictBox.right + margin,
 			bottom: strictBox.bottom + margin,
+			left: strictBox.left - margin,
+			right: strictBox.right + margin,
+			top: strictBox.top - margin,
 		};
 	};
 
@@ -213,7 +210,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		const height = maxY - minY;
 		const centerX = minX + width / 2;
 		const centerY = minY + height / 2;
-		return { minX, minY, maxX, maxY, width, height, centerX, centerY };
+		return { centerX, centerY, height, maxX, maxY, minX, minY, width };
 	}
 	toggleFullscreen = async (option?: 'enter' | 'exit') => {
 		if (!document.fullscreenElement && (!option || option === 'enter')) {
@@ -239,9 +236,9 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		const contentCenterX = bounds.centerX;
 		const contentCenterY = bounds.centerY;
 		const initialView = {
-			scale: newScale,
 			offsetX: viewWidth / 2 - contentCenterX * newScale,
 			offsetY: viewHeight / 2 - contentCenterY * newScale,
+			scale: newScale,
 		};
 		this.data.offsetX = initialView.offsetX;
 		this.data.offsetY = initialView.offsetY;
@@ -251,14 +248,14 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 	middleViewer = () => {
 		const container = this.data.container;
 		return {
+			height: container.clientHeight,
+			width: container.clientWidth,
 			x: container.clientWidth / 2,
 			y: container.clientHeight / 2,
-			width: container.clientWidth,
-			height: container.clientHeight,
 		};
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		this.data.container.remove();
 	};
 }

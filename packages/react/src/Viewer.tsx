@@ -1,14 +1,15 @@
-import {
-	JSONCanvasViewer,
-	type Options,
-	type JSONCanvasViewerInterface,
-	type GeneralModuleCtor,
-	type Hook,
-	type JSONCanvasTextNode,
-	type JSONCanvasLinkNode,
-	type JSONCanvasFileNode,
-	type JSONCanvas,
+import type {
+	Options,
+	JSONCanvasViewerInterface,
+	GeneralModuleCtor,
+	Hook,
+	JSONCanvasTextNode,
+	JSONCanvasLinkNode,
+	JSONCanvasFileNode,
+	JSONCanvas,
 } from 'json-canvas-viewer';
+import type { CSSProperties, ReactNode } from 'react';
+import { JSONCanvasViewer } from 'json-canvas-viewer';
 import React, {
 	forwardRef,
 	useEffect,
@@ -17,34 +18,32 @@ import React, {
 	useMemo,
 	useRef,
 	useState,
-	type CSSProperties,
-	type ReactNode,
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 
 type ModuleInputCtor = Array<GeneralModuleCtor>;
 
-interface TextSlotProps {
+type TextSlotProps = {
 	content: string;
 	node: JSONCanvasTextNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
-interface LinkSlotProps {
+};
+type LinkSlotProps = {
 	content: string;
 	node: JSONCanvasLinkNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
-interface FileSlotProps {
+};
+type FileSlotProps = {
 	content: string;
 	node: JSONCanvasFileNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
+};
 
 type ViewerHandle<T extends ModuleInputCtor> = {
-	viewer: JSONCanvasViewerInterface<T> | null;
+	viewer?: JSONCanvasViewerInterface<T>;
 };
 
 type ViewerProps<T extends ModuleInputCtor> = {
@@ -81,22 +80,38 @@ function useLatest<T>(value: T) {
 }
 
 export default forwardRef(function ViewerInner<T extends ModuleInputCtor>(
-	props: ViewerProps<T>,
+	{
+		attachmentDir,
+		attachments,
+		canvas,
+		theme,
+		modules,
+		className,
+		style,
+		prerenderHtml,
+		options = {} as ViewerProps<T>['options'],
+		text,
+		markdown,
+		image,
+		video,
+		audio,
+		link,
+	}: ViewerProps<T>,
 	ref: React.ForwardedRef<ViewerHandle<T>>,
 ) {
-	const containerRef = useRef<HTMLElement | null>(null);
-	const viewerRef = useRef<JSONCanvasViewerInterface<T> | null>(null);
-	const textRef = useLatest(props.text);
-	const markdownRef = useLatest(props.markdown);
-	const imageRef = useLatest(props.image);
-	const videoRef = useLatest(props.video);
-	const audioRef = useLatest(props.audio);
-	const linkRef = useLatest(props.link);
+	const containerRef = useRef<HTMLElement | undefined>(undefined);
+	const viewerRef = useRef<JSONCanvasViewerInterface<T> | undefined>(undefined);
+	const textRef = useLatest(text);
+	const markdownRef = useLatest(markdown);
+	const imageRef = useLatest(image);
+	const videoRef = useLatest(video);
+	const audioRef = useLatest(audio);
+	const linkRef = useLatest(link);
 	const portalsByIdRef = useRef(new Map<string, PortalEntry>());
 	const [, forceRender] = useState(0);
 
 	function upsertPortal(id: string, container: HTMLDivElement, element: ReactNode) {
-		portalsByIdRef.current.set(id, { id, container, element });
+		portalsByIdRef.current.set(id, { container, element, id });
 		flushSync(() => forceRender((x) => x + 1));
 	}
 	function removePortalById(id: string) {
@@ -109,14 +124,21 @@ export default forwardRef(function ViewerInner<T extends ModuleInputCtor>(
 		function createNodeFunc<N extends TextSlotProps | FileSlotProps | LinkSlotProps>(
 			getRenderFn: () => ((props: N) => ReactNode) | undefined,
 		) {
-			return (
-				container: HTMLDivElement,
-				content: string,
-				node: N['node'],
-				onBeforeUnmount: Hook,
-				onActive: Hook,
-				onLoseActive: Hook,
-			) => {
+			return ({
+				container,
+				content,
+				node,
+				onBeforeUnmount,
+				onActive,
+				onLoseActive,
+			}: {
+				container: HTMLDivElement;
+				content: string;
+				node: N['node'];
+				onBeforeUnmount: Hook;
+				onActive: Hook;
+				onLoseActive: Hook;
+			}) => {
 				const renderFn = getRenderFn();
 				if (!renderFn) return;
 				upsertPortal(
@@ -136,35 +158,35 @@ export default forwardRef(function ViewerInner<T extends ModuleInputCtor>(
 		}
 
 		const out: Options['nodeComponents'] = {};
-		if (props.text) out.text = createNodeFunc<TextSlotProps>(() => textRef.current);
-		if (props.markdown) out.markdown = createNodeFunc<FileSlotProps>(() => markdownRef.current);
-		if (props.image) out.image = createNodeFunc<FileSlotProps>(() => imageRef.current);
-		if (props.video) out.video = createNodeFunc<FileSlotProps>(() => videoRef.current);
-		if (props.audio) out.audio = createNodeFunc<FileSlotProps>(() => audioRef.current);
-		if (props.link) out.link = createNodeFunc<LinkSlotProps>(() => linkRef.current);
+		if (text) out.text = createNodeFunc<TextSlotProps>(() => textRef.current);
+		if (markdown) out.markdown = createNodeFunc<FileSlotProps>(() => markdownRef.current);
+		if (image) out.image = createNodeFunc<FileSlotProps>(() => imageRef.current);
+		if (video) out.video = createNodeFunc<FileSlotProps>(() => videoRef.current);
+		if (audio) out.audio = createNodeFunc<FileSlotProps>(() => audioRef.current);
+		if (link) out.link = createNodeFunc<LinkSlotProps>(() => linkRef.current);
 		return out;
 		// oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-	}, [props.text, props.markdown, props.image, props.video, props.audio, props.link]);
+	}, [text, markdown, image, video, audio, link]);
 
 	useLayoutEffect(() => {
 		if (!containerRef.current) return;
 
 		viewerRef.current = new JSONCanvasViewer(
 			{
-				...(props.options ?? ({} as ViewerProps<T>['options'])),
+				...options,
+				attachmentDir,
+				attachments,
+				canvas,
 				container: containerRef.current as unknown as HTMLDivElement,
-				theme: props.theme,
-				canvas: props.canvas,
-				attachmentDir: props.attachmentDir,
-				attachments: props.attachments,
 				nodeComponents,
+				theme,
 			} as Options<T>,
-			props.modules,
+			modules,
 		);
 
 		return () => {
 			viewerRef.current?.dispose();
-			viewerRef.current = null;
+			viewerRef.current = undefined;
 			// oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
 			portalsByIdRef.current.clear();
 		};
@@ -172,18 +194,18 @@ export default forwardRef(function ViewerInner<T extends ModuleInputCtor>(
 	}, []);
 
 	useEffect(() => {
-		viewerRef.current?.changeTheme(props.theme);
-	}, [props.theme]);
+		viewerRef.current?.changeTheme(theme);
+	}, [theme]);
 
 	useEffect(() => {
 		viewerRef.current?.load({
-			canvas: props.canvas,
-			attachmentDir: props.attachmentDir,
-			attachments: props.attachments,
+			attachmentDir,
+			attachments,
+			canvas,
 		});
-	}, [props.canvas, props.attachmentDir, props.attachments]);
+	}, [canvas, attachmentDir, attachments]);
 
-	const portals = Array.from(portalsByIdRef.current.values()).map((p) =>
+	const portals = [...portalsByIdRef.current.values()].map((p) =>
 		createPortal(p.element, p.container, p.id),
 	);
 
@@ -191,18 +213,16 @@ export default forwardRef(function ViewerInner<T extends ModuleInputCtor>(
 		<>
 			<section
 				ref={(el) => {
-					containerRef.current = el;
+					if (el) containerRef.current = el;
 				}}
-				className={props.className}
+				className={className}
 				style={{
 					maxHeight: '100vh',
 					maxWidth: '100vw',
-					...props.style,
+					...style,
 				}}
-				dangerouslySetInnerHTML={
-					props.prerenderHtml ? { __html: props.prerenderHtml } : undefined
-				}
-				suppressHydrationWarning={!!props.prerenderHtml}
+				dangerouslySetInnerHTML={prerenderHtml ? { __html: prerenderHtml } : undefined}
+				suppressHydrationWarning={Boolean(prerenderHtml)}
 			/>
 			{portals}
 		</>

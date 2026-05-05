@@ -1,26 +1,18 @@
 import type { GeneralArray } from '$/types';
 import type { JSONCanvasNode } from '@repo/shared';
 
-export default {
-	round,
-	resizeCanvasForDPR,
-	applyStyles,
-	drawRoundRect,
-	getAnchorCoord,
-	makeHook,
-};
-
 export const destroyError = new Error(
 	"[JSONCanvasViewer] Resource hasn't been set up or has been disposed.",
 );
 
-function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
+export function applyStyles(container: HTMLElement | ShadowRoot, styleString: string) {
 	const style = document.createElement('style');
 	style.innerHTML = styleString;
 	container.appendChild(style);
 }
 
-function drawRoundRect(
+// oxlint-disable-next-line max-params
+export function drawRoundRect(
 	ctx: CanvasRenderingContext2D,
 	x: number,
 	y: number,
@@ -41,24 +33,29 @@ function drawRoundRect(
 	ctx.closePath();
 }
 
-function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'left' | 'right') {
+export function getAnchorCoord(node: JSONCanvasNode, side: 'top' | 'bottom' | 'left' | 'right') {
 	const midX = node.x + node.width / 2;
 	const midY = node.y + node.height / 2;
 	switch (side) {
-		case 'top':
+		case 'top': {
 			return { x: midX, y: node.y };
-		case 'bottom':
+		}
+		case 'bottom': {
 			return { x: midX, y: node.y + node.height };
-		case 'left':
+		}
+		case 'left': {
 			return { x: node.x, y: midY };
-		case 'right':
+		}
+		case 'right': {
 			return { x: node.x + node.width, y: midY };
-		default:
+		}
+		default: {
 			return { x: midX, y: midY };
+		}
 	}
 }
 
-function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
+export function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: number) {
 	const dpr = window.devicePixelRatio ?? 1;
 	const ctx = canvas.getContext('2d');
 	if (!ctx)
@@ -71,7 +68,7 @@ function resizeCanvasForDPR(canvas: HTMLCanvasElement, width: number, height: nu
 	ctx.scale(dpr, dpr);
 }
 
-function round(roundedNum: number, digits: number) {
+export function round(roundedNum: number, digits: number) {
 	const factor = 10 ** digits;
 	return Math.round(roundedNum * factor) / factor;
 }
@@ -93,20 +90,20 @@ export type Hook<Args extends GeneralArray = [], Async extends boolean = false> 
  * @example const hook = makeHook(true);
  */
 export function makeHook<Args extends GeneralArray = [], Async extends boolean = false>(
-	reverse: boolean = false,
+	reverse = false,
 	async: Async = false as Async,
 ) {
 	const result = (
 		async
 			? async (...args: Args) => {
 					if (reverse) {
-						const items = Array.from(result.subs).reverse();
+						const items = [...result.subs].reverse();
 						for (const callback of items) await callback(...args);
 					} else for (const callback of result.subs) await callback(...args);
 				}
 			: (...args: Args) => {
 					if (reverse) {
-						const items = Array.from(result.subs).reverse();
+						const items = [...result.subs].reverse();
 						for (const callback of items) void callback(...args);
 					} else for (const callback of result.subs) void callback(...args);
 				}

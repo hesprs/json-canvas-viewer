@@ -1,11 +1,13 @@
 import type { BaseOptions } from '$';
+import type { BaseArgs } from '$/BaseModule';
+import type { EdgeItem, NodeItem } from '$/DataManager';
 import type { Box } from '$/types';
 import type { JSONCanvasGroupNode, JSONCanvasNode } from '@repo/shared';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
-import DataManager, { type EdgeItem, type NodeItem } from '$/DataManager';
+import DataManager from '$/DataManager';
 import StyleManager from '$/StyleManager';
-import utilities, { destroyError } from '$/utilities';
+import { destroyError, drawRoundRect, getAnchorCoord, resizeCanvasForDPR } from '$/utilities';
 
 const ARROW_LENGTH = 12;
 const ARROW_WIDTH = 4;
@@ -17,30 +19,30 @@ const DOT_BASE_GAP = 10; // Base gap between dots in CSS pixels
 
 const NODE_BORDER_HALF_WIDTH = NODE_BORDER_WIDTH / 2;
 
-interface Options extends BaseOptions {
+type Options = {
 	zoomInOptimization?: boolean;
-}
+} & BaseOptions;
 
 export default class Renderer extends BaseModule<Options> {
-	private _canvas: HTMLCanvasElement | null;
-	private ctx: CanvasRenderingContext2D;
-	private DM: DataManager;
-	private SM: StyleManager;
-	private zoomInOptimize: {
+	private _canvas: HTMLCanvasElement | undefined;
+	private readonly ctx: CanvasRenderingContext2D;
+	private readonly DM: DataManager;
+	private readonly SM: StyleManager;
+	private readonly zoomInOptimize: {
 		lastDrawnScale: number;
 		lastDrawnViewport: Box;
-		timeout: number | null;
+		timeout: number | undefined;
 		lastCallTime: number;
 	} = {
+		lastCallTime: 0,
 		lastDrawnScale: 0,
 		lastDrawnViewport: {
+			bottom: 0,
 			left: 0,
 			right: 0,
 			top: 0,
-			bottom: 0,
 		},
-		timeout: null,
-		lastCallTime: 0,
+		timeout: undefined,
 	};
 
 	private get canvas() {
@@ -62,12 +64,12 @@ export default class Renderer extends BaseModule<Options> {
 		this.onDispose(this.dispose);
 	}
 
-	private optimizeDPR = () => {
+	private readonly optimizeDPR = () => {
 		const container = this.DM.data.container;
-		utilities.resizeCanvasForDPR(this.canvas, container.offsetWidth, container.offsetHeight);
+		resizeCanvasForDPR(this.canvas, container.offsetWidth, container.offsetHeight);
 	};
 
-	private redraw = () => {
+	private readonly redraw = () => {
 		const offsetX = this.DM.data.offsetX;
 		const offsetY = this.DM.data.offsetY;
 		const scale = this.DM.data.scale;
@@ -78,7 +80,7 @@ export default class Renderer extends BaseModule<Options> {
 		}
 		if (this.zoomInOptimize.timeout) {
 			clearTimeout(this.zoomInOptimize.timeout);
-			this.zoomInOptimize.timeout = null;
+			this.zoomInOptimize.timeout = undefined;
 		}
 		const now = Date.now();
 		if (
@@ -90,7 +92,7 @@ export default class Renderer extends BaseModule<Options> {
 				this.zoomInOptimize.timeout = window.setTimeout(() => {
 					this.trueRedraw(offsetX, offsetY, scale, currentViewport);
 					this.zoomInOptimize.lastCallTime = now;
-					this.zoomInOptimize.timeout = null;
+					this.zoomInOptimize.timeout = undefined;
 				}, 60);
 				this.fakeRedraw(currentViewport, scale);
 				return;
@@ -131,28 +133,28 @@ export default class Renderer extends BaseModule<Options> {
 		this.canvas.style.transform = `translate(${currentOffsetX}px, ${currentOffsetY}px) scale(${cssScale})`;
 	}
 
-	private isInside = (inner: Box, outer: Box) =>
+	private readonly isInside = (inner: Box, outer: Box) =>
 		inner.left > outer.left &&
 		inner.top > outer.top &&
 		inner.right < outer.right &&
 		inner.bottom < outer.bottom;
 
-	private isOutside = (inner: Box, outer: Box) =>
+	private readonly isOutside = (inner: Box, outer: Box) =>
 		inner.right < outer.left ||
 		inner.bottom < outer.top ||
 		inner.left > outer.right ||
 		inner.top > outer.bottom;
 
-	private getCurrentViewport = (offsetX: number, offsetY: number, scale: number) => {
+	private readonly getCurrentViewport = (offsetX: number, offsetY: number, scale: number) => {
 		const left = -offsetX / scale;
 		const top = -offsetY / scale;
 		const container = this.DM.data.container;
 		const right = left + container.clientWidth / scale;
 		const bottom = top + container.clientHeight / scale;
-		return { left, top, right, bottom };
+		return { bottom, left, right, top };
 	};
 
-	private drawLabelBar = (
+	private readonly drawLabelBar = (
 		x: number,
 		y: number,
 		label: string,
@@ -189,12 +191,12 @@ export default class Renderer extends BaseModule<Options> {
 		this.ctx.restore();
 	};
 
-	private drawNodeBackground = (node: JSONCanvasNode) => {
+	private readonly drawNodeBackground = (node: JSONCanvasNode) => {
 		const colors = this.SM.getColor(node.color);
 		const radius = NODE_RADIUS;
-		this.ctx.globalAlpha = 1.0;
+		this.ctx.globalAlpha = 1;
 		this.ctx.fillStyle = colors.background;
-		utilities.drawRoundRect(
+		drawRoundRect(
 			this.ctx,
 			node.x + NODE_BORDER_HALF_WIDTH,
 			node.y + NODE_BORDER_HALF_WIDTH,
@@ -205,11 +207,11 @@ export default class Renderer extends BaseModule<Options> {
 		this.ctx.fill();
 		this.ctx.strokeStyle = colors.border;
 		this.ctx.lineWidth = NODE_BORDER_WIDTH;
-		utilities.drawRoundRect(this.ctx, node.x, node.y, node.width, node.height, radius);
+		drawRoundRect(this.ctx, node.x, node.y, node.width, node.height, radius);
 		this.ctx.stroke();
 	};
 
-	private drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
+	private readonly drawGroup = (node: JSONCanvasGroupNode, scale: number) => {
 		this.drawNodeBackground(node);
 		if (node.label) {
 			const color = this.SM.getColor(node.color);
@@ -217,22 +219,21 @@ export default class Renderer extends BaseModule<Options> {
 		}
 	};
 
-	private drawFile = (item: NodeItem) => {
+	private readonly drawFile = (item: NodeItem) => {
 		this.ctx.fillStyle = this.SM.getColor().text;
 		const node = item.ref;
 		this.ctx.font = '16px sans-serif';
 		this.ctx.fillText(item.fileName ?? '', node.x + 5, node.y - 10);
 	};
 
-	private drawEdge = (item: EdgeItem) => {
+	private readonly drawEdge = (item: EdgeItem) => {
 		const edge = item.ref;
 		const fromNode = this.DM.data.nodeMap[edge.fromNode].ref;
 		const toNode = this.DM.data.nodeMap[edge.toNode].ref;
-		const gac = utilities.getAnchorCoord;
-		const { x: startX, y: startY } = gac(fromNode, edge.fromSide);
-		const { x: endX, y: endY } = gac(toNode, edge.toSide);
+		const { x: startX, y: startY } = getAnchorCoord(fromNode, edge.fromSide);
+		const { x: endX, y: endY } = getAnchorCoord(toNode, edge.toSide);
 		const color = this.SM.getColor(edge.color);
-		let [startControlX, startControlY, endControlX, endControlY] = [0, 0, 0, 0];
+		let startControlX, startControlY, endControlX, endControlY: number;
 		if (!item.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
 				startX,
@@ -256,44 +257,81 @@ export default class Renderer extends BaseModule<Options> {
 			color.active,
 		);
 		this.drawArrowhead(endX, endY, endControlX, endControlY, color.active);
-		if (edge.label) {
-			const t = 0.5;
-			const x =
-				(1 - t) ** 3 * startX +
-				3 * (1 - t) ** 2 * t * startControlX +
-				3 * (1 - t) * t * t * endControlX +
-				t ** 3 * endX;
-			const y =
-				(1 - t) ** 3 * startY +
-				3 * (1 - t) ** 2 * t * startControlY +
-				3 * (1 - t) * t * t * endControlY +
-				t ** 3 * endY;
-			this.ctx.font = '18px sans-serif';
-			const metrics = this.ctx.measureText(edge.label);
-			const padding = 8;
-			const labelWidth = metrics.width + padding * 2;
-			const labelHeight = 20;
-			this.ctx.fillStyle = color.active;
-			this.ctx.beginPath();
-			utilities.drawRoundRect(
-				this.ctx,
-				x - labelWidth / 2,
-				y - labelHeight / 2 - 2,
-				labelWidth,
-				labelHeight,
-				4,
+		if (edge.label)
+			this.drawEdgeLabel(
+				startX,
+				startY,
+				endX,
+				endY,
+				startControlX,
+				startControlY,
+				endControlX,
+				endControlY,
+				edge.label,
+				color.active,
+				color.text,
 			);
-			this.ctx.fill();
-			this.ctx.fillStyle = color.text;
-			this.ctx.textAlign = 'center';
-			this.ctx.textBaseline = 'middle';
-			this.ctx.fillText(edge.label, x, y - 2);
-			this.ctx.textAlign = 'left';
-			this.ctx.textBaseline = 'alphabetic';
-		}
 	};
 
-	private getControlPoints = (
+	private readonly drawEdgeLabel = (
+		startX: number,
+		startY: number,
+		endX: number,
+		endY: number,
+		startControlX: number,
+		startControlY: number,
+		endControlX: number,
+		endControlY: number,
+		label: string,
+		color: string,
+		textColor: string,
+	) => {
+		const t = 0.5;
+		const x =
+			(1 - t) ** 3 * startX +
+			3 * (1 - t) ** 2 * t * startControlX +
+			3 * (1 - t) * t * t * endControlX +
+			t ** 3 * endX;
+		const y =
+			(1 - t) ** 3 * startY +
+			3 * (1 - t) ** 2 * t * startControlY +
+			3 * (1 - t) * t * t * endControlY +
+			t ** 3 * endY;
+		this.ctx.font = '18px sans-serif';
+		const lines = label.split('\n');
+		const lineHeight = 17;
+		let maxWidth = 0;
+		for (const line of lines) {
+			const w = this.ctx.measureText(line).width;
+			if (w > maxWidth) maxWidth = w;
+		}
+		const paddingX = 8;
+		const paddingY = 3;
+		const labelWidth = maxWidth + paddingX * 2;
+		const labelHeight = lines.length * lineHeight + paddingY * 2; // Dynamic height
+		this.ctx.fillStyle = color;
+		this.ctx.beginPath();
+		drawRoundRect(
+			this.ctx,
+			x - labelWidth / 2,
+			y - labelHeight / 2 - 2,
+			labelWidth,
+			labelHeight,
+			4,
+		);
+		this.ctx.fill();
+		this.ctx.fillStyle = textColor;
+		this.ctx.textAlign = 'center';
+		this.ctx.textBaseline = 'middle';
+		for (let i = 0; i < lines.length; i++) {
+			const offsetY = (i - (lines.length - 1) / 2) * lineHeight;
+			this.ctx.fillText(lines[i], x, y - 2 + offsetY);
+		}
+		this.ctx.textAlign = 'left';
+		this.ctx.textBaseline = 'alphabetic';
+	};
+
+	private readonly getControlPoints = (
 		startX: number,
 		startY: number,
 		endX: number,
@@ -313,37 +351,45 @@ export default class Renderer extends BaseModule<Options> {
 		let endControlX = endX;
 		let endControlY = endY;
 		switch (fromSide) {
-			case 'top':
+			case 'top': {
 				startControlY = startY - PADDING;
 				break;
-			case 'bottom':
+			}
+			case 'bottom': {
 				startControlY = startY + PADDING;
 				break;
-			case 'left':
+			}
+			case 'left': {
 				startControlX = startX - PADDING;
 				break;
-			case 'right':
+			}
+			case 'right': {
 				startControlX = startX + PADDING;
 				break;
+			}
 		}
 		switch (toSide) {
-			case 'top':
+			case 'top': {
 				endControlY = endY - PADDING;
 				break;
-			case 'bottom':
+			}
+			case 'bottom': {
 				endControlY = endY + PADDING;
 				break;
-			case 'left':
+			}
+			case 'left': {
 				endControlX = endX - PADDING;
 				break;
-			case 'right':
+			}
+			case 'right': {
 				endControlX = endX + PADDING;
 				break;
+			}
 		}
 		return [startControlX, startControlY, endControlX, endControlY];
 	};
 
-	private drawGridDots = (scale: number, offsetX: number, offsetY: number) => {
+	private readonly drawGridDots = (scale: number, offsetX: number, offsetY: number) => {
 		const scaleLevel = -Math.floor(Math.log2(scale));
 		const actualGap = DOT_BASE_GAP * 2 ** scaleLevel * scale;
 		const width = this.canvas.width;
@@ -351,16 +397,15 @@ export default class Renderer extends BaseModule<Options> {
 		const startX = offsetX % actualGap;
 		const startY = offsetY % actualGap;
 		this.ctx.fillStyle = this.SM.getNamedColor('dots');
-		for (let x = startX; x <= width; x += actualGap) {
+		for (let x = startX; x <= width; x += actualGap)
 			for (let y = startY; y <= height; y += actualGap) {
 				this.ctx.beginPath();
 				this.ctx.arc(x, y, DOT_RADIUS, 0, 2 * Math.PI);
 				this.ctx.fill();
 			}
-		}
 	};
 
-	private drawCurvedPath = (
+	private readonly drawCurvedPath = (
 		startX: number,
 		startY: number,
 		endX: number,
@@ -379,7 +424,7 @@ export default class Renderer extends BaseModule<Options> {
 		this.ctx.stroke();
 	};
 
-	private drawArrowhead = (
+	private readonly drawArrowhead = (
 		tipX: number,
 		tipY: number,
 		fromX: number,
@@ -405,12 +450,12 @@ export default class Renderer extends BaseModule<Options> {
 		this.ctx.fill();
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		if (this.zoomInOptimize.timeout) {
 			clearTimeout(this.zoomInOptimize.timeout);
-			this.zoomInOptimize.timeout = null;
+			this.zoomInOptimize.timeout = undefined;
 		}
 		this.canvas.remove();
-		this._canvas = null;
+		this._canvas = undefined;
 	};
 }

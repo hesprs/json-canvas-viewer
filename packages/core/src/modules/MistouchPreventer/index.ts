@@ -1,39 +1,40 @@
 import type { BaseOptions } from '$';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import type { BaseArgs } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
-import utilities, { destroyError } from '$/utilities';
+import { applyStyles, destroyError } from '$/utilities';
 import style from './styles.scss?inline';
 
-interface Options extends BaseOptions {
+type Options = {
 	preventMistouchAtStart?: boolean;
 	mistouchPreventerBannerText?: string;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	startMistouchPrevention: MistouchPreventer['startPrevention'];
 	endMistouchPrevention: MistouchPreventer['endPrevention'];
-}
+};
 
 export default class MistouchPreventer extends BaseModule<Options, Augmentation> {
-	private _preventionContainer: HTMLDivElement | null = null;
-	private preventMt: boolean = false;
-	private DM: DataManager;
-	private preventMistouch: {
+	private _preventionContainer: HTMLDivElement | undefined;
+	private preventMt = false;
+	private readonly DM: DataManager;
+	private readonly preventMistouch: {
 		record: boolean;
 		lastX: number;
 		lastY: number;
 		initialX: number;
 		initialY: number;
 	} = {
-		record: false,
-		lastX: 0,
-		lastY: 0,
 		initialX: 0,
 		initialY: 0,
+		lastX: 0,
+		lastY: 0,
+		record: false,
 	};
 
 	private get preventionContainer() {
-		if (this._preventionContainer === null) throw destroyError;
+		if (!this._preventionContainer) throw destroyError;
 		return this._preventionContainer;
 	}
 
@@ -49,7 +50,7 @@ export default class MistouchPreventer extends BaseModule<Options, Augmentation>
 		this._preventionContainer.className =
 			'JCV-prevention-container JCV-hidden JCV-full JCV-flex-center';
 
-		utilities.applyStyles(this._preventionContainer, style);
+		applyStyles(this._preventionContainer, style);
 		this._preventionContainer.appendChild(preventionBanner);
 		this.DM.data.container.appendChild(this._preventionContainer);
 
@@ -60,13 +61,13 @@ export default class MistouchPreventer extends BaseModule<Options, Augmentation>
 		window.addEventListener('pointerup', this.onPointerUp);
 
 		this.augment({
-			startMistouchPrevention: this.startPrevention,
 			endMistouchPrevention: this.endPrevention,
+			startMistouchPrevention: this.startPrevention,
 		});
 		this.onDispose(this.dispose);
 	}
 
-	private onPointerDown = (e: PointerEvent) => {
+	private readonly onPointerDown = (e: PointerEvent) => {
 		const bounds = this.DM.data.container.getBoundingClientRect();
 		if (
 			e.clientX < bounds.left ||
@@ -84,14 +85,14 @@ export default class MistouchPreventer extends BaseModule<Options, Augmentation>
 		}
 	};
 
-	private onPointerMove = (e: PointerEvent) => {
+	private readonly onPointerMove = (e: PointerEvent) => {
 		if (this.preventMistouch.record) {
 			this.preventMistouch.lastX = e.clientX;
 			this.preventMistouch.lastY = e.clientY;
 		}
 	};
 
-	private onPointerUp = () => {
+	private readonly onPointerUp = () => {
 		if (this.preventMistouch.record) {
 			this.preventMistouch.record = false;
 			if (
@@ -112,14 +113,14 @@ export default class MistouchPreventer extends BaseModule<Options, Augmentation>
 	endPrevention = () => {
 		this.preventMt = false;
 		this.preventionContainer.classList.add('JCV-hidden');
-		setTimeout(() => this.DM.data.container.classList.remove('JCV-numb'), 50); // minimum delay to prevent triggering undesired button touch
+		setTimeout(() => this.DM.data.container.classList.remove('JCV-numb'), 50); // Minimum delay to prevent triggering undesired button touch
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		window.removeEventListener('pointerdown', this.onPointerDown);
 		window.removeEventListener('pointermove', this.onPointerMove);
 		window.removeEventListener('pointerup', this.onPointerUp);
 		this.preventionContainer.remove();
-		this._preventionContainer = null;
+		this._preventionContainer = undefined;
 	};
 }

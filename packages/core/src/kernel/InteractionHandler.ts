@@ -134,7 +134,7 @@ export default class InteractionHandler extends BaseModule<Options, Augmentation
 	});
 
 	private readonly onTrueClick = (e: LoadedEvents['trueClick']) => {
-		const element = e.target as HTMLElement | undefined;
+		const element = e.target ? (e.target as HTMLElement) : undefined;
 		if (this.isUIControl(element)) return;
 		const node = this.findNodeId(element);
 		this.onClick(node);

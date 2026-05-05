@@ -5,7 +5,7 @@ import Viewer from '@/Viewer.vue';
 
 <template>
 	<Suspense>
-		<Viewer class="canvas-viewer" :canvas="canvas">
+		<Viewer class="canvas-viewer" :canvas>
 			<template #text="{ node }">
 				<p :class="node.type">
 					This is a Vue component that is mounted into JSON Canvas Viewer

@@ -29,13 +29,13 @@ const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
 
 export default class Controls extends BaseModule<Options, Augmentation> {
-	private _controlsPanel: HTMLDivElement | undefined;
-	private _toggleCollapseBtn: HTMLButtonElement | undefined;
-	private _toggleFullscreenBtn: HTMLButtonElement | undefined;
-	private _zoomOutBtn: HTMLButtonElement | undefined;
-	private _zoomSlider: HTMLInputElement | undefined;
-	private _zoomInBtn: HTMLButtonElement | undefined;
-	private _resetViewBtn: HTMLButtonElement | undefined;
+	private _controlsPanel?: HTMLDivElement;
+	private _toggleCollapseBtn?: HTMLButtonElement;
+	private _toggleFullscreenBtn?: HTMLButtonElement;
+	private _zoomOutBtn?: HTMLButtonElement;
+	private _zoomSlider?: HTMLInputElement;
+	private _zoomInBtn?: HTMLButtonElement;
+	private _resetViewBtn?: HTMLButtonElement;
 	private readonly DM: DataManager;
 	private readonly IH: InteractionHandler;
 	private collapsed: boolean;

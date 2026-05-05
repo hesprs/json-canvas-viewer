@@ -12,8 +12,8 @@ type Augmentation = {
 };
 
 export default class Controller extends BaseModule<BaseOptions, Augmentation> {
-	private animationId: undefined | number;
-	private resizeAnimationId: undefined | number;
+	private animationId?: number;
+	private resizeAnimationId?: number;
 	private readonly DM: DataManager;
 	private readonly SM: StyleManager;
 	private readonly resizeObserver: ResizeObserver;
@@ -25,12 +25,9 @@ export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 		lastScale: 1,
 	};
 	private readonly lastResizeCenter: {
-		x: undefined | number;
-		y: undefined | number;
-	} = {
-		x: undefined,
-		y: undefined,
-	};
+		x?: number;
+		y?: number;
+	} = {};
 
 	onResize = makeHook<[number, number]>();
 	onRefresh = makeHook();

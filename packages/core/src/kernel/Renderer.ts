@@ -24,14 +24,14 @@ type Options = {
 } & BaseOptions;
 
 export default class Renderer extends BaseModule<Options> {
-	private _canvas: HTMLCanvasElement | undefined;
+	private _canvas?: HTMLCanvasElement;
 	private readonly ctx: CanvasRenderingContext2D;
 	private readonly DM: DataManager;
 	private readonly SM: StyleManager;
 	private readonly zoomInOptimize: {
 		lastDrawnScale: number;
 		lastDrawnViewport: Box;
-		timeout: number | undefined;
+		timeout?: number;
 		lastCallTime: number;
 	} = {
 		lastCallTime: 0,
@@ -42,7 +42,6 @@ export default class Renderer extends BaseModule<Options> {
 			right: 0,
 			top: 0,
 		},
-		timeout: undefined,
 	};
 
 	private get canvas() {

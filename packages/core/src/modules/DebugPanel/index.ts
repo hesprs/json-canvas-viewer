@@ -6,7 +6,7 @@ import { applyStyles, destroyError, round } from '$/utilities';
 import style from './styles.scss?inline';
 
 export default class DebugPanel extends BaseModule {
-	private _debugPanel: HTMLDivElement | undefined;
+	private _debugPanel?: HTMLDivElement;
 	private readonly DM: DataManager;
 
 	private get debugPanel() {

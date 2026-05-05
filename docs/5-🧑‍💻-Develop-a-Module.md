@@ -144,7 +144,7 @@ interface Augmentation {
 }
 
 export default class DebugPanel extends BaseModule<Options, Augmentation> {
-	private _debugPanel: HTMLDivElement | undefined;
+	private _debugPanel?: HTMLDivElement;
 	private DM: DataManager;
 
 	private get debugPanel() { // getter to handle nullable property

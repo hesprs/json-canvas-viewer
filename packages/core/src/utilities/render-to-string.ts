@@ -14,8 +14,7 @@ export default async function renderToString(options: {
 		if (node.type === 'file' && !node.file.startsWith('http')) {
 			const file = node.file.split('/');
 			const name = file.pop() ?? '';
-			if (options.attachments?.[name]) node.file = options.attachments[name];
-			else node.file = basePath + name;
+			node.file = options.attachments?.[name] ?? basePath + name;
 		}
 	});
 	const renderedContent: Array<string> = [];
@@ -25,22 +24,26 @@ export default async function renderToString(options: {
 
 async function renderer(node: JSONCanvasNode, parse: Parser) {
 	switch (node.type) {
-		case 'text':
+		case 'text': {
 			return await parse(node.text);
-		case 'file':
+		}
+		case 'file': {
 			return await fileProcessor(node, parse);
-		case 'link':
+		}
+		case 'link': {
 			return `<a href="${node.url}" target="_blank" rel="nofollow">${node.url}</a>`;
-		default:
+		}
+		default: {
 			return '';
+		}
 	}
 }
 
 async function fileProcessor(node: JSONCanvasFileNode, parse: Parser) {
-	if (node.file.match(/\.md$/i)) return await loadMarkdown(node.file, parse);
-	else if (node.file.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i))
+	if (/\.md$/i.exec(node.file)) return await loadMarkdown(node.file, parse);
+	else if (/\.(png|jpg|jpeg|gif|svg|webp)$/i.exec(node.file))
 		return `<img src="${node.file}" alt="${node.file.split('/').pop()}">`;
-	else if (node.file.match(/\.(mp3|wav)$/i)) return `<audio src="${node.file}" controls></audio>`;
+	else if (/\.(mp3|wav)$/i.exec(node.file)) return `<audio src="${node.file}" controls></audio>`;
 	return '';
 }
 
@@ -49,9 +52,8 @@ async function loadMarkdown(path: string, parse: Parser) {
 	try {
 		const response = await fetch(path);
 		const result = await response.text();
-		const frontmatterMatch = result.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-		if (frontmatterMatch) parsedContent = await parse(frontmatterMatch[2]);
-		else parsedContent = await parse(result);
+		const frontmatterMatch = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(result);
+		parsedContent = await parse(frontmatterMatch ? frontmatterMatch[2] : result);
 	} catch {
 		parsedContent = 'Failed to load content.';
 	}

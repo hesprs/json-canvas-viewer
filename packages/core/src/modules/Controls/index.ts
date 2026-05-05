@@ -1,18 +1,19 @@
 import type { BaseOptions } from '$';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import type { BaseArgs } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
-import utilities, { destroyError } from '$/utilities';
+import { applyStyles, destroyError } from '$/utilities';
 import style from './styles.scss?inline';
 
-interface Options extends BaseOptions {
+type Options = {
 	controlsCollapsed?: boolean;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	toggleControlsCollapse: Controls['toggleCollapse'];
-}
+};
 
 const resetIcon =
 	'<svg viewBox="-6 -6 30 30" stroke-width=".08"><path d="m14.955 7.986.116.01a1 1 0 0 1 .85 1.13 8 8 0 0 1-13.374 4.728l-.84.84c-.63.63-1.707.184-1.707-.707V10h3.987c.89 0 1.337 1.077.707 1.707l-.731.731a6 6 0 0 0 8.347-.264 6 6 0 0 0 1.63-3.33 1 1 0 0 1 1.131-.848zM11.514.813a8 8 0 0 1 1.942 1.336l.837-.837c.63-.63 1.707-.184 1.707.707V6h-3.981c-.89 0-1.337-1.077-.707-1.707l.728-.729a6 6 0 0 0-9.98 3.591 1 1 0 1 1-1.98-.281A8 8 0 0 1 11.514.813Z" /></svg>';
@@ -28,43 +29,43 @@ const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
 
 export default class Controls extends BaseModule<Options, Augmentation> {
-	private _controlsPanel: HTMLDivElement | null = null;
-	private _toggleCollapseBtn: HTMLButtonElement | null = null;
-	private _toggleFullscreenBtn: HTMLButtonElement | null = null;
-	private _zoomOutBtn: HTMLButtonElement | null = null;
-	private _zoomSlider: HTMLInputElement | null = null;
-	private _zoomInBtn: HTMLButtonElement | null = null;
-	private _resetViewBtn: HTMLButtonElement | null = null;
-	private DM: DataManager;
-	private IH: InteractionHandler;
+	private _controlsPanel: HTMLDivElement | undefined;
+	private _toggleCollapseBtn: HTMLButtonElement | undefined;
+	private _toggleFullscreenBtn: HTMLButtonElement | undefined;
+	private _zoomOutBtn: HTMLButtonElement | undefined;
+	private _zoomSlider: HTMLInputElement | undefined;
+	private _zoomInBtn: HTMLButtonElement | undefined;
+	private _resetViewBtn: HTMLButtonElement | undefined;
+	private readonly DM: DataManager;
+	private readonly IH: InteractionHandler;
 	private collapsed: boolean;
 
 	private get controlsPanel() {
-		if (this._controlsPanel === null) throw destroyError;
+		if (!this._controlsPanel) throw destroyError;
 		return this._controlsPanel;
 	}
 	private get toggleCollapseBtn() {
-		if (this._toggleCollapseBtn === null) throw destroyError;
+		if (!this._toggleCollapseBtn) throw destroyError;
 		return this._toggleCollapseBtn;
 	}
 	private get toggleFullscreenBtn() {
-		if (this._toggleFullscreenBtn === null) throw destroyError;
+		if (!this._toggleFullscreenBtn) throw destroyError;
 		return this._toggleFullscreenBtn;
 	}
 	private get zoomOutBtn() {
-		if (this._zoomOutBtn === null) throw destroyError;
+		if (!this._zoomOutBtn) throw destroyError;
 		return this._zoomOutBtn;
 	}
 	private get zoomSlider() {
-		if (this._zoomSlider === null) throw destroyError;
+		if (!this._zoomSlider) throw destroyError;
 		return this._zoomSlider;
 	}
 	private get zoomInBtn() {
-		if (this._zoomInBtn === null) throw destroyError;
+		if (!this._zoomInBtn) throw destroyError;
 		return this._zoomInBtn;
 	}
 	private get resetViewBtn() {
-		if (this._resetViewBtn === null) throw destroyError;
+		if (!this._resetViewBtn) throw destroyError;
 		return this._resetViewBtn;
 	}
 
@@ -80,7 +81,7 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 		this._controlsPanel.className = 'JCV-controls';
 		this._controlsPanel.classList.toggle('JCV-collapsed', this.collapsed);
 
-		utilities.applyStyles(this._controlsPanel, style);
+		applyStyles(this._controlsPanel, style);
 
 		this._toggleCollapseBtn = document.createElement('button');
 		this._toggleCollapseBtn.className = 'JCV-button JCV-collapse-button JCV-border-shadow-bg';
@@ -137,27 +138,27 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 		this.controlsPanel.classList.toggle('JCV-collapsed', this.collapsed);
 		if (!this.collapsed) this.updateSlider();
 	};
-	private zoomIn = () => this.IH.zoom(1.3, this.DM.middleViewer());
-	private zoomOut = () => this.IH.zoom(1 / 1.3, this.DM.middleViewer());
-	private slide = () =>
+	private readonly zoomIn = () => this.IH.zoom(1.3, this.DM.middleViewer());
+	private readonly zoomOut = () => this.IH.zoom(1 / 1.3, this.DM.middleViewer());
+	private readonly slide = () =>
 		this.IH.trueZoom(
 			1.1 ** Number(this.zoomSlider.value) / this.DM.data.scale,
 			this.DM.middleViewer(),
 		);
 
-	private updateFullscreenBtn = (enter: 'enter' | 'exit') => {
-		if (enter === 'enter') this.toggleFullscreenBtn.innerHTML = exitFullscreenIcon;
-		else this.toggleFullscreenBtn.innerHTML = enterFullscreenIcon;
+	private readonly updateFullscreenBtn = (enter: 'enter' | 'exit') => {
+		this.toggleFullscreenBtn.innerHTML =
+			enter === 'enter' ? exitFullscreenIcon : enterFullscreenIcon;
 	};
-	private toggleFullscreen = () => this.DM.toggleFullscreen();
+	private readonly toggleFullscreen = () => this.DM.toggleFullscreen();
 
-	private updateSlider = () => {
+	private readonly updateSlider = () => {
 		if (this.collapsed) return;
 		this.zoomSlider.value = String(this.scaleToSlider(this.DM.data.scale));
 	};
-	private scaleToSlider = (scale: number) => Math.log(scale) / Math.log(1.1);
+	private readonly scaleToSlider = (scale: number) => Math.log(scale) / Math.log(1.1);
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		this.toggleCollapseBtn.removeEventListener('click', this.toggleCollapse);
 		this.zoomInBtn.removeEventListener('click', this.zoomIn);
 		this.zoomOutBtn.removeEventListener('click', this.zoomOut);
@@ -165,12 +166,12 @@ export default class Controls extends BaseModule<Options, Augmentation> {
 		this.resetViewBtn.removeEventListener('click', this.DM.resetView);
 		this.toggleFullscreenBtn.removeEventListener('click', this.toggleFullscreen);
 		this.controlsPanel.remove();
-		this._controlsPanel = null;
-		this._toggleCollapseBtn = null;
-		this._zoomInBtn = null;
-		this._zoomOutBtn = null;
-		this._zoomSlider = null;
-		this._resetViewBtn = null;
-		this._toggleFullscreenBtn = null;
+		this._controlsPanel = undefined;
+		this._toggleCollapseBtn = undefined;
+		this._zoomInBtn = undefined;
+		this._zoomOutBtn = undefined;
+		this._zoomSlider = undefined;
+		this._resetViewBtn = undefined;
+		this._toggleFullscreenBtn = undefined;
 	};
 }

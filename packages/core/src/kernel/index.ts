@@ -13,13 +13,13 @@ import InteractionHandler from '$/InteractionHandler';
 import OverlayManager from '$/OverlayManager';
 import Renderer from '$/Renderer';
 import StyleManager from '$/StyleManager';
-import utilities from '$/utilities';
+import { makeHook } from '$/utilities';
 import { Container } from '@needle-di/core';
 
-export interface BaseOptions {
+export type BaseOptions = {
 	container: HTMLElement;
 	loading?: 'normal' | 'lazy' | 'none';
-}
+};
 
 const internalModules = [
 	DataManager,
@@ -36,15 +36,15 @@ export type AllOptions<M extends ModuleInput = []> = Options<M> & Options<Intern
 type AllAugmentation<M extends ModuleInput = []> = Augmentation<M> & Augmentation<InternalModules>;
 
 class JSONCanvasViewer<M extends ModuleInputCtor> {
-	private allModules: ModuleInputCtor;
-	private IO: IntersectionObserver | null = null;
+	private readonly allModules: ModuleInputCtor;
+	private IO: IntersectionObserver | undefined;
 	private started = false;
 	private disposed = false;
 	options: AllOptions<M>;
 	container: Container;
-	onDispose = utilities.makeHook(true);
-	onStart = utilities.makeHook();
-	onRestart = utilities.makeHook();
+	onDispose = makeHook(true);
+	onStart = makeHook();
+	onRestart = makeHook();
 
 	constructor(options: AllOptions<M>, modules?: M) {
 		this.container = new Container();
@@ -73,7 +73,6 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 		if (loading === 'normal') this.load();
 		else if (loading === 'lazy') {
 			this.IO = new IntersectionObserver(this.onVisibilityCheck, {
-				root: null,
 				rootMargin: '50px',
 				threshold: 0,
 			});
@@ -81,18 +80,18 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 		}
 	}
 
-	private onVisibilityCheck = (entries: Array<IntersectionObserverEntry>) => {
+	private readonly onVisibilityCheck = (entries: Array<IntersectionObserverEntry>) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				this.load();
 				this.IO?.disconnect();
-				this.IO = null;
+				this.IO = undefined;
 				return;
 			}
 		});
 	};
 
-	private augment = (aug: GeneralObject) => {
+	private readonly augment = (aug: GeneralObject) => {
 		const descriptors = Object.getOwnPropertyDescriptors(aug);
 		Object.defineProperties(this, descriptors);
 	};
@@ -114,7 +113,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	dispose = () => {
 		if (!this.started || this.disposed) return;
 		this.IO?.disconnect();
-		this.IO = null;
+		this.IO = undefined;
 		const container = this.options.container;
 		while (container.firstChild) container.firstChild.remove();
 		this.onDispose();

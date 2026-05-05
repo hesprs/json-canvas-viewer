@@ -1,96 +1,87 @@
 import type { BaseOptions } from '$';
-import { BaseModule, type BaseArgs } from '$/BaseModule';
+import type { BaseArgs } from '$/BaseModule';
+import type { HslColor } from '@ahmedsemih/color-fns';
+import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
-import utilities from '$/utilities';
-import {
-	parseHex,
-	toHslString,
-	type HslColor,
-	rgbToHsl,
-	parseHsl,
-	parseRgb,
-} from '@ahmedsemih/color-fns';
+import { makeHook } from '$/utilities';
+import { parseHex, toHslString, rgbToHsl, parseHsl, parseRgb } from '@ahmedsemih/color-fns';
 
-interface Color {
+type Color = {
 	border: string;
 	background: string;
 	active: string;
 	text: string;
 	card: string;
-}
+};
 
-export interface WithBorderWidth extends Color {
+export type WithBorderWidth = {
 	'border-width': string;
-}
+} & Color;
 
 type ColorOptions = {
 	[K in keyof (StyleManager['definedColors']['light'] &
 		StyleManager['namedColors']['light'])]?: string;
 };
 
-interface Options extends BaseOptions {
+type Options = {
 	theme?: 'dark' | 'light';
 	colors?: {
 		light?: ColorOptions;
 		dark?: ColorOptions;
 	};
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	changeTheme: StyleManager['changeTheme'];
 	onChangeTheme: StyleManager['onChangeTheme'];
-}
+};
 
 export default class StyleManager extends BaseModule<Options, Augmentation> {
 	theme: 'dark' | 'light' = 'light';
-	onChangeTheme = utilities.makeHook<['light' | 'dark']>();
+	onChangeTheme = makeHook<['light' | 'dark']>();
 	definedColors = {
-		light: {
-			'0': { hue: 0, saturation: 0, lightness: 72 },
-			'1': { hue: 358, saturation: 81, lightness: 55 },
-			'2': { hue: 19, saturation: 87, lightness: 58 },
-			'3': { hue: 41, saturation: 79, lightness: 52 },
-			'4': { hue: 150, saturation: 100, lightness: 37 },
-			'5': { hue: 221, saturation: 100, lightness: 59 },
-			'6': { hue: 257, saturation: 81, lightness: 62 },
-		},
 		dark: {
-			'0': { hue: 0, saturation: 0, lightness: 40 },
-			'1': { hue: 358, saturation: 100, lightness: 65 },
-			'2': { hue: 23, saturation: 86, lightness: 63 },
-			'3': { hue: 39, saturation: 91, lightness: 70 },
-			'4': { hue: 153, saturation: 80, lightness: 45 },
-			'5': { hue: 217, saturation: 100, lightness: 62 },
-			'6': { hue: 259, saturation: 100, lightness: 75 },
+			'0': { hue: 0, lightness: 40, saturation: 0 },
+			'1': { hue: 358, lightness: 65, saturation: 100 },
+			'2': { hue: 23, lightness: 63, saturation: 86 },
+			'3': { hue: 39, lightness: 70, saturation: 91 },
+			'4': { hue: 153, lightness: 45, saturation: 80 },
+			'5': { hue: 217, lightness: 62, saturation: 100 },
+			'6': { hue: 259, lightness: 75, saturation: 100 },
+		},
+		light: {
+			'0': { hue: 0, lightness: 72, saturation: 0 },
+			'1': { hue: 358, lightness: 55, saturation: 81 },
+			'2': { hue: 19, lightness: 58, saturation: 87 },
+			'3': { hue: 41, lightness: 52, saturation: 79 },
+			'4': { hue: 150, lightness: 37, saturation: 100 },
+			'5': { hue: 221, lightness: 59, saturation: 100 },
+			'6': { hue: 257, lightness: 62, saturation: 81 },
 		},
 	};
 
 	namedColors = {
-		light: {
-			dots: 'hsla(0, 0%, 72%, 0.4)',
-			text: 'rgb(30, 30, 30)',
-			background: 'rgb(250, 250, 250)',
-			'background-secondary': 'rgb(255, 255, 255)',
-			shadow: '0px 0px 8px rgb(0, 0, 0, 0.1)',
-			border: 'hsla(0, 0%, 82%, 0.7)',
-		},
 		dark: {
-			dots: 'hsla(0, 0%, 40%, 0.3)',
-			text: 'rgb(242, 242, 242)',
 			background: 'rgb(30, 30, 30)',
 			'background-secondary': 'rgb(37, 37, 40)',
-			shadow: '0px 0px 8px rgb(0, 0, 0, 0.2)',
 			border: 'hsla(0, 0%, 30%, 0.7)',
+			dots: 'hsla(0, 0%, 40%, 0.3)',
+			shadow: '0px 0px 8px rgb(0, 0, 0, 0.2)',
+			text: 'rgb(242, 242, 242)',
+		},
+		light: {
+			background: 'rgb(250, 250, 250)',
+			'background-secondary': 'rgb(255, 255, 255)',
+			border: 'hsla(0, 0%, 82%, 0.7)',
+			dots: 'hsla(0, 0%, 72%, 0.4)',
+			shadow: '0px 0px 8px rgb(0, 0, 0, 0.1)',
+			text: 'rgb(30, 30, 30)',
 		},
 	};
 
-	private colorCache: {
-		dark: {
-			[key: string]: WithBorderWidth;
-		};
-		light: {
-			[key: string]: WithBorderWidth;
-		};
+	private readonly colorCache: {
+		dark: Record<string, WithBorderWidth>;
+		light: Record<string, WithBorderWidth>;
 	} = {
 		dark: {},
 		light: {},
@@ -99,7 +90,7 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 	constructor(...args: BaseArgs) {
 		super(...args);
 
-		// user-defined color merging
+		// User-defined color merging
 		const colors = this.options.colors;
 		if (colors) {
 			const themes = ['light', 'dark'] as const;
@@ -132,45 +123,43 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 		});
 	}
 
-	private hslProcessor = (color: HslColor) => {
+	private readonly hslProcessor = (color: HslColor) => {
 		const { hue, saturation, lightness } = color;
-		let result;
-		if (this.theme === 'dark') {
-			result = {
-				active: color,
-				card: { hue, saturation: saturation / 3, lightness: lightness / 3 },
-				border: { ...color, alpha: 0.7 },
-				background: { ...color, alpha: 0.1 },
-				text: color.lightness >= 70 ? 'rgb(30, 30, 30)' : 'rgb(242, 242, 242)',
-			};
-		} else {
-			result = {
-				active: color,
-				card:
-					hue === 0
-						? { hue, saturation, lightness: 100 }
-						: { hue, saturation: saturation * 0.4, lightness: 90 },
-				border: { ...color, alpha: 0.7 },
-				background: { ...color, alpha: 0.1 },
-				text: color.lightness >= 70 ? 'rgb(30, 30, 30)' : 'rgb(242, 242, 242)',
-			};
-		}
+		const result =
+			this.theme === 'dark'
+				? {
+						active: color,
+						background: { ...color, alpha: 0.1 },
+						border: { ...color, alpha: 0.7 },
+						card: { hue, lightness: lightness / 3, saturation: saturation / 3 },
+						text: color.lightness >= 70 ? 'rgb(30, 30, 30)' : 'rgb(242, 242, 242)',
+					}
+				: {
+						active: color,
+						background: { ...color, alpha: 0.1 },
+						border: { ...color, alpha: 0.7 },
+						card:
+							hue === 0
+								? { hue, lightness: 100, saturation }
+								: { hue, lightness: 90, saturation: saturation * 0.4 },
+						text: color.lightness >= 70 ? 'rgb(30, 30, 30)' : 'rgb(242, 242, 242)',
+					};
 		return {
 			active: toHslString(result.active),
-			card: toHslString(result.card),
-			border: toHslString(result.border),
 			background: toHslString(result.background),
+			border: toHslString(result.border),
+			card: toHslString(result.card),
 			text: result.text,
 		};
 	};
 
-	private parseColor = (color: string) => {
+	private readonly parseColor = (color: string) => {
 		if (color.startsWith('rgb')) return rgbToHsl(parseRgb(color));
 		if (color.startsWith('#')) return rgbToHsl(parseHex(color));
 		if (color.startsWith('hsl')) return parseHsl(color);
 	};
 
-	getColor = (colorIndex: string = '0') => {
+	getColor = (colorIndex = '0') => {
 		const theme = this.theme;
 		let color: Color;
 		if (this.colorCache[theme][colorIndex]) return this.colorCache[theme][colorIndex];
@@ -191,7 +180,7 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 		this.namedColors[this.theme][name];
 
 	changeTheme = (theme?: 'dark' | 'light') => {
-		this.theme = theme ? theme : this.theme === 'dark' ? 'light' : 'dark';
+		this.theme = (theme ?? this.theme === 'dark') ? 'light' : 'dark';
 		const container = this.container.get(DataManager).data.container;
 		Object.entries(this.namedColors[this.theme]).forEach(([key, value]) => {
 			container.style.setProperty(`--${key}`, value);

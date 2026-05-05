@@ -1,27 +1,27 @@
 export type Parser = (markdown: string) => string | Promise<string>;
 
-export interface JSONCanvasGroupNode extends JSONCanvasGenericNode {
+export type JSONCanvasGroupNode = {
 	type: 'group';
 	label?: string;
 	background?: string;
 	backgroundStyle?: 'cover' | 'ratio' | 'repeat';
-}
+} & JSONCanvasGenericNode;
 
-export interface JSONCanvasFileNode extends JSONCanvasGenericNode {
+export type JSONCanvasFileNode = {
 	type: 'file';
 	file: string;
 	subpath?: string;
-}
+} & JSONCanvasGenericNode;
 
-export interface JSONCanvasTextNode extends JSONCanvasGenericNode {
+export type JSONCanvasTextNode = {
 	type: 'text';
 	text: string;
-}
+} & JSONCanvasGenericNode;
 
-export interface JSONCanvasLinkNode extends JSONCanvasGenericNode {
+export type JSONCanvasLinkNode = {
 	type: 'link';
 	url: string;
-}
+} & JSONCanvasGenericNode;
 
 export type JSONCanvasNode =
 	| JSONCanvasGroupNode
@@ -29,7 +29,7 @@ export type JSONCanvasNode =
 	| JSONCanvasTextNode
 	| JSONCanvasLinkNode;
 
-export interface JSONCanvasEdge {
+export type JSONCanvasEdge = {
 	id: string;
 	fromNode: string;
 	toNode: string;
@@ -39,14 +39,14 @@ export interface JSONCanvasEdge {
 	label?: string;
 	styleAttributes?: Record<string, string>;
 	color?: string;
-}
+};
 
-export interface JSONCanvas {
+export type JSONCanvas = {
 	nodes?: Array<JSONCanvasNode>;
 	edges?: Array<JSONCanvasEdge>;
-}
+};
 
-interface JSONCanvasGenericNode {
+type JSONCanvasGenericNode = {
 	id: string;
 	type: 'group' | 'file' | 'text' | 'link';
 	x: number;
@@ -55,4 +55,4 @@ interface JSONCanvasGenericNode {
 	height: number;
 	styleAttributes?: Record<string, string>;
 	color?: string;
-}
+};

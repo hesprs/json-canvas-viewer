@@ -13,7 +13,7 @@ export default function vitePluginJsonCanvas(parser: Parser = marked) {
 	return {
 		name: 'vite-plugin-json-canvas',
 		async transform(code: string, id: string) {
-			if (!id.endsWith('.canvas')) return null;
+			if (!id.endsWith('.canvas')) return;
 			try {
 				const json: JSONCanvas = JSON.parse(code);
 				if (json.nodes)
@@ -22,13 +22,10 @@ export default function vitePluginJsonCanvas(parser: Parser = marked) {
 							if (node.type === 'text') node.text = await parser(node.text);
 						}),
 					);
-				return {
-					code: `export default ${JSON.stringify(json)}`,
-					map: null,
-				};
-			} catch (e) {
+				return { code: `export default ${JSON.stringify(json)}` };
+			} catch (error) {
 				console.error(`[vite-plugin-json-canvas] Failed to parse: ${id}`);
-				throw e;
+				throw error;
 			}
 		},
 	};

@@ -1,56 +1,63 @@
 import type { BaseOptions } from '$';
+import type { BaseArgs } from '$/BaseModule';
 import type { JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import StyleManager from '$/StyleManager';
-import utilities, { destroyError } from '$/utilities';
+import {
+	applyStyles,
+	destroyError,
+	drawRoundRect,
+	getAnchorCoord,
+	resizeCanvasForDPR,
+} from '$/utilities';
 import style from './styles.scss?inline';
 
-interface Options extends BaseOptions {
+type Options = {
 	minimapCollapsed?: boolean;
-}
+} & BaseOptions;
 
-interface Augmentation {
+type Augmentation = {
 	toggleMinimapCollapse: Minimap['toggleCollapse'];
-}
+};
 
 const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
 
 export default class Minimap extends BaseModule<Options, Augmentation> {
-	private _minimapCtx: CanvasRenderingContext2D | null = null;
-	private _viewportRectangle: HTMLDivElement | null = null;
-	private _minimap: HTMLDivElement | null = null;
-	private _minimapContainer: HTMLDivElement | null = null;
-	private _toggleMinimapBtn: HTMLButtonElement | null = null;
-	private minimapCache: { scale: number; centerX: number; centerY: number } = {
-		scale: 1,
+	private readonly _minimapCtx: CanvasRenderingContext2D | undefined;
+	private _viewportRectangle: HTMLDivElement | undefined;
+	private _minimap: HTMLDivElement | undefined;
+	private _minimapContainer: HTMLDivElement | undefined;
+	private _toggleMinimapBtn: HTMLButtonElement | undefined;
+	private readonly minimapCache: { scale: number; centerX: number; centerY: number } = {
 		centerX: 0,
 		centerY: 0,
+		scale: 1,
 	};
-	private DM: DataManager;
-	private SM: StyleManager;
+	private readonly DM: DataManager;
+	private readonly SM: StyleManager;
 	private collapsed: boolean;
 
 	private get minimap() {
-		if (this._minimap === null) throw destroyError;
+		if (!this._minimap) throw destroyError;
 		return this._minimap;
 	}
 	private get minimapCtx() {
-		if (this._minimapCtx === null) throw destroyError;
+		if (!this._minimapCtx) throw destroyError;
 		return this._minimapCtx;
 	}
 	private get viewportRectangle() {
-		if (this._viewportRectangle === null) throw destroyError;
+		if (!this._viewportRectangle) throw destroyError;
 		return this._viewportRectangle;
 	}
 	private get minimapContainer() {
-		if (this._minimapContainer === null) throw destroyError;
+		if (!this._minimapContainer) throw destroyError;
 		return this._minimapContainer;
 	}
 	private get toggleMinimapBtn() {
-		if (this._toggleMinimapBtn === null) throw destroyError;
+		if (!this._toggleMinimapBtn) throw destroyError;
 		return this._toggleMinimapBtn;
 	}
 
@@ -64,7 +71,7 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		this._minimapContainer = document.createElement('div');
 		this._minimapContainer.className = 'JCV-minimap-container';
 
-		utilities.applyStyles(this._minimapContainer, style);
+		applyStyles(this._minimapContainer, style);
 
 		this._toggleMinimapBtn = document.createElement('button');
 		this._toggleMinimapBtn.className =
@@ -91,7 +98,7 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		this._minimapContainer.classList.toggle('JCV-collapsed', this.collapsed);
 
 		this._toggleMinimapBtn.addEventListener('click', this.toggleCollapse);
-		utilities.resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
+		resizeCanvasForDPR(minimapCanvas, minimapCanvas.width, minimapCanvas.height);
 
 		this.augment({ toggleMinimapCollapse: this.toggleCollapse });
 		this.onStart(this.start);
@@ -105,7 +112,7 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		if (!this.collapsed) this.updateViewportRectangle();
 	};
 
-	private start = () => {
+	private readonly start = () => {
 		const bounds = this.DM.data.nodeBounds;
 		if (!bounds) return;
 		const displayWidth = this.minimap.clientWidth;
@@ -126,21 +133,21 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		this.minimapCtx.restore();
 	};
 
-	private drawMinimapNode = (node: JSONCanvasNode) => {
+	private readonly drawMinimapNode = (node: JSONCanvasNode) => {
 		const colors = this.SM.getColor(node.color);
 		const radius = 25;
 		this.minimapCtx.fillStyle = colors.border;
-		utilities.drawRoundRect(this.minimapCtx, node.x, node.y, node.width, node.height, radius);
+		drawRoundRect(this.minimapCtx, node.x, node.y, node.width, node.height, radius);
 		this.minimapCtx.fill();
 	};
 
-	private drawMinimapEdge = (edge: JSONCanvasEdge) => {
+	private readonly drawMinimapEdge = (edge: JSONCanvasEdge) => {
 		const canvasMap = this.DM.data.nodeMap;
 		const fromNode = canvasMap[edge.fromNode].ref;
 		const toNode = canvasMap[edge.toNode].ref;
 		if (!fromNode || !toNode) return;
-		const { x: startX, y: startY } = utilities.getAnchorCoord(fromNode, edge.fromSide);
-		const { x: endX, y: endY } = utilities.getAnchorCoord(toNode, edge.toSide);
+		const { x: startX, y: startY } = getAnchorCoord(fromNode, edge.fromSide);
+		const { x: endX, y: endY } = getAnchorCoord(toNode, edge.toSide);
 		this.minimapCtx.beginPath();
 		this.minimapCtx.moveTo(startX, startY);
 		this.minimapCtx.lineTo(endX, endY);
@@ -149,7 +156,7 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		this.minimapCtx.stroke();
 	};
 
-	private updateViewportRectangle = () => {
+	private readonly updateViewportRectangle = () => {
 		if (this.collapsed) return;
 		const bounds = this.DM.data.nodeBounds;
 		const container = this.DM.data.container;
@@ -174,13 +181,13 @@ export default class Minimap extends BaseModule<Options, Augmentation> {
 		this.viewportRectangle.style.height = `${viewRectHeight}px`;
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		this.toggleMinimapBtn.removeEventListener('click', this.toggleCollapse);
 		this.minimapCtx.clearRect(0, 0, this.minimap.clientWidth, this.minimap.clientHeight);
 		this.minimapContainer.remove();
-		this._minimapContainer = null;
-		this._toggleMinimapBtn = null;
-		this._viewportRectangle = null;
-		this._minimap = null;
+		this._minimapContainer = undefined;
+		this._toggleMinimapBtn = undefined;
+		this._viewportRectangle = undefined;
+		this._minimap = undefined;
 	};
 }

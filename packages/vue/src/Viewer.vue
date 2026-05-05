@@ -1,49 +1,48 @@
 <script lang="ts" generic="T extends ModuleInputCtor" setup>
-import {
-	JSONCanvasViewer,
-	type Options,
-	type JSONCanvasViewerInterface,
-	renderToString,
-	type GeneralModuleCtor,
-	type Hook,
-	type JSONCanvasTextNode,
-	type JSONCanvasLinkNode,
-	type JSONCanvasFileNode,
-	type JSONCanvas,
+import type {
+	Options,
+	JSONCanvasViewerInterface,
+	GeneralModuleCtor,
+	Hook,
+	JSONCanvasTextNode,
+	JSONCanvasLinkNode,
+	JSONCanvasFileNode,
+	JSONCanvas,
 } from 'json-canvas-viewer';
+import type { ComponentInternalInstance } from 'vue';
+import { JSONCanvasViewer, renderToString } from 'json-canvas-viewer';
 import {
 	onMounted,
 	onUnmounted,
 	useTemplateRef,
 	watch,
 	getCurrentInstance,
-	type ComponentInternalInstance,
 	createApp,
 	reactive,
 } from 'vue';
 
 export type ModuleInputCtor = Array<GeneralModuleCtor>;
 
-export interface TextSlotProps {
+export type TextSlotProps = {
 	content: string;
 	node: JSONCanvasTextNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
+};
 
-export interface LinkSlotProps {
+export type LinkSlotProps = {
 	content: string;
 	node: JSONCanvasLinkNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
+};
 
-export interface FileSlotProps {
+export type FileSlotProps = {
 	content: string;
 	node: JSONCanvasFileNode;
 	onActive: Hook;
 	onLoseActive: Hook;
-}
+};
 
 type ComponentOptions<T extends ModuleInputCtor> = {
 	modules?: T;
@@ -58,17 +57,24 @@ type ComponentOptions<T extends ModuleInputCtor> = {
 	theme?: 'dark' | 'light';
 };
 
-const props = defineProps<ComponentOptions<T>>();
-const isPrerendering = props.isPrerendering ?? false;
+const {
+	isPrerendering = false,
+	attachmentDir,
+	canvas = {},
+	attachments,
+	options = {},
+	theme,
+	modules,
+} = defineProps<ComponentOptions<T>>();
 const viewerRef = useTemplateRef('viewerRef');
-let viewer: JSONCanvasViewerInterface<T> | null = null;
+let viewer: JSONCanvasViewerInterface<T> | undefined;
 const instance = getCurrentInstance() as ComponentInternalInstance;
 const prerender = isPrerendering
 	? await renderToString({
-			canvas: props.canvas ?? {},
-			attachmentDir: props.attachmentDir,
-			attachments: props.attachments,
-			...props.options,
+			attachmentDir,
+			attachments,
+			canvas,
+			...options,
 		})
 	: '';
 
@@ -85,14 +91,21 @@ defineExpose({ viewer });
 function createNodeFunc<N extends TextSlotProps | FileSlotProps | LinkSlotProps>(
 	slotFn: (props: N) => unknown,
 ) {
-	return (
-		container: HTMLDivElement,
-		content: string,
-		node: N['node'],
-		onBeforeUnmount: Hook,
-		onActive: Hook,
-		onLoseActive: Hook,
-	) => {
+	return ({
+		container,
+		content,
+		node,
+		onBeforeUnmount,
+		onActive,
+		onLoseActive,
+	}: {
+		container: HTMLDivElement;
+		content: string;
+		node: N['node'];
+		onBeforeUnmount: Hook;
+		onActive: Hook;
+		onLoseActive: Hook;
+	}) => {
 		const app = createApp({
 			render: () =>
 				slotFn(
@@ -111,19 +124,14 @@ function createNodeFunc<N extends TextSlotProps | FileSlotProps | LinkSlotProps>
 }
 
 watch(
-	() => props.theme,
-	(theme) => viewer?.changeTheme(theme),
+	() => theme,
+	(newTheme) => viewer?.changeTheme(newTheme),
 );
 watch(
-	() => {
-		return {
-			canvas: props.canvas,
-			attachmentDir: props.attachmentDir,
-			attachments: props.attachments,
-		};
-	},
+	() => ({ attachmentDir, attachments, canvas }),
+	// oxlint-disable-next-line no-shadow
 	({ canvas, attachmentDir, attachments }) =>
-		viewer?.load({ canvas, attachmentDir, attachments }),
+		viewer?.load({ attachmentDir, attachments, canvas }),
 );
 
 onMounted(() => {
@@ -136,21 +144,21 @@ onMounted(() => {
 		nodeComponents[nodeType] = createNodeFunc(slotFunc as never);
 	}
 	viewer = new JSONCanvasViewer(
-		Object.assign(props.options ?? {}, {
+		Object.assign(options, {
+			attachmentDir,
+			attachments,
+			canvas,
 			container: viewerRef.value,
-			theme: props.theme,
-			canvas: props.canvas,
-			attachmentDir: props.attachmentDir,
-			attachments: props.attachments,
 			nodeComponents,
+			theme,
 		}) as Options<T>,
-		props.modules,
+		modules,
 	);
 });
 
 onUnmounted(() => {
 	viewer?.dispose();
-	viewer = null;
+	viewer = undefined;
 });
 </script>
 

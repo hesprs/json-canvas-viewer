@@ -29,7 +29,7 @@ export type General = any;
 export type GeneralArray = ReadonlyArray<General>;
 export type GeneralObject = object;
 export type GeneralFunction = Function;
-export type GeneralConstructor = new (...args: General[]) => General;
+export type GeneralConstructor = new (...args: Array<General>) => General;
 // #endregion =====================================================================
 
 // #region Orchestration Machine

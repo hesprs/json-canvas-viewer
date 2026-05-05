@@ -1,38 +1,39 @@
 import type { BaseOptions } from '$';
-import { type BaseArgs, BaseModule } from '$/BaseModule';
+import type { BaseArgs } from '$/BaseModule';
+import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import StyleManager from '$/StyleManager';
-import utilities from '$/utilities';
+import { makeHook } from '$/utilities';
 
-interface Augmentation {
+type Augmentation = {
 	refresh: Controller['refresh'];
 	onRefresh: Controller['onRefresh'];
 	onResize: Controller['onResize'];
-}
+};
 
 export default class Controller extends BaseModule<BaseOptions, Augmentation> {
-	private animationId: null | number = null;
-	private resizeAnimationId: null | number = null;
-	private DM: DataManager;
-	private SM: StyleManager;
-	private resizeObserver: ResizeObserver;
+	private animationId: undefined | number;
+	private resizeAnimationId: undefined | number;
+	private readonly DM: DataManager;
+	private readonly SM: StyleManager;
+	private readonly resizeObserver: ResizeObserver;
 	private perFrame: {
 		lastScale: number;
 		lastOffsets: { x: number; y: number };
 	} = {
-		lastScale: 1,
 		lastOffsets: { x: 0, y: 0 },
+		lastScale: 1,
 	};
-	private lastResizeCenter: {
-		x: null | number;
-		y: null | number;
+	private readonly lastResizeCenter: {
+		x: undefined | number;
+		y: undefined | number;
 	} = {
-		x: null,
-		y: null,
+		x: undefined,
+		y: undefined,
 	};
 
-	onResize = utilities.makeHook<[number, number]>();
-	onRefresh = utilities.makeHook();
+	onResize = makeHook<[number, number]>();
+	onRefresh = makeHook();
 
 	constructor(...args: BaseArgs) {
 		super(...args);
@@ -41,21 +42,21 @@ export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 		this.resizeObserver = new ResizeObserver(this.onResizeCallback);
 		this.SM.onChangeTheme.subscribe(this.refresh);
 		this.augment({
-			refresh: this.refresh,
 			onRefresh: this.onRefresh,
 			onResize: this.onResize,
+			refresh: this.refresh,
 		});
 		this.onStart(this.start);
 		this.onRestart(this.refresh);
 		this.onDispose(this.dispose);
 	}
 
-	private start = () => {
+	private readonly start = () => {
 		this.resizeObserver.observe(this.DM.data.container);
 		this.animationId = requestAnimationFrame(this.draw);
 	};
 
-	private draw = () => {
+	private readonly draw = () => {
 		if (
 			this.perFrame.lastScale !== this.DM.data.scale ||
 			this.perFrame.lastOffsets.x !== this.DM.data.offsetX ||
@@ -67,13 +68,13 @@ export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 
 	refresh = () => {
 		this.perFrame = {
-			lastScale: this.DM.data.scale,
 			lastOffsets: { x: this.DM.data.offsetX, y: this.DM.data.offsetY },
+			lastScale: this.DM.data.scale,
 		};
 		this.onRefresh();
 	};
 
-	private onResizeCallback = () => {
+	private readonly onResizeCallback = () => {
 		this.resizeAnimationId = requestAnimationFrame(() => {
 			const center = this.DM.middleViewer();
 			if (this.lastResizeCenter.x && this.lastResizeCenter.y) {
@@ -87,7 +88,7 @@ export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 		});
 	};
 
-	private dispose = () => {
+	private readonly dispose = () => {
 		if (this.animationId) cancelAnimationFrame(this.animationId);
 		if (this.resizeAnimationId) cancelAnimationFrame(this.resizeAnimationId);
 		this.resizeObserver.disconnect();

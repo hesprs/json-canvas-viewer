@@ -4,7 +4,7 @@
 	"tabWidth": 4,
 	"useTabs": true,
 	"singleQuote": true,
-	"experimentalSortImports": {
+	"sortImports": {
 		"newlinesBetween": false,
 		"groups": [
 			"type-import",
@@ -26,5 +26,5 @@
 			}
 		}
 	],
-    "ignorePatterns": ["**/node_modules/**", "**/dist/**"]
+	"ignorePatterns": ["**/node_modules/**", "**/dist/**"]
 }

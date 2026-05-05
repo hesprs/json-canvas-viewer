@@ -14,7 +14,7 @@ interface Options {
     attachments?: Record<string, string>;
     attachmentDir?: string;
     noAttachmentRelocation?: boolean;
-    markdownParser?: (markdown: string) => string | Promise<string>;
+    parser?: (markdown: string) => string | Promise<string>;
     extraCSS?: string;
     shadowed?: boolean;
     loading?: 'normal' | 'lazy' | 'none';
@@ -25,14 +25,14 @@ interface Options {
         dark?: Colors;
     };
     nodeComponents?: {
-        [Key: 'text' | 'image' | 'audio' | 'video' | 'link' | 'markdown']: (
-            container: HTMLDivElement,
-	        content: string,
-	        node: JSONCanvasNode,
-	        onBeforeUnmount: Hook,
-	        onActive: Hook,
-	        onLoseActive: Hook,
-        ) => void;
+        [Key: 'text' | 'image' | 'audio' | 'video' | 'link' | 'markdown']: (args: {
+            container: HTMLDivElement;
+	        content: string;
+	        node: JSONCanvasNode;
+	        onBeforeUnmount: Hook;
+	        onActive: Hook;
+	        onLoseActive: Hook;
+        }) => void | Promise<void>;
     }
 }
 
@@ -98,9 +98,9 @@ type Hook<Args extends GeneralArray = []> = {
 - The paths to attachments are kept as-is.
 - You can still control individual attachments' paths using `attachments`.
 
-**`markdownParser`**: the markdown parser.
+**`parser`**: the markdown parser.
 
-- Default: `(markdown: string) => markdown`
+- Default: `(markdown: string) => markdown` (no parsing happens)
 - This is unnecessary if you are using Vite + `vite-plugin-json-canvas`.
 - The package exports a `parser` that uses Marked internally, which can be used for this purpose.
 
@@ -143,28 +143,51 @@ type Hook<Args extends GeneralArray = []> = {
 - The content is parsed HTML string for `text` nodes, file path for other nodes.
 - With this option, you can render any component inside JSON Canvas Viewer. This option is elevated into five component properties `text`, `image`, `file`, `link` and `markdown` in React and Preact components. In Vue, they are present as five named and scoped slots. **Note that in component builds, you won't see the `container` and `onBeforeUnmount` arguments since they are handled internally and automatically.**
 
-- To use them in React/Preact:
+- **To use them in vanilla TypeScript**:
+
+```TypeScript
+import canvas from 'path/to/your.canvas';
+import { JSONCanvasViewer as Viewer } from 'json-canvas-viewer';
+
+new Viewer({
+    canvas,
+	container: document.body,
+	nodeComponents: {
+	    text: ({ container /* you can receive more arguments here */ }) => {
+			const content = document.createElement('div');
+			content.textContent = 'this is an HTML element';
+			container.appendChild(parsedContentWrapper);
+		}
+	}
+});
+```
+
+- **To use them in React/Preact**:
 
 ```tsx
 import canvas from 'path/to/your.canvas';
-import Viewer from '@json-canvas-viewer/react'; // or '@json-canvas-viewer/preact'
+import { JSONCanvasViewerComponent as Viewer } from '@json-canvas-viewer/react'; // or '@json-canvas-viewer/preact'
 
 export default function component() {
   return (
     <Viewer
       canvas={canvas}
-      text={(/* you can receive arguments here */) => <p>this is a React/Preact component</p>} // you can pass any component here
+      text={(
+        {
+          /* you can receive arguments here */
+        },
+      ) => <p>this is a React/Preact component</p>} // you can pass any component here
     ></Viewer>
   );
 }
 ```
 
-- To use them in Vue:
+- **To use them in Vue**:
 
 ```vue
 <script setup lang="ts">
 import canvas from 'path/to/your.canvas';
-import Viewer from '@json-canvas-viewer/vue';
+import { JSONCanvasViewerComponent as Viewer } from '@json-canvas-viewer/vue';
 </script>
 
 <template>

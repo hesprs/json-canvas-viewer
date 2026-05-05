@@ -1,9 +1,7 @@
 import type { BaseOptions } from '$';
 import type { General, GeneralObject, ModuleInput as MI, Orchestratable } from '$/types';
-import type utilities from '$/utilities';
+import type { Hook } from '$/utilities';
 import type { Container } from '@needle-di/core';
-
-type Hook = ReturnType<typeof utilities.makeHook>;
 
 export type GeneralModuleCtor = typeof BaseModule<General, General>;
 export type GeneralModule = BaseModule<General, General>;
@@ -22,6 +20,7 @@ export class BaseModule<O extends BaseOptions = BaseOptions, A extends GeneralOb
 	onStart: Hook['subscribe'];
 	onRestart: Hook['subscribe'];
 	onDispose: Hook['subscribe'];
+	// oxlint-disable-next-line max-params
 	constructor(
 		protected container: Container,
 		options: GeneralObject,

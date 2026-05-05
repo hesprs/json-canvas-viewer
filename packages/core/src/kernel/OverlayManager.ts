@@ -66,9 +66,9 @@ type ComponentDict = {
 const supportedTypes = ['markdown', 'image', 'audio', 'video'] as const;
 
 export default class OverlayManager extends BaseModule<Options, Augmentation> {
-	private _overlaysLayer: HTMLDivElement | undefined = document.createElement('div');
+	private _overlaysLayer?: HTMLDivElement = document.createElement('div');
 	private overlays: Record<string, HTMLDivElement> = {}; // { id: node } the overlays in viewport
-	private selectedId: string | undefined;
+	private selectedId?: string;
 	private aborted = false;
 	private eventListeners: Record<string, Array<EventListener | undefined>> = {};
 	private readonly DM: DataManager;
@@ -213,8 +213,8 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 
 	private readonly select = (id?: string) => {
 		const previousId = this.selectedId;
-		const previous = !previousId ? undefined : this.overlays[previousId];
-		const current = !id ? undefined : this.overlays[id];
+		const previous = previousId ? this.overlays[previousId] : undefined;
+		const current = id ? this.overlays[id] : undefined;
 		if (previous && previousId) {
 			previous.classList.remove('JCV-active');
 			const nodeItem = this.DM.data.nodeMap[previousId];

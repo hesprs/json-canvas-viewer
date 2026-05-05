@@ -26,11 +26,11 @@ const toggleCollapseIcon =
 	'<svg viewBox="-3.6 -3.6 31.2 31.2" stroke-width=".4"><path d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z" /></svg>';
 
 export default class Minimap extends BaseModule<Options, Augmentation> {
-	private readonly _minimapCtx: CanvasRenderingContext2D | undefined;
-	private _viewportRectangle: HTMLDivElement | undefined;
-	private _minimap: HTMLDivElement | undefined;
-	private _minimapContainer: HTMLDivElement | undefined;
-	private _toggleMinimapBtn: HTMLButtonElement | undefined;
+	private readonly _minimapCtx?: CanvasRenderingContext2D;
+	private _viewportRectangle?: HTMLDivElement;
+	private _minimap?: HTMLDivElement;
+	private _minimapContainer?: HTMLDivElement;
+	private _toggleMinimapBtn?: HTMLButtonElement;
 	private readonly minimapCache: { scale: number; centerX: number; centerY: number } = {
 		centerX: 0,
 		centerY: 0,

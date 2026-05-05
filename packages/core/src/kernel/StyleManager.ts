@@ -180,7 +180,7 @@ export default class StyleManager extends BaseModule<Options, Augmentation> {
 		this.namedColors[this.theme][name];
 
 	changeTheme = (theme?: 'dark' | 'light') => {
-		this.theme = (theme ?? this.theme === 'dark') ? 'light' : 'dark';
+		this.theme = theme ?? (this.theme === 'dark' ? 'light' : 'dark');
 		const container = this.container.get(DataManager).data.container;
 		Object.entries(this.namedColors[this.theme]).forEach(([key, value]) => {
 			container.style.setProperty(`--${key}`, value);

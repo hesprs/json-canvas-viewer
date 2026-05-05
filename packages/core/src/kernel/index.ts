@@ -37,7 +37,7 @@ type AllAugmentation<M extends ModuleInput = []> = Augmentation<M> & Augmentatio
 
 class JSONCanvasViewer<M extends ModuleInputCtor> {
 	private readonly allModules: ModuleInputCtor;
-	private IO: IntersectionObserver | undefined;
+	private IO?: IntersectionObserver;
 	private started = false;
 	private disposed = false;
 	options: AllOptions<M>;

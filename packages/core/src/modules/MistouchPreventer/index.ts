@@ -16,7 +16,7 @@ type Augmentation = {
 };
 
 export default class MistouchPreventer extends BaseModule<Options, Augmentation> {
-	private _preventionContainer: HTMLDivElement | undefined;
+	private _preventionContainer?: HTMLDivElement;
 	private preventMt = false;
 	private readonly DM: DataManager;
 	private readonly preventMistouch: {

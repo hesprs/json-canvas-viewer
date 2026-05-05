@@ -153,7 +153,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		this.resetView();
 	};
 
-	private readonly processBaseDir = (baseDir: string | undefined) => {
+	private readonly processBaseDir = (baseDir?: string) => {
 		if (!baseDir) return './';
 		const lastChar = baseDir?.slice(-1);
 		if (lastChar === '/') return baseDir;

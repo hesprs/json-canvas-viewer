@@ -14,13 +14,12 @@ export type Augmentation<M extends ModuleInput> = Orchestratable<M, '_Augmentati
 export type BaseArgs = ConstructorParameters<GeneralModuleCtor>;
 
 export class BaseModule<O extends BaseOptions = BaseOptions, A extends GeneralObject = {}> {
-	// https://github.com/timocov/dts-bundle-generator/issues/360
 	declare private static readonly _BaseModuleBrand: unique symbol; // Nominal marker
 	declare _Augmentation: A;
 	onStart: Hook['subscribe'];
 	onRestart: Hook['subscribe'];
 	onDispose: Hook['subscribe'];
-	// oxlint-disable-next-line max-params
+
 	constructor(
 		protected container: Container,
 		options: GeneralObject,

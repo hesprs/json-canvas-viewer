@@ -257,41 +257,78 @@ export default class Renderer extends BaseModule<Options> {
 			color.active,
 		);
 		this.drawArrowhead(endX, endY, endControlX, endControlY, color.active);
-		if (edge.label) {
-			const t = 0.5;
-			const x =
-				(1 - t) ** 3 * startX +
-				3 * (1 - t) ** 2 * t * startControlX +
-				3 * (1 - t) * t * t * endControlX +
-				t ** 3 * endX;
-			const y =
-				(1 - t) ** 3 * startY +
-				3 * (1 - t) ** 2 * t * startControlY +
-				3 * (1 - t) * t * t * endControlY +
-				t ** 3 * endY;
-			this.ctx.font = '18px sans-serif';
-			const metrics = this.ctx.measureText(edge.label);
-			const padding = 8;
-			const labelWidth = metrics.width + padding * 2;
-			const labelHeight = 20;
-			this.ctx.fillStyle = color.active;
-			this.ctx.beginPath();
-			drawRoundRect(
-				this.ctx,
-				x - labelWidth / 2,
-				y - labelHeight / 2 - 2,
-				labelWidth,
-				labelHeight,
-				4,
+		if (edge.label)
+			this.drawEdgeLabel(
+				startX,
+				startY,
+				endX,
+				endY,
+				startControlX,
+				startControlY,
+				endControlX,
+				endControlY,
+				edge.label,
+				color.active,
+				color.text,
 			);
-			this.ctx.fill();
-			this.ctx.fillStyle = color.text;
-			this.ctx.textAlign = 'center';
-			this.ctx.textBaseline = 'middle';
-			this.ctx.fillText(edge.label, x, y - 2);
-			this.ctx.textAlign = 'left';
-			this.ctx.textBaseline = 'alphabetic';
+	};
+
+	private readonly drawEdgeLabel = (
+		startX: number,
+		startY: number,
+		endX: number,
+		endY: number,
+		startControlX: number,
+		startControlY: number,
+		endControlX: number,
+		endControlY: number,
+		label: string,
+		color: string,
+		textColor: string,
+	) => {
+		const t = 0.5;
+		const x =
+			(1 - t) ** 3 * startX +
+			3 * (1 - t) ** 2 * t * startControlX +
+			3 * (1 - t) * t * t * endControlX +
+			t ** 3 * endX;
+		const y =
+			(1 - t) ** 3 * startY +
+			3 * (1 - t) ** 2 * t * startControlY +
+			3 * (1 - t) * t * t * endControlY +
+			t ** 3 * endY;
+		this.ctx.font = '18px sans-serif';
+		const lines = label.split('\n');
+		const lineHeight = 17;
+		let maxWidth = 0;
+		for (const line of lines) {
+			const w = this.ctx.measureText(line).width;
+			if (w > maxWidth) maxWidth = w;
 		}
+		const paddingX = 8;
+		const paddingY = 3;
+		const labelWidth = maxWidth + paddingX * 2;
+		const labelHeight = lines.length * lineHeight + paddingY * 2; // Dynamic height
+		this.ctx.fillStyle = color;
+		this.ctx.beginPath();
+		drawRoundRect(
+			this.ctx,
+			x - labelWidth / 2,
+			y - labelHeight / 2 - 2,
+			labelWidth,
+			labelHeight,
+			4,
+		);
+		this.ctx.fill();
+		this.ctx.fillStyle = textColor;
+		this.ctx.textAlign = 'center';
+		this.ctx.textBaseline = 'middle';
+		for (let i = 0; i < lines.length; i++) {
+			const offsetY = (i - (lines.length - 1) / 2) * lineHeight;
+			this.ctx.fillText(lines[i], x, y - 2 + offsetY);
+		}
+		this.ctx.textAlign = 'left';
+		this.ctx.textBaseline = 'alphabetic';
 	};
 
 	private readonly getControlPoints = (

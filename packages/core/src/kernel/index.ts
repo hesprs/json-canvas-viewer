@@ -13,7 +13,7 @@ import InteractionHandler from '$/InteractionHandler';
 import OverlayManager from '$/OverlayManager';
 import Renderer from '$/Renderer';
 import StyleManager from '$/StyleManager';
-import { makeHook } from '$/utilities';
+import { hook } from '$/utilities';
 import { Container } from '@needle-di/core';
 
 export type BaseOptions = {
@@ -42,9 +42,9 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 	private disposed = false;
 	options: AllOptions<M>;
 	container: Container;
-	onDispose = makeHook(true);
-	onStart = makeHook();
-	onRestart = makeHook();
+	onDispose = hook(true);
+	onStart = hook();
+	onRestart = hook();
 
 	constructor(options: AllOptions<M>, modules?: M) {
 		this.container = new Container();
@@ -96,11 +96,7 @@ class JSONCanvasViewer<M extends ModuleInputCtor> {
 		Object.defineProperties(this, descriptors);
 	};
 
-	load = (options?: {
-		canvas?: JSONCanvas;
-		attachmentDir?: string;
-		attachments?: Record<string, string>;
-	}) => {
+	load = (options?: { canvas?: JSONCanvas; attachments?: Record<string, string> }) => {
 		if (this.disposed) return;
 		if (options) Object.assign(this.options, options);
 		if (this.started) this.onRestart();

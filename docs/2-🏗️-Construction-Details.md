@@ -12,13 +12,9 @@ interface Options {
     canvas?: JSONCanvas;
     theme?: 'light' | 'dark';
     attachments?: Record<string, string>;
-    attachmentDir?: string;
-    noAttachmentRelocation?: boolean;
     parser?: (markdown: string) => string | Promise<string>;
-    extraCSS?: string;
     shadowed?: boolean;
     loading?: 'normal' | 'lazy' | 'none';
-    zoomInOptimization?: boolean;
     pointeract?: PointeractOptions;
     colors?: {
         light?: Colors;
@@ -26,7 +22,7 @@ interface Options {
     };
     nodeComponents?: {
         [Key: 'text' | 'image' | 'audio' | 'video' | 'link' | 'markdown']: (args: {
-            container: HTMLDivElement;
+          container: HTMLDivElement;
 	        content: string;
 	        node: JSONCanvasNode;
 	        onBeforeUnmount: Hook;
@@ -84,31 +80,11 @@ type Hook<Args extends GeneralArray = []> = {
 - If using relative path, the path is relative to the file where instantiation happens.
 - This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
-**`attachmentDir`**: the directory of attachments.
-
-- Default: `./`
-- This option lets you specify the directory where attachments are stored, so that you don't need to manually remap them with `attachments`.
-- If using relative path, the path is relative to the file where instantiation happens.
-- **Please put all your attachments in this directory, wherever they originally are**. You can still control individual attachments' paths using `attachments`.
-- This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
-
-**`noAttachmentRelocation`**: disables attachment relocation
-
-- Default: `false`
-- The paths to attachments are kept as-is.
-- You can still control individual attachments' paths using `attachments`.
-
 **`parser`**: the markdown parser.
 
 - Default: `(markdown: string) => markdown` (no parsing happens)
 - This is unnecessary if you are using Vite + `vite-plugin-json-canvas`.
 - The package exports a `parser` that uses Marked internally, which can be used for this purpose.
-
-**`extraCSS`**: extra CSS string to be injected into the viewer.
-
-- Default: `''`
-- Please import your CSS as strings (e.g. `import css from 'path/to/your.css?inline` if you are using Vite).
-- You can directly write global CSS to stylize the viewer.
 
 **`shadowed`**: whether to put the viewer in a shadow DOM.
 
@@ -121,11 +97,6 @@ type Hook<Args extends GeneralArray = []> = {
 - `none`: disables loading, you need to manually call `JSONCanvasViewer.load()`.
 - `lazy`: delays loading until the viewer is about to enter the user's viewport.
 - `normal`: loads the canvas immediately after instantiation.
-
-**`zoomInOptimization`**: whether to reuse previous renders if the viewport of next frame is absolutely inside the previous one.
-
-- Default: `false`
-- This can de facto improve the performance when zooming in, however it may introduce visual inconsistency and jerking.
 
 **`pointeract`**: options passed to `pointeract`, the user interaction resolver.
 
@@ -217,7 +188,7 @@ interface JSONCanvasViewer {
   options: JSONCanvasViewerOptions;
   changeTheme(theme?: 'dark' | 'light'): void;
   dispose(): void;
-  load(options?: { canvas?: JSONCanvas; attachmentDir?: string }): void;
+  load(options?: { canvas?: JSONCanvas; attachments?: Record<string, string> }): void;
   pan(delta: { x: number; y: number }): void;
   panToCoords(coords: { x: number; y: number }): void;
   refresh(): void;
@@ -257,7 +228,7 @@ interface JSONCanvasViewer {
 
 **`load()`**: load or reload a canvas into the viewer.
 
-- You can change the canvas by passing an argument to it. A typical use case is to pass a new `canvas` object (and potentially `attachments` and `attachmentDir`) to load a new canvas on an existing viewer.
+- You can change the canvas by passing an argument to it. A typical use case is to pass a new `canvas` object (and potentially `attachments`) to load a new canvas on an existing viewer.
 - The key to [loading and reloading](#loading-and-reloading).
 - Can be configured via `loading` option.
 

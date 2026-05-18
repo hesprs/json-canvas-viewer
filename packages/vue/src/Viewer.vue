@@ -47,19 +47,14 @@ export type FileSlotProps = {
 type ComponentOptions<T extends ModuleInputCtor> = {
 	modules?: T;
 	canvas?: JSONCanvas;
-	attachmentDir?: string;
 	attachments?: Record<string, string>;
-	options?: Omit<
-		Options<T>,
-		'container' | 'theme' | 'canvas' | 'attachmentDir' | 'nodeComponents' | 'attachments'
-	>;
+	options?: Omit<Options<T>, 'container' | 'theme' | 'canvas' | 'nodeComponents' | 'attachments'>;
 	isPrerendering?: boolean;
 	theme?: 'dark' | 'light';
 };
 
 const {
 	isPrerendering = false,
-	attachmentDir,
 	canvas = {},
 	attachments,
 	options = {},
@@ -71,7 +66,6 @@ let viewer: JSONCanvasViewerInterface<T> | undefined;
 const instance = getCurrentInstance() as ComponentInternalInstance;
 const prerender = isPrerendering
 	? await renderToString({
-			attachmentDir,
 			attachments,
 			canvas,
 			...options,
@@ -128,10 +122,9 @@ watch(
 	(newTheme) => viewer?.changeTheme(newTheme),
 );
 watch(
-	() => ({ attachmentDir, attachments, canvas }),
+	() => ({ attachments, canvas }),
 	// oxlint-disable-next-line no-shadow
-	({ canvas, attachmentDir, attachments }) =>
-		viewer?.load({ attachmentDir, attachments, canvas }),
+	({ canvas, attachments }) => viewer?.load({ attachments, canvas }),
 );
 
 onMounted(() => {
@@ -145,7 +138,6 @@ onMounted(() => {
 	}
 	viewer = new JSONCanvasViewer(
 		Object.assign(options, {
-			attachmentDir,
 			attachments,
 			canvas,
 			container: viewerRef.value,

@@ -1,4 +1,3 @@
-import type { BaseOptions } from '$';
 import type { BaseArgs } from '$/BaseModule';
 import type { EdgeItem, NodeItem } from '$/DataManager';
 import type { Box } from '$/types';
@@ -12,37 +11,17 @@ import { destroyError, drawRoundRect, getAnchorCoord, resizeCanvasForDPR } from 
 const ARROW_LENGTH = 12;
 const ARROW_WIDTH = 4;
 const NODE_RADIUS = 12;
-const CSS_ZOOM_REDRAW_INTERVAL = 500;
 const NODE_BORDER_WIDTH = 2;
 const DOT_RADIUS = 1; // Dot radius in CSS pixels
 const DOT_BASE_GAP = 10; // Base gap between dots in CSS pixels
 
 const NODE_BORDER_HALF_WIDTH = NODE_BORDER_WIDTH / 2;
 
-type Options = {
-	zoomInOptimization?: boolean;
-} & BaseOptions;
-
-export default class Renderer extends BaseModule<Options> {
+export default class Renderer extends BaseModule {
 	private _canvas?: HTMLCanvasElement;
 	private readonly ctx: CanvasRenderingContext2D;
 	private readonly DM: DataManager;
 	private readonly SM: StyleManager;
-	private readonly zoomInOptimize: {
-		lastDrawnScale: number;
-		lastDrawnViewport: Box;
-		timeout?: number;
-		lastCallTime: number;
-	} = {
-		lastCallTime: 0,
-		lastDrawnScale: 0,
-		lastDrawnViewport: {
-			bottom: 0,
-			left: 0,
-			right: 0,
-			top: 0,
-		},
-	};
 
 	private get canvas() {
 		if (!this._canvas) throw destroyError;
@@ -73,37 +52,6 @@ export default class Renderer extends BaseModule<Options> {
 		const offsetY = this.DM.data.offsetY;
 		const scale = this.DM.data.scale;
 		const currentViewport = this.getCurrentViewport(offsetX, offsetY, scale);
-		if (!this.options.zoomInOptimization) {
-			this.trueRedraw(offsetX, offsetY, scale, currentViewport);
-			return;
-		}
-		if (this.zoomInOptimize.timeout) {
-			clearTimeout(this.zoomInOptimize.timeout);
-			this.zoomInOptimize.timeout = undefined;
-		}
-		const now = Date.now();
-		if (
-			this.isInside(currentViewport, this.zoomInOptimize.lastDrawnViewport) &&
-			scale !== this.zoomInOptimize.lastDrawnScale
-		) {
-			const timeSinceLast = now - this.zoomInOptimize.lastCallTime;
-			if (timeSinceLast < CSS_ZOOM_REDRAW_INTERVAL) {
-				this.zoomInOptimize.timeout = window.setTimeout(() => {
-					this.trueRedraw(offsetX, offsetY, scale, currentViewport);
-					this.zoomInOptimize.lastCallTime = now;
-					this.zoomInOptimize.timeout = undefined;
-				}, 60);
-				this.fakeRedraw(currentViewport, scale);
-				return;
-			}
-		}
-		this.zoomInOptimize.lastCallTime = now;
-		this.trueRedraw(offsetX, offsetY, scale, currentViewport);
-	};
-
-	private trueRedraw(offsetX: number, offsetY: number, scale: number, currentViewport: Box) {
-		this.zoomInOptimize.lastDrawnViewport = currentViewport;
-		this.zoomInOptimize.lastDrawnScale = scale;
 		this.canvas.style.transform = '';
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.ctx.save();
@@ -121,16 +69,7 @@ export default class Renderer extends BaseModule<Options> {
 			this.drawEdge(item);
 		});
 		this.ctx.restore();
-	}
-
-	private fakeRedraw(currentViewport: Box, scale: number) {
-		const cssScale = scale / this.zoomInOptimize.lastDrawnScale;
-		const currentOffsetX =
-			(this.zoomInOptimize.lastDrawnViewport.left - currentViewport.left) * scale;
-		const currentOffsetY =
-			(this.zoomInOptimize.lastDrawnViewport.top - currentViewport.top) * scale;
-		this.canvas.style.transform = `translate(${currentOffsetX}px, ${currentOffsetY}px) scale(${cssScale})`;
-	}
+	};
 
 	private readonly isInside = (inner: Box, outer: Box) =>
 		inner.left > outer.left &&
@@ -450,10 +389,6 @@ export default class Renderer extends BaseModule<Options> {
 	};
 
 	private readonly dispose = () => {
-		if (this.zoomInOptimize.timeout) {
-			clearTimeout(this.zoomInOptimize.timeout);
-			this.zoomInOptimize.timeout = undefined;
-		}
 		this.canvas.remove();
 		this._canvas = undefined;
 	};

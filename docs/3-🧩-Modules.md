@@ -85,3 +85,7 @@ import { MistouchPreventer } from 'json-canvas-viewer';
 `startMistouchPrevention(): void`: freezes the canvas and shows the banner.
 
 `endMistouchPrevention(): void`: unlocks the canvas and hides the banner.
+
+---
+
+**Next Read**: [Modules](4-🖇️-Prerendering.md)

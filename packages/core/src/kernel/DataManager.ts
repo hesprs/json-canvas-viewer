@@ -5,7 +5,7 @@ import type { Hook } from '$/utilities';
 import type { JSONCanvas, JSONCanvasEdge, JSONCanvasNode } from '@repo/shared';
 import { BaseModule } from '$/BaseModule';
 import style from '$/styles.scss?inline';
-import { applyStyles, getAnchorCoord, makeHook } from '$/utilities';
+import { applyStyles, getAnchorCoord, hook } from '$/utilities';
 
 const INITIAL_VIEWPORT_PADDING = 100;
 const NODE_LABEL_MARGIN = 40;
@@ -14,10 +14,7 @@ const EDGE_BOX_HEURISTICS_BASE_MARGIN = 10;
 type Options = {
 	shadowed?: boolean;
 	canvas?: JSONCanvas;
-	attachmentDir?: string;
-	extraCSS?: string;
 	attachments?: Record<string, string>;
-	noAttachmentRelocation?: boolean;
 } & BaseOptions;
 
 type Augmentation = {
@@ -45,20 +42,18 @@ type NodeMap = Record<string, NodeItem>;
 type EdgeMap = Record<string, EdgeItem>;
 
 export default class DataManager extends BaseModule<Options, Augmentation> {
-	onToggleFullscreen = makeHook<['enter' | 'exit']>();
+	onToggleFullscreen = hook<['enter' | 'exit']>();
 
 	data: {
 		canvasData: Required<JSONCanvas>;
 		nodeMap: NodeMap;
 		edgeMap: EdgeMap;
-		canvasBaseDir: string;
 		nodeBounds: NodeBounds;
 		offsetX: number;
 		offsetY: number;
 		scale: number;
 		container: HTMLDivElement;
 	} = {
-		canvasBaseDir: './',
 		canvasData: {
 			edges: [],
 			nodes: [],
@@ -91,7 +86,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 			? viewerContainer.attachShadow({ mode: 'open' })
 			: viewerContainer;
 
-		applyStyles(realContainer, style + this.options.extraCSS);
+		applyStyles(realContainer, style);
 
 		this.data.container.classList.add('JSON-Canvas-Viewer');
 		realContainer.appendChild(this.data.container);
@@ -114,7 +109,6 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 		};
 
 		Object.assign(this.data, {
-			canvasBaseDir: this.processBaseDir(this.options.attachmentDir),
 			canvasData,
 			edgeMap: {},
 			nodeBounds: this.calculateNodeBounds(canvasData),
@@ -133,14 +127,13 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 
 			// Re-process attachments
 			if (node.type === 'file') {
-				const path = node.file.split('/');
-				const fileName = path.pop() ?? '';
-				item.fileName = fileName;
-				if (!node.file.startsWith('http://') && !node.file.startsWith('https://')) {
-					const userDefinedAttachment = this.options.attachments?.[fileName];
+				const path = node.file;
+				const basename = path.split('/').pop() ?? '';
+				const lastIndex = basename.lastIndexOf('?');
+				item.fileName = lastIndex !== -1 ? basename.slice(0, lastIndex) : basename;
+				if (!node.file.includes('://')) {
+					const userDefinedAttachment = this.options.attachments?.[path];
 					if (userDefinedAttachment) node.file = userDefinedAttachment;
-					else if (!this.options.noAttachmentRelocation)
-						node.file = this.data.canvasBaseDir + fileName;
 				}
 			}
 		});

@@ -1,5 +1,6 @@
 import type { BaseOptions } from '$';
 import type { BaseArgs } from '$/BaseModule';
+import type { NodeItem } from '$/DataManager';
 import type { WithBorderWidth as Color } from '$/StyleManager';
 import type { Hook } from '$/utilities';
 import type {
@@ -14,7 +15,7 @@ import Controller from '$/Controller';
 import DataManager from '$/DataManager';
 import InteractionHandler from '$/InteractionHandler';
 import StyleManager from '$/StyleManager';
-import { destroyError, makeHook } from '$/utilities';
+import { destroyError, hook } from '$/utilities';
 
 type Options = {
 	parser?: Parser;
@@ -136,10 +137,10 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		return this._overlaysLayer;
 	}
 
-	onInteractionStart = makeHook();
-	onInteractionEnd = makeHook();
-	onNodeActive = makeHook<[JSONCanvasNode]>();
-	onNodeLosesActive = makeHook<[JSONCanvasNode]>();
+	onInteractionStart = hook();
+	onInteractionEnd = hook();
+	onNodeActive = hook<[JSONCanvasNode]>();
+	onNodeLosesActive = hook<[JSONCanvasNode]>();
 
 	constructor(...args: BaseArgs) {
 		super(...args);
@@ -178,29 +179,27 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 	};
 
 	private readonly renderOverlays = () => {
-		const overlayMatcher = async (node: JSONCanvasNode) => {
-			switch (node.type) {
+		const overlayMatcher = async ({ ref, fileName }: NodeItem) => {
+			switch (ref.type) {
 				case 'text': {
-					this.createOverlay(node, await this.parse(node.text), 'text');
+					this.createOverlay(ref, await this.parse(ref.text), 'text');
 					break;
 				}
 				case 'file': {
 					for (const type of supportedTypes) {
-						if (!node.file.match(fileRegex[type])) continue;
-						this.createOverlay(node, node.file, type);
+						if (!fileName?.match(fileRegex[type])) continue;
+						this.createOverlay(ref, ref.file, type);
 						break;
 					}
 					break;
 				}
 				case 'link': {
-					this.createOverlay(node, node.url, 'link');
+					this.createOverlay(ref, ref.url, 'link');
 					break;
 				}
 			}
 		};
-		Object.values(this.DM.data.nodeMap).forEach(async (node) => {
-			await overlayMatcher(node.ref);
-		});
+		Object.values(this.DM.data.nodeMap).forEach(async (node) => await overlayMatcher(node));
 	};
 
 	private readonly themeChanged = () => {
@@ -269,9 +268,9 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 		overlay.appendChild(overlayBorder);
 		const nodeItem = this.DM.data.nodeMap[node.id];
 
-		nodeItem.onActive = makeHook();
-		nodeItem.onLoseActive = makeHook();
-		nodeItem.onBeforeUnmount = makeHook();
+		nodeItem.onActive = hook();
+		nodeItem.onLoseActive = hook();
+		nodeItem.onBeforeUnmount = hook();
 
 		void this.componentDict[args[2]]({
 			container: contentWrapper,

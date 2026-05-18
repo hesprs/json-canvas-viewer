@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsdown';
+import pkg from './package.json' with { type: 'json' };
 
 const isChimp = process.env.MODE === 'chimp';
 
@@ -13,6 +14,7 @@ const fullConfig = defineConfig({
 
 const chimpConfig = defineConfig({
 	clean: false,
+	deps: { alwaysBundle: Object.keys(pkg.dependencies) },
 	dts: false,
 	entry: 'src/chimp.ts',
 	minify: true,

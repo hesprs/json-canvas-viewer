@@ -46,7 +46,7 @@ type ViewerHandle<T extends ModuleInputCtor> = {
 	viewer?: JSONCanvasViewerInterface<T>;
 };
 
-type ViewerProps<T extends ModuleInputCtor> = {
+type ViewerProps<T extends ModuleInputCtor = ModuleInputCtor> = {
 	modules?: T;
 	canvas?: JSONCanvas;
 	attachments?: Record<string, string>;
@@ -75,6 +75,8 @@ function useLatest<T>(value: T) {
 	return ref;
 }
 
+const emptyOptions = {} as ViewerProps['options'];
+
 export default forwardRef(
 	<T extends ModuleInputCtor>(
 		{
@@ -85,7 +87,7 @@ export default forwardRef(
 			className,
 			style,
 			prerenderHtml,
-			options = {} as ViewerProps<T>['options'],
+			options = emptyOptions,
 			text,
 			markdown,
 			image,

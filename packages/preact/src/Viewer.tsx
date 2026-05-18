@@ -77,6 +77,8 @@ function useLatest<T>(value: T) {
 	return ref;
 }
 
+const emptyOptions = {} as ViewerProps['options'];
+
 export default forwardRef(
 	<T extends ModuleInputCtor>(
 		{
@@ -86,7 +88,7 @@ export default forwardRef(
 			video,
 			audio,
 			link,
-			options = {} as ViewerProps<T>['options'],
+			options = emptyOptions,
 			attachments,
 			canvas,
 			theme,

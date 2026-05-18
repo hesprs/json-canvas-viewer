@@ -12,6 +12,7 @@ Welcome to the JSON Canvas Viewer documentation!
 - [**🧩 Preact Component**](1-🚀-Quick-Start.md#preact)
 - [**🧩 Vue Component**](1-🚀-Quick-Start.md#vue-3)
 - [**🔌 APIs**](2-🏗️-Construction-Details.md)
+- [**🎨 CSS Styling**](6-🎨-CSS-Styling.md)
 - [**🧑‍💻 Development**](5-🧑‍💻-Develop-a-Module.md)
 
 ## Get Involved

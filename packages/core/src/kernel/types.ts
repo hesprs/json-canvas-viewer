@@ -23,16 +23,13 @@ export type Box = {
 };
 // #endregion =====================================================================
 
-// #region General Types
-// oxlint-disable-next-line typescript/no-explicit-any
+// #region [DO NOT MODIFY] SynthKernel Core Types
 export type General = any;
 export type GeneralArray = ReadonlyArray<General>;
 export type GeneralObject = object;
 export type GeneralFunction = Function;
-export type GeneralConstructor = new (...args: Array<General>) => General;
-// #endregion =====================================================================
+export type GeneralConstructor = new (...args: ReadonlyArray<General>) => General;
 
-// #region Orchestration Machine
 type UnionToIntersection<U> = (U extends General ? (k: U) => void : never) extends (
 	k: infer I,
 ) => void
@@ -52,4 +49,4 @@ export type Orchestratable<
 	T extends GeneralModuleInput,
 	K extends keyof Instances<T>,
 > = UnionToIntersection<Instances<T>[K]>;
-// #endregion ======================================================================
+// #endregion

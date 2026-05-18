@@ -3,7 +3,7 @@ import type { BaseArgs } from '$/BaseModule';
 import type { HslColor } from '@ahmedsemih/color-fns';
 import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
-import { makeHook } from '$/utilities';
+import { hook } from '$/utilities';
 import { parseHex, toHslString, rgbToHsl, parseHsl, parseRgb } from '@ahmedsemih/color-fns';
 
 type Color = {
@@ -38,7 +38,7 @@ type Augmentation = {
 
 export default class StyleManager extends BaseModule<Options, Augmentation> {
 	theme: 'dark' | 'light' = 'light';
-	onChangeTheme = makeHook<['light' | 'dark']>();
+	onChangeTheme = hook<['light' | 'dark']>();
 	definedColors = {
 		dark: {
 			'0': { hue: 0, lightness: 40, saturation: 0 },

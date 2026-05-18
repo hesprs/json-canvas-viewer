@@ -5,7 +5,7 @@ import type { Options as PointeractOptions, Events, PointeractInterface } from '
 import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import OverlayManager from '$/OverlayManager';
-import { makeHook } from '$/utilities';
+import { hook } from '$/utilities';
 import {
 	Click,
 	Drag,
@@ -37,7 +37,7 @@ type Augmentation = {
 export default class InteractionHandler extends BaseModule<Options, Augmentation> {
 	pointeract: PointeractInterface<LoadedModules>;
 	private readonly DM: DataManager;
-	onClick = makeHook<[string | undefined]>();
+	onClick = hook<[string | undefined]>();
 
 	constructor(...args: BaseArgs) {
 		super(...args);

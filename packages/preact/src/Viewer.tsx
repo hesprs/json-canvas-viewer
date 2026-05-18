@@ -51,13 +51,9 @@ type ViewerHandle<T extends ModuleInputCtor> = {
 type ViewerProps<T extends ModuleInputCtor = ModuleInputCtor> = {
 	modules?: T;
 	canvas?: JSONCanvas;
-	attachmentDir?: string;
 	attachments?: Record<string, string>;
 	theme?: 'dark' | 'light';
-	options?: Omit<
-		Options<T>,
-		'container' | 'theme' | 'canvas' | 'attachmentDir' | 'nodeComponents' | 'attachments'
-	>;
+	options?: Omit<Options<T>, 'container' | 'theme' | 'canvas' | 'nodeComponents' | 'attachments'>;
 	text?: (props: TextSlotProps) => ComponentChildren;
 	markdown?: (props: FileSlotProps) => ComponentChildren;
 	image?: (props: FileSlotProps) => ComponentChildren;
@@ -91,7 +87,6 @@ export default forwardRef(
 			audio,
 			link,
 			options = {} as ViewerProps<T>['options'],
-			attachmentDir,
 			attachments,
 			canvas,
 			theme,
@@ -178,7 +173,6 @@ export default forwardRef(
 			viewerRef.current = new JSONCanvasViewer(
 				{
 					...options,
-					attachmentDir,
 					attachments,
 					canvas,
 					container: containerRef.current as unknown as HTMLDivElement,
@@ -202,12 +196,8 @@ export default forwardRef(
 		}, [theme]);
 
 		useEffect(() => {
-			viewerRef.current?.load({
-				attachmentDir,
-				attachments,
-				canvas,
-			});
-		}, [canvas, attachmentDir, attachments]);
+			viewerRef.current?.load({ attachments, canvas });
+		}, [canvas, attachments]);
 
 		const portals = [...portalsByIdRef.current.values()].map((p) =>
 			createPortal(p.element, p.container),

@@ -4,14 +4,13 @@
 
 ```TypeScript
 function renderToString(options: {
-    canvas: JSONCanvas,
-    attachmentDir?: string;
-    attachments?: Record<string, string>,
-    parser?: (markdown: string) => string | Promise<string>,
+  canvas: JSONCanvas,
+  attachments?: Record<string, string>,
+  parser?: (markdown: string) => string | Promise<string>,
 }): Promise<string>;
 ```
 
-- `options`: the [same requirements](2-🏗️-Construction-Details.md#options) as `canvas`, `attachmentDir`, `attachments`, and `markdownParser` passed in the main constructor options.
+- `options`: the [same requirements](2-🏗️-Construction-Details.md#options) as `canvas`, `attachments`, and `markdownParser` passed in the main constructor options.
 
 You can use the returned string as the `innerHTML` of your container element. To achieve this:
 
@@ -51,3 +50,7 @@ export default async function App() {
   );
 }
 ```
+
+---
+
+**Next Read**: [Modules](5-🧑‍💻-Develop-a-Module.md)

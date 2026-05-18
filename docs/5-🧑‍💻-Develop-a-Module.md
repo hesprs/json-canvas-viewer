@@ -183,3 +183,7 @@ export default class DebugPanel extends BaseModule<Options, Augmentation> {
 	};
 }
 ```
+
+---
+
+**Next Read**: [Modules](6-🎨-CSS-Styling.md)

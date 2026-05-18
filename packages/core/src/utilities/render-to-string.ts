@@ -3,19 +3,15 @@ import type { JSONCanvas, JSONCanvasFileNode, JSONCanvasNode, Parser } from '@re
 export default async function renderToString(options: {
 	canvas: JSONCanvas;
 	attachments?: Record<string, string>;
-	attachmentDir?: string;
 	parser?: Parser;
 }) {
 	const render = async (node: JSONCanvasNode) =>
 		await renderer(node, options.parser ?? ((markdown: string) => markdown));
 	const nodes = options.canvas.nodes ?? [];
-	const basePath = options.attachmentDir ?? './';
 	nodes.forEach((node) => {
-		if (node.type === 'file' && !node.file.startsWith('http')) {
-			const file = node.file.split('/');
-			const name = file.pop() ?? '';
-			node.file = options.attachments?.[name] ?? basePath + name;
-		}
+		if (node.type !== 'file' || node.file.includes('://')) return;
+		const userDefinedPath = options.attachments?.[node.file];
+		if (userDefinedPath) node.file = userDefinedPath;
 	});
 	const renderedContent: Array<string> = [];
 	await Promise.all(nodes.map(async (node) => renderedContent.push(await render(node))));

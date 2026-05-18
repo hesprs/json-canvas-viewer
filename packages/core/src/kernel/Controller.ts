@@ -3,7 +3,7 @@ import type { BaseArgs } from '$/BaseModule';
 import { BaseModule } from '$/BaseModule';
 import DataManager from '$/DataManager';
 import StyleManager from '$/StyleManager';
-import { makeHook } from '$/utilities';
+import { hook } from '$/utilities';
 
 type Augmentation = {
 	refresh: Controller['refresh'];
@@ -29,8 +29,8 @@ export default class Controller extends BaseModule<BaseOptions, Augmentation> {
 		y?: number;
 	} = {};
 
-	onResize = makeHook<[number, number]>();
-	onRefresh = makeHook();
+	onResize = hook<[number, number]>();
+	onRefresh = hook();
 
 	constructor(...args: BaseArgs) {
 		super(...args);

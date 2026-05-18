@@ -84,7 +84,7 @@ export type Hook<Args extends GeneralArray = []> = {
 export function hook<Args extends GeneralArray = []>(reverse = false): Hook<Args> {
 	const result: Hook<Args> = (...args: Args) => {
 		const subs = result.subs.values().toArray();
-		for (const callback of reverse ? subs : subs.toReversed()) callback(...args);
+		for (const callback of reverse ?  subs.toReversed() : subs) callback(...args);
 	};
 	result.subs = new Set();
 	result.subscribe = (callback: HookMatchingFunc<Args>) => {

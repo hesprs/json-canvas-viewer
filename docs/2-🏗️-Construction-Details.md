@@ -71,12 +71,12 @@ type Hook<Args extends GeneralArray = []> = {
 - Default: `light`
 - This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
-**`attachments`**: remaps attachment file names with their true locations.
+**`attachments`**: remaps attachment file with their true locations.
 
-- Attachments are files like external markdown notes, images or other media files embedded in the canvas.
+- Attachments are external markdown notes, images or other media files embedded in the canvas.
 - The file path of attachments in a canvas directly exported from Obsidian is always inaccurate, thus remapping them is necessary.
 - This option is to make you able to assign the attachment URLs individually.
-- Keys are the file names + extensions (e.g., `photo.png`), values are the true file paths (e.g. `./photos/photo.png`).
+- Keys are the original file paths in canvas (value in `JSONCanvasFileNode.file`), values are the true file paths served (e.g. `/public/photo.png`).
 - If using relative path, the path is relative to the file where instantiation happens.
 - This option is elevated to a **component property** in the React / Vue / Preact components and supports reactive updates.
 
@@ -285,6 +285,12 @@ During construction, the viewer itself and all modules are instantiated, this is
 Loading happens after construction. If your `loading` is unset or `normal`, loading will happen immediately, otherwise it will happen when `load()` is called via lazy loading or yourself. During loading, the canvas data will be processed, the rendering loops are started and eventListeners are attached.
 
 To load or reload a new canvas, simply call `load()` again. Everything will be updated efficiently on the existing viewer.
+
+## Error Handling
+
+The only error can happen during loading a canvas is attachment 404 due to not remapped attachments (see [options](#options) - `attachments`). Please ensure all attachments are remapped correctly.
+
+When an attachment error happens, the viewer can still function normally, but the attachment will not be displayed.
 
 ## Accessing Types
 

@@ -131,7 +131,7 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 				const basename = path.split('/').pop() ?? '';
 				const lastIndex = basename.lastIndexOf('?');
 				item.fileName = lastIndex !== -1 ? basename.slice(0, lastIndex) : basename;
-				if (!node.file.includes('://')) {
+				if (!path.includes('://')) {
 					const userDefinedAttachment = this.options.attachments?.[path];
 					if (userDefinedAttachment) node.file = userDefinedAttachment;
 				}

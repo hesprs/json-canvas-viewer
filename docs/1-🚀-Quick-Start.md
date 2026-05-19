@@ -71,7 +71,13 @@ export default defineConfig({
 });
 ```
 
-The plugin accepts any markdown parser that inputs and outputs a string. You can set it to `(md) => md` to disable parsing.
+The plugin accepts any markdown parser that inputs and outputs a string. You can set it to `(md) => md` to disable parsing:
+
+```TypeScript
+export default defineConfig({
+	plugins: [canvas((md) => md)],
+});
+```
 
 ### Non-Vite
 

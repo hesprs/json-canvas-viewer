@@ -116,7 +116,7 @@ import { JSONCanvasViewer, parser, fetchCanvas } from 'https://unpkg.com/json-ca
 new JSONCanvasViewer({
     container: document.body, // The element to attach the viewer to
     canvas: await fetchCanvas('path/to/your.canvas'), // remember to prepare your canvas
-    markdownParser: parser,
+    parser,
 });
 </script>
 </html>

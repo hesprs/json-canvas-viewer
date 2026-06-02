@@ -38,7 +38,7 @@
 		"check": "tsc && oxfmt --check && oxlint --type-aware"
 	},
 	"dependencies": {
-		"marked": "^17.0.5"
+		"marked": "^18.0.4"
 	},
 	"devDependencies": {
 		"@repo/shared": "workspace:*"

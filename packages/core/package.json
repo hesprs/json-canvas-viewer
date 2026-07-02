@@ -52,13 +52,13 @@
 		"@ahmedsemih/color-fns": "^1.3.0",
 		"@needle-di/core": "^1.1.2",
 		"dompurify": "^3.4.11",
-		"marked": "^18.0.4",
+		"marked": "^18.0.5",
 		"pointeract": "^1.2.0"
 	},
 	"devDependencies": {
 		"@repo/shared": "workspace:*",
-		"@tsdown/css": "^0.22.1",
-		"sass": "^1.100.0",
+		"@tsdown/css": "^0.22.3",
+		"sass": "^1.101.0",
 		"vite-plugin-json-canvas": "workspace:*"
 	},
 	"packageManager": "pnpm@10.24.0"

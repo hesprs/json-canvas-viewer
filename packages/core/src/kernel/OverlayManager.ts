@@ -28,10 +28,10 @@ type Augmentation = {
 };
 
 const fileRegex = {
-	audio: /\.(mp3|wav|ogg|opus|aac|m4a|flac)$/i,
-	image: /\.(png|jpg|jpeg|gif|svg|webp|avif|bmp|ico|heic|heif)$/i,
-	markdown: /\.(md|mdx|markdown|txt)$/i,
-	video: /\.(mp4|webm|ogv|mov|m3u8|mpd)$/i,
+	audio: /\.(?:mp3|wav|ogg|opus|aac|m4a|flac)$/i,
+	image: /\.(?:png|jpg|jpeg|gif|svg|webp|avif|bmp|ico|heic|heif)$/i,
+	markdown: /\.(?:md|mdx|markdown|txt)$/i,
+	video: /\.(?:mp4|webm|ogv|mov|m3u8|mpd)$/i,
 };
 
 type NodeComponentHook<N extends JSONCanvasNode> = (options: {
@@ -108,8 +108,9 @@ export default class OverlayManager extends BaseModule<Options, Augmentation> {
 			try {
 				const response = await fetch(content);
 				const result = await response.text();
-				const frontmatterMatch = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(result);
-				parsedContent = await this.parse(frontmatterMatch ? frontmatterMatch[2] : result);
+				const frontmatterMatch =
+					/^---\n(?<frontmatter>[\s\S]*?)\n---\n(?<content>[\s\S]*)$/.exec(result);
+				parsedContent = await this.parse(frontmatterMatch?.groups?.content ?? result);
 			} catch (error) {
 				console.error('[JSON Canvas Viewer] Failed to load markdown:', error);
 				parsedContent = 'Failed to load content.';

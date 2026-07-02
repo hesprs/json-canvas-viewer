@@ -36,10 +36,11 @@ async function renderer(node: JSONCanvasNode, parse: Parser) {
 }
 
 async function fileProcessor(node: JSONCanvasFileNode, parse: Parser) {
-	if (/\.md$/i.exec(node.file)) return await loadMarkdown(node.file, parse);
-	else if (/\.(png|jpg|jpeg|gif|svg|webp)$/i.exec(node.file))
+	if (/\.md$/i.test(node.file)) return await loadMarkdown(node.file, parse);
+	else if (/\.(?:png|jpg|jpeg|gif|svg|webp)$/i.test(node.file))
 		return `<img src="${node.file}" alt="${node.file.split('/').pop()}">`;
-	else if (/\.(mp3|wav)$/i.exec(node.file)) return `<audio src="${node.file}" controls></audio>`;
+	else if (/\.(?:mp3|wav)$/i.test(node.file))
+		return `<audio src="${node.file}" controls></audio>`;
 	return '';
 }
 
@@ -48,8 +49,10 @@ async function loadMarkdown(path: string, parse: Parser) {
 	try {
 		const response = await fetch(path);
 		const result = await response.text();
-		const frontmatterMatch = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(result);
-		parsedContent = await parse(frontmatterMatch ? frontmatterMatch[2] : result);
+		const frontmatterMatch = /^---\n(?<frontmatter>[\s\S]*?)\n---\n(?<content>[\s\S]*)$/.exec(
+			result,
+		);
+		parsedContent = await parse(frontmatterMatch?.groups?.content ?? result);
 	} catch {
 		parsedContent = 'Failed to load content.';
 	}

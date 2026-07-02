@@ -64,6 +64,8 @@ const {
 const viewerRef = useTemplateRef('viewerRef');
 let viewer: JSONCanvasViewerInterface<T> | undefined;
 const instance = getCurrentInstance() as ComponentInternalInstance;
+defineExpose({ viewer });
+
 const prerender = isPrerendering
 	? await renderToString({
 			attachments,
@@ -73,14 +75,13 @@ const prerender = isPrerendering
 	: '';
 
 const slots = defineSlots<{
-	text?(props: TextSlotProps): unknown;
-	markdown?(props: FileSlotProps): unknown;
-	image?(props: FileSlotProps): unknown;
-	video?(props: FileSlotProps): unknown;
-	audio?(props: FileSlotProps): unknown;
-	link?(props: LinkSlotProps): unknown;
+	text?: (props: TextSlotProps) => unknown;
+	markdown?: (props: FileSlotProps) => unknown;
+	image?: (props: FileSlotProps) => unknown;
+	video?: (props: FileSlotProps) => unknown;
+	audio?: (props: FileSlotProps) => unknown;
+	link?: (props: LinkSlotProps) => unknown;
 }>();
-defineExpose({ viewer });
 
 function createNodeFunc<N extends TextSlotProps | FileSlotProps | LinkSlotProps>(
 	slotFn: (props: N) => unknown,

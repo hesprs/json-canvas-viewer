@@ -13,7 +13,7 @@ import type { ForwardedRef } from 'preact/compat';
 import { JSONCanvasViewer } from 'json-canvas-viewer';
 import { forwardRef, createPortal, flushSync } from 'preact/compat';
 import {
-	useEffect,
+	useCallback,
 	useImperativeHandle,
 	useLayoutEffect,
 	useMemo,
@@ -71,12 +71,6 @@ type PortalEntry = {
 	element: ComponentChildren;
 };
 
-function useLatest<T>(value: T) {
-	const ref = useRef(value);
-	ref.current = value;
-	return ref;
-}
-
 const emptyOptions = {} as ViewerProps['options'];
 
 export default forwardRef(
@@ -101,29 +95,43 @@ export default forwardRef(
 	) => {
 		const containerRef = useRef<HTMLElement | undefined>();
 		const viewerRef = useRef<JSONCanvasViewerInterface<T> | undefined>();
-		const textRef = useLatest(text);
-		const markdownRef = useLatest(markdown);
-		const imageRef = useLatest(image);
-		const videoRef = useLatest(video);
-		const audioRef = useLatest(audio);
-		const linkRef = useLatest(link);
-		const portalsByIdRef = useRef(new Map<string, PortalEntry>());
-		const [, forceRender] = useState(0);
+		const [portalsById, setPortalsById] = useState(() => new Map<string, PortalEntry>());
 
-		function upsertPortal(id: string, container: HTMLDivElement, element: ComponentChildren) {
-			portalsByIdRef.current.set(id, { container, element, id });
-			flushSync(() => forceRender((x) => x + 1));
-		}
+		const upsertPortal = useCallback(
+			(id: string, container: HTMLDivElement, element: ComponentChildren) => {
+				flushSync(() => {
+					setPortalsById((current) => {
+						const next = new Map(current);
+						next.set(id, { container, element, id });
+						return next;
+					});
+				});
+			},
+			[],
+		);
 
-		function removePortalById(id: string) {
-			portalsByIdRef.current.delete(id);
-		}
+		const removePortalById = useCallback((id: string) => {
+			setPortalsById((current) => {
+				if (!current.has(id)) return current;
+				const next = new Map(current);
+				next.delete(id);
+				return next;
+			});
+		}, []);
 
-		useImperativeHandle(ref, () => ({ viewer: viewerRef.current }), []);
+		useImperativeHandle(
+			ref,
+			() => ({
+				get viewer() {
+					return viewerRef.current;
+				},
+			}),
+			[],
+		);
 
 		const nodeComponents = useMemo<Options['nodeComponents']>(() => {
 			function createNodeFunc<N extends TextSlotProps | FileSlotProps | LinkSlotProps>(
-				getRenderFn: () => ((props: N) => ComponentChildren) | undefined,
+				renderFn: (props: N) => ComponentChildren,
 			) {
 				return ({
 					container,
@@ -140,8 +148,6 @@ export default forwardRef(
 					onActive: Hook;
 					onLoseActive: Hook;
 				}) => {
-					const renderFn = getRenderFn();
-					if (!renderFn) return;
 					upsertPortal(
 						node.id,
 						container,
@@ -159,51 +165,39 @@ export default forwardRef(
 			}
 
 			const out: Options['nodeComponents'] = {};
-			if (text) out.text = createNodeFunc<TextSlotProps>(() => textRef.current);
-			if (markdown) out.markdown = createNodeFunc<FileSlotProps>(() => markdownRef.current);
-			if (image) out.image = createNodeFunc<FileSlotProps>(() => imageRef.current);
-			if (video) out.video = createNodeFunc<FileSlotProps>(() => videoRef.current);
-			if (audio) out.audio = createNodeFunc<FileSlotProps>(() => audioRef.current);
-			if (link) out.link = createNodeFunc<LinkSlotProps>(() => linkRef.current);
+			if (text) out.text = createNodeFunc<TextSlotProps>(text);
+			if (markdown) out.markdown = createNodeFunc<FileSlotProps>(markdown);
+			if (image) out.image = createNodeFunc<FileSlotProps>(image);
+			if (video) out.video = createNodeFunc<FileSlotProps>(video);
+			if (audio) out.audio = createNodeFunc<FileSlotProps>(audio);
+			if (link) out.link = createNodeFunc<LinkSlotProps>(link);
 			return out;
-			// oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-		}, [text, markdown, image, video, audio, link]);
+		}, [audio, image, link, markdown, removePortalById, text, upsertPortal, video]);
 
 		useLayoutEffect(() => {
 			if (!containerRef.current) return;
 
-			viewerRef.current = new JSONCanvasViewer(
+			const viewer = new JSONCanvasViewer(
 				{
 					...options,
 					attachments,
 					canvas,
-					container: containerRef.current as unknown as HTMLDivElement,
+					container: containerRef.current,
 					nodeComponents,
 					theme,
 				} as Options<T>,
 				modules,
 			);
+			viewerRef.current = viewer;
 
 			return () => {
-				viewerRef.current?.dispose();
+				viewer.dispose();
 				viewerRef.current = undefined;
-				// oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-				portalsByIdRef.current.clear();
+				setPortalsById(new Map());
 			};
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, []);
+		}, [attachments, canvas, modules, nodeComponents, options, theme]);
 
-		useEffect(() => {
-			viewerRef.current?.changeTheme(theme);
-		}, [theme]);
-
-		useEffect(() => {
-			viewerRef.current?.load({ attachments, canvas });
-		}, [canvas, attachments]);
-
-		const portals = [...portalsByIdRef.current.values()].map((p) =>
-			createPortal(p.element, p.container),
-		);
+		const portals = [...portalsById.values()].map((p) => createPortal(p.element, p.container));
 
 		return (
 			<>

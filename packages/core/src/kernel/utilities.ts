@@ -77,8 +77,8 @@ type HookMatchingFunc<Args extends GeneralArray> = (...args: Args) => void;
 export type Hook<Args extends GeneralArray = []> = {
 	(...args: Args): void;
 	subs: Set<HookMatchingFunc<Args>>;
-	subscribe(callback: HookMatchingFunc<Args>): () => void;
-	unsubscribe(callback: HookMatchingFunc<Args>): void;
+	subscribe: (callback: HookMatchingFunc<Args>) => () => void;
+	unsubscribe: (callback: HookMatchingFunc<Args>) => void;
 };
 
 export function hook<Args extends GeneralArray = []>(reverse = false): Hook<Args> {

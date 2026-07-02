@@ -55,8 +55,7 @@
 					"camelCase": false,
 					"snakeCase": false,
 					"pascalCase": true
-				},
-				"ignore": "zh-Hans.ts"
+				}
 			}
 		],
 		"unicorn/consistent-function-scoping": "off",
@@ -83,7 +82,8 @@
 		"vitest/no-conditional-expect": "off",
 		"jest/require-hook": "off",
 		"vitest/prefer-called-once": "off",
-		"eslint/no-underscore-dangle": "off"
+		"eslint/no-underscore-dangle": "off",
+		"vue/require-default-prop": "off",
 	},
 	"env": {
 		"builtin": true,

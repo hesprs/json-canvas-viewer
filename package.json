@@ -6,11 +6,10 @@
 	],
 	"type": "module",
 	"scripts": {
-		"fix": "bun --bun turbo run fix && oxfmt docs",
-		"build": "bun --bun turbo run build",
-		"check": "bun --bun turbo run check",
-		"dev": "bun --bun turbo run dev",
-		"check:docs": "bun --bun oxfmt --check docs README.md"
+		"fix": "turbo run fix && oxfmt docs README.md",
+		"build": "turbo run build",
+		"check": "turbo run check && oxfmt --check docs README.md",
+		"dev": "turbo run dev"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.3.14",

@@ -31,5 +31,5 @@ jobs:
       - name: Check docs formatting
         run: bun check:docs
 
-      - name: Run test build and checks
+      - name: Run checks
         run: bun check

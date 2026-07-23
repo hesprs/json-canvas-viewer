@@ -1,26 +1,30 @@
 {
+	"name": "jcv-monorepo",
 	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
 	"type": "module",
 	"scripts": {
-		"lint": "turbo run lint && oxfmt docs",
-		"build": "turbo run build",
-		"check": "turbo run check",
-		"dev": "turbo run dev",
-		"check:docs": "oxfmt --check docs README.md"
+		"fix": "bun --bun turbo run fix && oxfmt docs",
+		"build": "bun --bun turbo run build",
+		"check": "bun --bun turbo run check",
+		"dev": "bun --bun turbo run dev",
+		"check:docs": "bun --bun oxfmt --check docs README.md"
 	},
 	"devDependencies": {
-		"@types/node": "^26.0.1",
-		"oxfmt": "^0.57.0",
-		"oxlint": "^1.72.0",
+		"@types/bun": "^1.3.14",
+		"oxfmt": "^0.60.0",
+		"oxlint": "^1.75.0",
 		"oxlint-tsgolint": "^0.24.0",
-		"terser": "^5.48.0",
-		"tsdown": "^0.22.3",
-		"turbo": "^2.10.2",
+		"terser": "^5.49.0",
+		"tsdown": "^0.22.13",
+		"turbo": "^2.10.6",
 		"typescript": "^6.0.3",
-		"vite": "^8.1.2"
+		"vite": "^8.1.5"
 	},
 	"engines": {
 		"node": ">=18"
 	},
-	"packageManager": "pnpm@11.9.0"
+	"packageManager": "bun@1.13.3"
 }

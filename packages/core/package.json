@@ -44,9 +44,9 @@
 	},
 	"scripts": {
 		"dev": "vite",
-		"lint": "oxlint --type-aware --fix && oxfmt",
+		"fix": "oxlint --fix && oxfmt",
 		"build": "tsdown && MODE=chimp tsdown",
-		"check": "tsc && oxfmt --check && oxlint --type-aware"
+		"check": "tsc && oxfmt --check && oxlint"
 	},
 	"dependencies": {
 		"@ahmedsemih/color-fns": "^1.3.0",
@@ -58,8 +58,6 @@
 	"devDependencies": {
 		"@repo/shared": "workspace:*",
 		"@tsdown/css": "^0.22.1",
-		"sass": "^1.100.0",
 		"vite-plugin-json-canvas": "workspace:*"
-	},
-	"packageManager": "pnpm@10.24.0"
+	}
 }

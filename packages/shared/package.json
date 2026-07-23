@@ -15,19 +15,19 @@
 	"types": "./index.ts",
 	"exports": {
 		".": {
-			"types": "./index.ts",
-			"import": "./index.ts"
+			"types": "./src/index.ts",
+			"default": "./src/index.ts"
 		},
-		"./build": {
-			"types": "./build.ts",
-			"import": "./build.ts"
+		"./*": {
+			"types": "./src/*.ts",
+			"default": "./src/*.ts"
 		},
 		"./demo.canvas": {
-			"import": "./demo.canvas"
+			"import": "./src/demo.canvas"
 		}
 	},
 	"scripts": {
-		"lint": "oxlint --type-aware --fix && oxfmt",
-		"check": "tsc && oxfmt --check && oxlint --type-aware"
+		"fix": "oxlint --fix && oxfmt",
+		"check": "tsc && oxfmt --check && oxlint"
 	}
 }

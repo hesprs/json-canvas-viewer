@@ -58,6 +58,7 @@
 	"devDependencies": {
 		"@repo/shared": "workspace:*",
 		"@tsdown/css": "^0.22.1",
+		"sass-embedded": "^1.100.0",
 		"vite-plugin-json-canvas": "workspace:*"
 	}
 }

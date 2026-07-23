@@ -43,9 +43,9 @@
 		"provenance": true
 	},
 	"scripts": {
-		"lint": "oxlint --type-aware --fix && oxfmt",
+		"fix": "oxlint --fix && oxfmt",
 		"build": "tsdown",
-		"check": "tsc && oxfmt --check && oxlint --type-aware",
+		"check": "tsc && oxfmt --check && oxlint",
 		"dev": "vite"
 	},
 	"dependencies": {

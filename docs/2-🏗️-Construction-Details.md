@@ -143,11 +143,7 @@ export default function component() {
   return (
     <Viewer
       canvas={canvas}
-      text={(
-        {
-          /* you can receive arguments here */
-        },
-      ) => <p>this is a React/Preact component</p>} // you can pass any component here
+      text={({/* you can receive arguments here */}) => <p>this is a React/Preact component</p>}
     ></Viewer>
   );
 }
@@ -164,11 +160,7 @@ import { JSONCanvasViewerComponent as Viewer } from '@json-canvas-viewer/vue';
 <template>
   <Suspense>
     <Viewer class="canvas-viewer" :canvas="canvas">
-      <template
-        #text="{
-          /* you can receive arguments here */
-        }"
-      >
+      <template #text="{/* you can receive arguments here */}">
         <p>This is a Vue component</p>
       </template>
     </Viewer>

@@ -1,15 +1,16 @@
 {
+	"name": "jcv-monorepo",
 	"private": true,
 	"workspaces": [
-		"packages/**"
+		"packages/*"
 	],
 	"type": "module",
 	"scripts": {
-		"fix": "turbo run fix && oxfmt docs",
+		"fix": "turbo run fix && oxfmt docs README.md",
 		"build": "turbo run build",
 		"check": "turbo run check",
-		"dev": "turbo run dev",
-		"check:docs": "oxfmt --check docs README.md"
+    "check:docs": "oxfmt --check docs README.md",
+		"dev": "turbo run dev"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.3.14",

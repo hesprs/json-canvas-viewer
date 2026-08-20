@@ -1,7 +1,4 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["build.ts", "index.ts", "module-type.d.ts"],
-	"compilerOptions": {
-		"types": ["node"]
-	}
+	"include": ["build.ts", "index.ts", "module-type.d.ts"]
 }

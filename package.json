@@ -1,8 +1,11 @@
 {
 	"private": true,
+	"workspaces": [
+		"packages/**"
+	],
 	"type": "module",
 	"scripts": {
-		"lint": "turbo run lint && oxfmt docs",
+		"fix": "turbo run fix && oxfmt docs",
 		"build": "turbo run build",
 		"check": "turbo run check",
 		"dev": "turbo run dev",

@@ -85,7 +85,7 @@
 		"vitest/prefer-called-once": "off",
 		"eslint/no-underscore-dangle": "off",
 		"vue/require-default-prop": "off",
-		"eslint/one-var": ["warn", "never"]
+		//"eslint/one-var": ["warn", "never"]
 	},
 	"env": {
 		"builtin": true,

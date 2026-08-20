@@ -45,7 +45,7 @@
 	"scripts": {
 		"dev": "bun --bun vite",
 		"fix": "oxlint --fix && oxfmt",
-		"build": "bun --bun tsdown && bun --bun MODE=chimp tsdown",
+		"build": "bun --bun tsdown && MODE=chimp bun --bun tsdown",
 		"check": "tsc && oxlint && oxfmt --check"
 	},
 	"dependencies": {

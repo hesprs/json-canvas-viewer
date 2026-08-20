@@ -43,10 +43,10 @@
 		"provenance": true
 	},
 	"scripts": {
-		"lint": "oxlint --type-aware --fix && oxfmt",
-		"build": "tsdown",
-		"check": "tsc && oxfmt --check && oxlint --type-aware",
-		"dev": "vite"
+		"fix": "oxlint --fix && oxfmt",
+		"build": "bun --bun tsdown",
+		"check": "tsc && oxlint && oxfmt --check",
+		"dev": "bun --bun vite"
 	},
 	"dependencies": {
 		"json-canvas-viewer": "workspace:*"
@@ -57,6 +57,6 @@
 		"vite-plugin-json-canvas": "workspace:*"
 	},
 	"peerDependencies": {
-		"preact": "^10.28.4"
+		"preact": "^10.29.8"
 	}
 }

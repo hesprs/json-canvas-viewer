@@ -33,9 +33,9 @@
 		"provenance": true
 	},
 	"scripts": {
-		"lint": "oxlint --type-aware --fix && oxfmt",
-		"build": "tsdown",
-		"check": "tsc && oxfmt --check && oxlint --type-aware"
+		"fix": "oxlint --fix && oxfmt",
+		"build": "bun --bun tsdown",
+		"check": "tsc && oxlint && oxfmt --check"
 	},
 	"dependencies": {
 		"marked": "^18.0.4"
@@ -44,6 +44,6 @@
 		"@repo/shared": "workspace:*"
 	},
 	"peerDependencies": {
-		"vite": "^8.0.8"
+		"vite": "^8.2.1"
 	}
 }

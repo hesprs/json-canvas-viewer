@@ -182,10 +182,10 @@ export default class DataManager extends BaseModule<Options, Augmentation> {
 	};
 
 	private calculateNodeBounds(canvasData: Required<JSONCanvas>) {
-		let minX = Infinity,
-			minY = Infinity,
-			maxX = -Infinity,
-			maxY = -Infinity;
+		let minX = Infinity;
+		let minY = Infinity;
+		let maxX = -Infinity;
+		let maxY = -Infinity;
 		canvasData.nodes.forEach((node) => {
 			minX = Math.min(minX, node.x);
 			minY = Math.min(minY, node.y);

@@ -27,7 +27,7 @@
 		}
 	},
 	"scripts": {
-		"lint": "oxlint --type-aware --fix && oxfmt",
-		"check": "tsc && oxfmt --check && oxlint --type-aware"
+		"fix": "oxlint --fix && oxfmt",
+		"check": "tsc && oxlint && oxfmt --check"
 	}
 }

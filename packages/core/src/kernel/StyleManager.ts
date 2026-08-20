@@ -19,8 +19,9 @@ export type WithBorderWidth = {
 } & Color;
 
 type ColorOptions = {
-	[K in keyof (StyleManager['definedColors']['light'] &
-		StyleManager['namedColors']['light'])]?: string;
+	[
+		K in keyof (StyleManager['definedColors']['light'] & StyleManager['namedColors']['light'])
+	]?: string;
 };
 
 type Options = {

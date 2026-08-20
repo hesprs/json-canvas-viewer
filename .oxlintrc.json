@@ -44,10 +44,7 @@
 		"typescript/consistent-type-imports": "off",
 		"react/jsx-max-depth": "off",
 		"react/react-in-jsx-scope": "off",
-		"react/function-component-definition": [
-			"warn",
-			{ "unnamedComponents": "arrow-function" }
-		],
+		"react/function-component-definition": ["warn", { "unnamedComponents": "arrow-function" }],
 		"unicorn/no-await-expression-member": "off",
 		"eslint/no-await-in-loop": "off",
 		"eslint/max-params": "off",
@@ -87,7 +84,8 @@
 		"jest/require-hook": "off",
 		"vitest/prefer-called-once": "off",
 		"eslint/no-underscore-dangle": "off",
-		"vue/require-default-prop": "off"
+		"vue/require-default-prop": "off",
+		//"eslint/one-var": ["warn", "never"]
 	},
 	"env": {
 		"builtin": true,
@@ -95,6 +93,7 @@
 		"browser": true,
 		"vue": true
 	},
+	"globals": { "Bun": "readonly" },
 	"ignorePatterns": ["**/node_modules/**", "**/dist/**"],
 	"options": { "typeAware": true }
 }

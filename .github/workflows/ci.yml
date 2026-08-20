@@ -29,4 +29,7 @@ jobs:
         run: bun install
 
       - name: Run checks
-        run: bun check
+        run: bun check:docs && bun check
+        
+      - name: Run test build
+        run: bun run build

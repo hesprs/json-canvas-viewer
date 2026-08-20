@@ -28,6 +28,6 @@
 	},
 	"scripts": {
 		"fix": "oxlint --fix && oxfmt",
-		"check": "tsc && oxfmt --check && oxlint"
+		"check": "tsc && oxlint && oxfmt --check"
 	}
 }

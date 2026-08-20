@@ -171,7 +171,10 @@ export default class Renderer extends BaseModule {
 		const { x: startX, y: startY } = getAnchorCoord(fromNode, edge.fromSide);
 		const { x: endX, y: endY } = getAnchorCoord(toNode, edge.toSide);
 		const color = this.SM.getColor(edge.color);
-		let startControlX, startControlY, endControlX, endControlY: number;
+		let startControlX;
+		let startControlY;
+		let endControlX;
+		let endControlY: number;
 		if (!item.controlPoints) {
 			[startControlX, startControlY, endControlX, endControlY] = this.getControlPoints(
 				startX,

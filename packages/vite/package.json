@@ -38,12 +38,13 @@
 		"check": "tsc && oxlint && oxfmt --check"
 	},
 	"dependencies": {
-		"marked": "^18.0.4"
+		"marked": "catalog:"
 	},
 	"devDependencies": {
-		"@repo/shared": "workspace:*"
+		"@repo/shared": "workspace:*",
+		"vite": "catalog:"
 	},
 	"peerDependencies": {
-		"vite": "^8.2.1"
+		"vite": "catalog:"
 	}
 }

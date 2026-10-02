@@ -1,14 +1,6 @@
 import type { JSONCanvas, Parser } from '@repo/shared';
 import { marked } from 'marked';
 
-declare global {
-	// @ts-expect-error
-	module '*.canvas' {
-		const content: JSONCanvas;
-		export default content;
-	}
-}
-
 export default function vitePluginJsonCanvas(parser: Parser = marked) {
 	return {
 		name: 'vite-plugin-json-canvas',

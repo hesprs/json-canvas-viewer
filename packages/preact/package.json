@@ -54,9 +54,10 @@
 	"devDependencies": {
 		"@preact/preset-vite": "^2.10.5",
 		"@repo/shared": "workspace:*",
+		"preact": "catalog:",
 		"vite-plugin-json-canvas": "workspace:*"
 	},
 	"peerDependencies": {
-		"preact": "^10.29.8"
+		"preact": "catalog:"
 	}
 }

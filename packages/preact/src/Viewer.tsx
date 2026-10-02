@@ -93,8 +93,8 @@ export default forwardRef(
 		}: ViewerProps<T>,
 		ref: ForwardedRef<ViewerHandle<T>>,
 	) => {
-		const containerRef = useRef<HTMLElement | undefined>();
-		const viewerRef = useRef<JSONCanvasViewerInterface<T> | undefined>();
+		const containerRef = useRef<HTMLElement | undefined>(undefined);
+		const viewerRef = useRef<JSONCanvasViewerInterface<T> | undefined>(undefined);
 		const [portalsById, setPortalsById] = useState(() => new Map<string, PortalEntry>());
 
 		const upsertPortal = useCallback(
